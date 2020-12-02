@@ -1,0 +1,145 @@
+@page "/puzzle"
+@page "/puzzle/{day}"
+
+@if (SolutionMetadata == null)
+{
+    <h3>Day @Day (no solution available)</h3>
+}
+else
+{
+    <h3>Day @SolutionMetadata.Day - @SolutionMetadata.Title</h3>
+    <div style="display: flex; margin-top: 1em">
+        <button style="height: 70px; width: 150px; margin-right: 1em" @onclick="SolveAsync" class="btn btn-primary" disabled="@(IsWorking || Input == null ? "disabled" : null)">
+            @if (Input == null)
+            {
+                <span>Loading input...</span>
+            }
+            else if (IsWorking)
+            {
+                <span>Calculating...</span>
+            }
+            else
+            {
+                <span>Solve</span>
+            }
+        </button>
+
+        <div style="margin-right: 1em">
+            @{var isProgressBarRendered = false;}
+            @foreach (var (result, number) in Results.Select((x, i) => (x, i + 1)))
+            {
+                <table style="border:0">
+                    <tr style="height: 35px">
+                        <td style="vertical-align: middle; padding-right: 1em">Part @(number):</td>
+                        <td style="vertical-align: middle;">
+                            @switch (result)
+                            {
+                                case string text when text.Contains(Environment.NewLine):
+                                    var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                                    <textarea name="part@(number)result" value="@result" rows="@(lines.Length + 1)" cols="@lines.Max(x => x.Length)" readonly
+                                              style="border: none; resize: none; font-family: 'Source Code Pro', monospace; line-height: 12px; font-size: 14px; font-weight: bold;" />
+                                    break;
+                                case string text:
+                                    <input name="part@(number)result" type="text" readonly value="@result" />
+                                    break;
+                                case TaskCanceledException _:
+                                    <span>Canceled.</span>
+                                    break;
+                                case NotImplementedException _:
+                                    <span>Not implemented.</span>
+                                    break;
+                                case Exception exception:
+                                    <span>Error - @exception.Message (@exception.GetType().Name)</span>
+                                    break;
+                                case null when IsWorking && !isProgressBarRendered:
+                                    isProgressBarRendered = true;
+                                    <div class="progress" style="width: 200px; height: 2em">
+                                        @if (Progress.Percentage > 0)
+                                        {
+                                            var percentage = (int)Progress.Percentage;
+                                            var percentageString = $"{percentage}%";
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                                 style="width: @percentageString" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">Calculating...</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated"
+                                                 style="width: 100%" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Calculating...</div>
+                                        }
+                                    </div>
+                                    break;
+                                case null when IsWorking && isProgressBarRendered:
+                                    <span>Waiting...</span>
+                                    break;
+                                default:
+                                    <span>no result.</span>
+                                    break;
+                            }
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+        <div style="height: 35px; width: 120px; margin-right: 1em">
+            <button @onclick="Cancel" class="btn btn-secondary" style="width: 100%; height: 100%; margin-bottom: .25em; @(IsWorking ? null : "display:none")">Cancel</button>
+            @if (CalculationStopwatch != null)
+            {
+                <div style="margin-top: .25em">
+                    Time:
+                    @if (CalculationStopwatch.Elapsed >= TimeSpan.FromMinutes(1))
+                    {
+                        <span>@CalculationStopwatch.Elapsed.ToString(@"m\m\ s\s")</span>
+                    }
+                    else
+                    {
+                        <span>@CalculationStopwatch.Elapsed.ToString(@"s\.fff") s</span>
+                    }
+
+                </div>
+            }
+        </div>
+    </div>
+
+    <div style="margin-top: 4em; margin-bottom: 4em;">
+        <TabControl OnActivatePage="VisualizerHandler.CancelAllVisualizations">
+            <TabPage Name="Visualization" IsVisible="SolutionMetadata != null && VisualizerHandler.GetVisualizer(SolutionMetadata.Type) != null" IsActive>
+                @if (IsWorking)
+                {
+                    <span>Calculating...</span>
+
+                }
+                else if (SolutionInstance == null)
+                {
+                    <span>Click 'Solve' to see the visualization!</span>
+                }
+                else
+                {
+                    <DynamicVisualizer SolutionInstance="SolutionInstance"></DynamicVisualizer>
+                }
+            </TabPage>
+            <TabPage Name="Description">
+                <div style="margin-top: 2em; font-size: 12px">Source: <a href="https://adventofcode.com/2019/day/@(SolutionMetadata.Day)">Advent of Code</a></div>
+                <div style="font-family: 'Source Code Pro', monospace; font-size: 14px; max-width: 60em">
+                    @((MarkupString)Description)
+                </div>
+            </TabPage>
+            <TabPage Name="Input">
+                <div style="margin-top: 1em;">&nbsp;</div>
+                @if (HasInputChanged)
+                {
+                    <button class="btn btn-outline-primary" @onclick="async () => await LoadInputAsync(true)" style="margin-bottom: 1em;" disabled="@(IsWorking ? "disabled" : null)">
+                        Restore original input
+                    </button>
+                }
+                <textarea @bind="@Input" @oninput="(e) => { Input = (string)(e.Value); HasInputChanged = true; }"
+                          disabled="@(IsWorking ? "disabled" : null)"
+                          placeholder="Enter your puzzle input here."
+                          rows="@(Input?.Split('\n').Length + 1)"
+                          style="box-sizing: border-box; width: 100%; white-space: nowrap; overflow: auto; font-family: 'Source Code Pro', monospace; font-size: 14px;" />
+            </TabPage>
+            <TabPage Name="Source">
+                <pre style="margin-top: 2em; font-family: 'Source Code Pro', monospace; font-size: 14px;">@SourceCode</pre>
+            </TabPage>
+        </TabControl>
+    </div>
+}

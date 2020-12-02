@@ -1,0 +1,22 @@
+@* Tab buttons *@
+<div class="nav nav-tabs">
+    @foreach (var page in Pages)
+    {
+        if (!page.IsVisible) { continue; }
+
+        var outlineClass = ActivePage == page ? "active" : "";
+        <button class="nav-item nav-link @outlineClass" @onclick="() => ActivatePage(page)" disabled="@(page.IsEnabled ? null : "disabled")">@(page.Name)</button>
+    }
+</div>
+
+@* Active page content *@
+<div>
+    @ActivePage?.ChildContent
+</div>
+
+@* Child content (TabPages) is not displayed directly, but it still have to be included to use CascadingValue. *@
+<div style="display: none">
+    <CascadingValue Name="Parent" Value="this">
+        @ChildContent
+    </CascadingValue>
+</div>
