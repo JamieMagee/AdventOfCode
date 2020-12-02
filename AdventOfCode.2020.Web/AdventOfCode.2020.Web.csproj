@@ -25,9 +25,9 @@
   <Target Name="CopyInputs" BeforeTargets="BeforeBuild">
     <Message Importance="high" Text="Copying puzzle files to WebApp wwwroot..." />
     <ItemGroup>
-      <InputFiles Include="$(MSBuildThisFileDirectory)..\AdventOfCode._2020.Puzzles\Input\day*.txt" />
-      <DescriptionFiles Include="$(MSBuildThisFileDirectory)..\AdventOfCode._2020.Puzzles\Descriptions\day*.html" />
-      <SourceFiles Include="$(MSBuildThisFileDirectory)..\AdventOfCode._2020.Puzzles\Solutions\Day*.cs" />
+      <InputFiles Include="$(MSBuildThisFileDirectory)..\AdventOfCode.2020.Puzzles\Input\day*.txt" />
+      <DescriptionFiles Include="$(MSBuildThisFileDirectory)..\AdventOfCode.2020.Puzzles\Descriptions\day*.html" />
+      <SourceFiles Include="$(MSBuildThisFileDirectory)..\AdventOfCode.2020.Puzzles\Solutions\Day*.cs" />
     </ItemGroup>
     <Copy SourceFiles="@(InputFiles)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\input\" />
     <Copy SourceFiles="@(DescriptionFiles)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\description\" />
