@@ -24,6 +24,12 @@ jobs:
       - name: Publish
         run: dotnet publish --configuration Release --output dist AdventOfCode.2020.Web
         
+      - name: Rewrite base href
+        uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
+        with:
+          html_path: dist/wwwroot/index.html
+          base_href: /AdventOfCode/
+        
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
