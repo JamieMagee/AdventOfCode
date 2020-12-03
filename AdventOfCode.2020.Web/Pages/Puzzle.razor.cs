@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AdventOfCode._2020.Puzzles.Core;
-using aoc2020.web.Services;
+using AdventOfCode._2020.Web.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace aoc2020.web.Pages
+namespace AdventOfCode._2020.Web.Pages
 {
     public sealed partial class Puzzle : ComponentBase
     {

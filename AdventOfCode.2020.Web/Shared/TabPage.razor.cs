@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 
-namespace aoc2020.web.Shared
+namespace AdventOfCode._2020.Web.Shared
 {
     /// <summary>
     /// Represents a single page of a <see cref="TabControl"/>.

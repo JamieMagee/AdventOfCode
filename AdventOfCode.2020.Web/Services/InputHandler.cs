@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace aoc2020.web.Services
+namespace AdventOfCode._2020.Web.Services
 {
     public interface IInputHandler
     {

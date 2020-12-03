@@ -35,7 +35,7 @@ namespace AdventOfCode._2020.Console
 
             [Option('s', "setup",
                 HelpText =
-                    "[Number of day] Download input and description for given day, and add it to aoc2019.Puzzles along with an empty solution .cs file.")]
+                    "[Number of day] Download input and description for given day, and add it to AdventOfCode._2020.Puzzles along with an empty solution .cs file.")]
             public int? DayToSetup { get; set; }
 
             [Usage(ApplicationAlias = "AdventOfCode.2020.Console")]
@@ -46,7 +46,7 @@ namespace AdventOfCode._2020.Console
                 new Example("Run solution for day 12", new UnParserSettings {PreferShortName = true},
                     new Options {DayToRun = 12}),
                 new Example(
-                    "Add input and description for day 23 to aoc2019.Puzzles along with an empty test and solution .cs file",
+                    "Add input and description for day 23 to AdventOfCode._2020.Puzzles along with an empty test and solution .cs file",
                     new Options {DayToSetup = 23}),
             };
         }

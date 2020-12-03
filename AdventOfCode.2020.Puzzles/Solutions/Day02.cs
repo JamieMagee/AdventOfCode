@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using AdventOfCode._2020.Puzzles.Core;
 
 namespace AdventOfCode._2020.Puzzles.Solutions
@@ -8,7 +7,7 @@ namespace AdventOfCode._2020.Puzzles.Solutions
     [Puzzle("Password Philosophy")]
     public sealed class Day02 : SolutionBase
     {
-        public override async Task<string> Part1Async(string input)
+        public override string Part1(string input)
         {
             return input.Trim()
                 .Split("\n")
@@ -17,7 +16,7 @@ namespace AdventOfCode._2020.Puzzles.Solutions
                 .ToString();
         }
 
-        public override async Task<string> Part2Async(string input)
+        public override string Part2(string input)
         {
             return input.Trim()
                 .Split("\n")
@@ -50,8 +49,7 @@ namespace AdventOfCode._2020.Puzzles.Solutions
 
             public bool PartTwoValid()
             {
-                return _password.Length >= _max - 1 &&
-                       _password[_min - 1] == _letter ^ _password[_max - 1] == _letter;
+                return (_password[_min - 1] == _letter) ^ (_password[_max - 1] == _letter);
             }
         }
     }

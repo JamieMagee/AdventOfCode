@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text;
 using AdventOfCode._2020.Puzzles.Core;
-using aoc2020.web.Services;
+using AdventOfCode._2020.Web.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace aoc2020.web
+namespace AdventOfCode._2020.Web
 {
     public class Program
     {
