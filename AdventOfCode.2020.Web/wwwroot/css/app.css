@@ -151,7 +151,7 @@ a, .btn-link {
 }
 
 @media (min-width: 768px) {
-    app {
+    #app {
         flex-direction: row;
     }
 
