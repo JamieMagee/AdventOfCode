@@ -9,22 +9,20 @@ using Microsoft.AspNetCore.Components;
 
 namespace AdventOfCode._2020.Web.Pages
 {
-    public sealed partial class Puzzle : ComponentBase
+    public sealed partial class Puzzle
     {
-        [Parameter]
-        public string Day { get; set; }
+        private CancellationTokenSource myCancellationTokenSource;
+        private int myProgressRenderTick = Environment.TickCount;
 
-        [Parameter]
-        public int MillisBetweenProgressRender { get; set; } = 100;
+        [Parameter] public string Day { get; set; }
 
-        [Inject]
-        private ISolutionHandler SolutionHandler { get; set; }
+        [Parameter] public int MillisBetweenProgressRender { get; set; } = 100;
 
-        [Inject]
-        private IInputHandler InputHandler { get; set; }
+        [Inject] private ISolutionHandler SolutionHandler { get; set; }
 
-        [Inject]
-        private IVisualizerHandler VisualizerHandler { get; set; }
+        [Inject] private IInputHandler InputHandler { get; set; }
+
+        [Inject] private IVisualizerHandler VisualizerHandler { get; set; }
 
         private SolutionMetadata SolutionMetadata { get; set; }
 
@@ -46,7 +44,10 @@ namespace AdventOfCode._2020.Web.Pages
 
         private ISolution SolutionInstance { get; set; }
 
-        protected override Task OnParametersSetAsync() => InitAsync();
+        protected override Task OnParametersSetAsync()
+        {
+            return InitAsync();
+        }
 
         private async Task InitAsync()
         {
@@ -58,11 +59,16 @@ namespace AdventOfCode._2020.Web.Pages
             Progress = new SolutionProgress();
             CalculationStopwatch = null;
             SolutionInstance = null;
-            if (int.TryParse(Day, out var dayNumber) && SolutionHandler.Solutions.TryGetValue(dayNumber, out var solutionMetadata))
+            if (int.TryParse(Day, out var dayNumber) &&
+                SolutionHandler.Solutions.TryGetValue(dayNumber, out var solutionMetadata))
             {
                 SolutionMetadata = solutionMetadata;
                 Results = InputHandler.GetResults(SolutionMetadata.Day);
-                if (InputHandler.IsCachedInputAvailable(solutionMetadata.Day)) { await LoadInputAsync(); }
+                if (InputHandler.IsCachedInputAvailable(solutionMetadata.Day))
+                {
+                    await LoadInputAsync();
+                }
+
                 Description = "Loading description...";
                 LoadPuzzleMetadataInBackground();
             }
@@ -105,18 +111,29 @@ namespace AdventOfCode._2020.Web.Pages
                 SolutionInstance.CancellationToken = myCancellationTokenSource.Token;
                 SolutionInstance.ProgressUpdated += OnProgressUpdate;
                 CalculationStopwatch = Stopwatch.StartNew();
-                foreach (var (part, index) in new Func<string, Task<string>>[] { SolutionInstance.Part1Async, SolutionInstance.Part2Async }.Select((x, i) => (x, i)))
+                foreach (var (part, index) in new Func<string, Task<string>>[]
+                {
+                    SolutionInstance.Part1Async, SolutionInstance.Part2Async
+                }.Select((x, i) => (x, i)))
                 {
                     Progress = new SolutionProgress();
                     StateHasChanged();
                     await Task.Delay(1);
-                    if (IsWorking == false) { break; }
+                    if (IsWorking == false)
+                    {
+                        break;
+                    }
+
                     Results[index] = await ExceptionToResult(part);
                 }
             }
             finally
             {
-                if (SolutionInstance != null) { SolutionInstance.ProgressUpdated -= OnProgressUpdate; }
+                if (SolutionInstance != null)
+                {
+                    SolutionInstance.ProgressUpdated -= OnProgressUpdate;
+                }
+
                 IsWorking = false;
                 CalculationStopwatch?.Stop();
             }
@@ -150,8 +167,5 @@ namespace AdventOfCode._2020.Web.Pages
                 return exception;
             }
         }
-
-        private CancellationTokenSource myCancellationTokenSource;
-        private int myProgressRenderTick = Environment.TickCount;
     }
 }

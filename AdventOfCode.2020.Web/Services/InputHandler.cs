@@ -23,37 +23,37 @@ namespace AdventOfCode._2020.Web.Services
     {
         public InputHandler(HttpClient httpClient)
         {
-            myHttpClient = httpClient;
+            _myHttpClient = httpClient;
         }
 
-        public bool IsCachedInputAvailable(int day) => myInputCache.ContainsKey(day);
+        public bool IsCachedInputAvailable(int day) => _myInputCache.ContainsKey(day);
 
         public async Task<string> GetInputAsync(int day)
         {
-            var input = await GetFileAsync(day, "input/day{0}.txt", myInputCache);
+            var input = await GetFileAsync(day, "input/day{0}.txt", _myInputCache);
             return input;
         }
 
         public async Task<string> GetDescriptionAsync(int day)
         {
-            var description = await GetFileAsync(day, "description/day{0}.html", myDescriptionCache);
+            var description = await GetFileAsync(day, "description/day{0}.html", _myDescriptionCache);
             return description ?? "No description available.";
         }
 
         public async Task<string> GetSourceCodeAsync(int day)
         {
-            var source = await GetFileAsync(day, "source/Day{0}.cs", mySourceCodeCache);
+            var source = await GetFileAsync(day, "source/Day{0}.cs", _mySourceCodeCache);
             return source ?? "No source file available.";
         }
 
-        public async Task<string> GetFileAsync(int day, string pathTemplate, IDictionary<int, string> cache)
+        private async Task<string> GetFileAsync(int day, string pathTemplate, IDictionary<int, string> cache)
         {
             if (!cache.TryGetValue(day, out var description))
             {
                 var dayString = day.ToString().PadLeft(2, '0');
                 try
                 {
-                    description = await myHttpClient.GetStringAsync(string.Format(pathTemplate, dayString));
+                    description = await _myHttpClient.GetStringAsync(string.Format(pathTemplate, dayString));
                 }
                 catch (HttpRequestException)
                 {
@@ -67,10 +67,10 @@ namespace AdventOfCode._2020.Web.Services
 
         public object[] GetResults(int day)
         {
-            if (!myResultCache.TryGetValue(day, out var results))
+            if (!_myResultCache.TryGetValue(day, out var results))
             {
                 results = new object[2];
-                myResultCache.Add(day, results);
+                _myResultCache.Add(day, results);
             }
             return results;
         }
@@ -84,10 +84,10 @@ namespace AdventOfCode._2020.Web.Services
             }
         }
 
-        private readonly HttpClient myHttpClient;
-        private readonly Dictionary<int, object[]> myResultCache = new Dictionary<int, object[]>();
-        private readonly Dictionary<int, string> myInputCache = new Dictionary<int, string>();
-        private readonly Dictionary<int, string> myDescriptionCache = new Dictionary<int, string>();
-        private readonly Dictionary<int, string> mySourceCodeCache = new Dictionary<int, string>();
+        private readonly HttpClient _myHttpClient;
+        private readonly Dictionary<int, object[]> _myResultCache = new Dictionary<int, object[]>();
+        private readonly Dictionary<int, string> _myInputCache = new Dictionary<int, string>();
+        private readonly Dictionary<int, string> _myDescriptionCache = new Dictionary<int, string>();
+        private readonly Dictionary<int, string> _mySourceCodeCache = new Dictionary<int, string>();
     }
 }

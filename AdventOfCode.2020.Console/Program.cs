@@ -25,21 +25,21 @@ namespace AdventOfCode._2020.Console
         private sealed class Options
         {
             [Option('a', "all", HelpText = "Run all available solutions.")]
-            public bool RunAllDays { get; set; }
+            public bool RunAllDays { get; private set; }
 
             [Option('l', "last", HelpText = "Run the last available solution.")]
             public bool RunLastDay { get; set; }
 
             [Option('d', "day", HelpText = "[Number of day] Run the solution for the given day.")]
-            public int? DayToRun { get; set; }
+            public int? DayToRun { get; private set; }
 
             [Option('s', "setup",
                 HelpText =
                     "[Number of day] Download input and description for given day, and add it to AdventOfCode._2020.Puzzles along with an empty solution .cs file.")]
-            public int? DayToSetup { get; set; }
+            public int? DayToSetup { get; private set; }
 
             [Usage(ApplicationAlias = "AdventOfCode.2020.Console")]
-            public static IEnumerable<Example> Examples => new Example[]
+            public static IEnumerable<Example> Examples => new[]
             {
                 new Example("Run all available solutions", new Options {RunAllDays = true}),
                 new Example("Run the last available solution", new Options {RunLastDay = true}),
@@ -47,13 +47,13 @@ namespace AdventOfCode._2020.Console
                     new Options {DayToRun = 12}),
                 new Example(
                     "Add input and description for day 23 to AdventOfCode._2020.Puzzles along with an empty test and solution .cs file",
-                    new Options {DayToSetup = 23}),
+                    new Options {DayToSetup = 23})
             };
         }
 
         public static async Task Main(string[] args) => await new Program(args).Run();
 
-        public Program(string[] args)
+        private Program(string[] args)
         {
             Options options = null;
             if (!args.Any())
@@ -72,7 +72,7 @@ namespace AdventOfCode._2020.Console
             _mySolutionHandler = new SolutionHandler();
         }
 
-        public async Task Run()
+        private async Task Run()
         {
             if (_myOptions == null)
             {
@@ -134,7 +134,7 @@ namespace AdventOfCode._2020.Console
 
             var dayString = day.ToString().PadLeft(2, '0');
             var rootDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var input = File.ReadAllText(Path.Combine(rootDir, "Input", $"day{dayString}.txt"));
+            var input = await File.ReadAllTextAsync(Path.Combine(rootDir, "Input", $"day{dayString}.txt"));
 
             System.Console.WriteLine($"Day {day}: {solutionMetadata.Title}");
             await SolvePart(1, input, solution.Part1Async, solution);
@@ -200,7 +200,7 @@ namespace AdventOfCode._2020.Console
             using var httpClient = new HttpClient(httpClientHandler);
 
             await SaveInputAsync(day, dayString, puzzleProjectPath, httpClient);
-            string puzzleTitle = await SaveDescriptionAsync(day, dayString, puzzleProjectPath, httpClient);
+            var puzzleTitle = await SaveDescriptionAsync(day, dayString, puzzleProjectPath, httpClient);
             await CreateSolutionSourceAsync(day, dayString, consoleProjectBinPath, puzzleProjectPath, puzzleTitle);
 
             System.Console.WriteLine("Done.");
@@ -214,7 +214,7 @@ namespace AdventOfCode._2020.Console
             var input = await httpClient.GetStringAsync(inputAddress);
 
             System.Console.WriteLine($"Saving input to {inputFile.FullName}");
-            File.WriteAllText(inputFile.FullName, input, Encoding.UTF8);
+            await File.WriteAllTextAsync(inputFile.FullName, input, Encoding.UTF8);
         }
 
         private async Task<string> SaveDescriptionAsync(int day, string dayString, string puzzleProjectPath, HttpClient httpClient)
@@ -231,21 +231,21 @@ namespace AdventOfCode._2020.Console
 
             var titleNode = articleNodes.First().SelectSingleNode("//h2");
             var puzzleTitle = puzzleTitleRegex.Match(titleNode.InnerText).Groups["title"].Value;
-            titleNode.InnerHtml = $"--- Part One ---";
+            titleNode.InnerHtml = "--- Part One ---";
             System.Console.WriteLine($"Found {articleNodes.Count} parts. Title: {puzzleTitle}");
             var description = articleNodes.Aggregate(string.Empty, (result, node) => result + node.OuterHtml);
 
             System.Console.WriteLine($"Saving description to {descriptionFile.FullName}");
-            File.WriteAllText(descriptionFile.FullName, description, Encoding.UTF8);
+            await File.WriteAllTextAsync(descriptionFile.FullName, description, Encoding.UTF8);
 
             return puzzleTitle;
         }
 
         private static async Task CreateSolutionSourceAsync(int day, string dayString, string consoleProjectBinPath, string puzzleProjectPath, string puzzleTitle)
         {
-            var solutionSourceFile = new FileInfo(Path.Combine(consoleProjectBinPath, "Template", $"Day_DAYSTRING_.cs"));
+            var solutionSourceFile = new FileInfo(Path.Combine(consoleProjectBinPath, "Template", "Day_DAYSTRING_.cs"));
             var solutionTargetFile = new FileInfo(Path.Combine(puzzleProjectPath, "Solutions", $"Day{dayString}.cs"));
-            var testSourceFile = new FileInfo(Path.Combine(consoleProjectBinPath, "Template", $"Day_DAYSTRING_Test.cs"));
+            var testSourceFile = new FileInfo(Path.Combine(consoleProjectBinPath, "Template", "Day_DAYSTRING_Test.cs"));
             var testTargetFile = new FileInfo(Path.Combine($"{puzzleProjectPath}.Test", "Solutions", $"Day{dayString}Test.cs"));
 
             if (solutionTargetFile.Exists)

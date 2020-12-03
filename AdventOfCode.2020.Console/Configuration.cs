@@ -10,9 +10,9 @@ namespace AdventOfCode._2020.Console
         {
         }
 
-        public int Year { get; set; } = 2020;
+        public int Year { get; } = 2020;
 
-        public string PuzzleProjectPath { get; set; } = Path.Combine("..", "..", "..", "..", "AdventOfCode.2020.Puzzles");
+        public string PuzzleProjectPath { get; } = Path.Combine("..", "..", "..", "..", "AdventOfCode.2020.Puzzles");
 
         public string SessionCookie { get; set; }
 

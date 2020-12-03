@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AdventOfCode._2020.Puzzles.Core;
 
 namespace AdventOfCode._2020.Puzzles.Solutions
@@ -9,11 +7,9 @@ namespace AdventOfCode._2020.Puzzles.Solutions
     [Puzzle("Toboggan Trajectory")]
     public sealed class Day03 : SolutionBase
     {
-        private const char TREE = '#';
-        private const int DAY_1_X = 3;
-        private const int DAY_1_Y = 1;
+        private const char Tree = '#';
 
-        private readonly List<(int, int)> Day2Slopes = new List<(int, int)>
+        private readonly List<(int, int)> _day2Slopes = new List<(int, int)>
         {
             (1, 1),
             (3, 1),
@@ -22,48 +18,40 @@ namespace AdventOfCode._2020.Puzzles.Solutions
             (1, 2)
         };
 
-        public override string Part1(string input)
+        protected override string Part1(string input)
         {
-            var trimmed = input.Trim()
-                .Split('\n')
-                .Select(line => line.ToCharArray())
-                .ToList();
-            int x = 0, y = 0, countTrees = 0;
-            do
-            {
-                x = (x + DAY_1_X) % trimmed[0].Length;
-                y++;
-                var item = trimmed[y][x];
-                countTrees += item == TREE ? 1 : 0;
-            } while (y < trimmed.Count - 1);
-
-            return countTrees.ToString();
+            return CalculateTrees(input, 3, 1).ToString();
         }
 
-        public override string Part2(string input)
+        protected override string Part2(string input)
         {
-            return Day2Slopes.Select(tuple => CalculateTrees(input, tuple.Item1, tuple.Item2))
+            return _day2Slopes.Select(tuple => CalculateTrees(input, tuple.Item1, tuple.Item2))
                 .Aggregate((uint)1, (acc, val) => acc * val)
                 .ToString();
         }
 
-        private uint CalculateTrees(string input, int xIncrement, int yIncrement)
+        private static uint CalculateTrees(string input, int xIncrement, int yIncrement)
         {
-            var trimmed = input.Trim()
-                .Split('\n')
-                .Select(line => line.ToCharArray())
-                .ToList();
+            var parsedInput = ParseInput(input); 
             int x = 0, y = 0;
             uint countTrees = 0;
             do
             {
-                x = (x + xIncrement) % trimmed[0].Length;
+                x = (x + xIncrement) % parsedInput[0].Length;
                 y += yIncrement;
-                var item = trimmed[y][x];
-                countTrees += item == TREE ? 1 : 0;
-            } while (y < trimmed.Count - 1);
+                var item = parsedInput[y][x];
+                countTrees += item == Tree ? 1 : 0;
+            } while (y < parsedInput.Count - 1);
 
             return countTrees;
+        }
+
+        private static IList<char[]> ParseInput(string input)
+        {
+            return input.Trim()
+                .Split('\n')
+                .Select(line => line.ToCharArray())
+                .ToList();
         }
     }
 }

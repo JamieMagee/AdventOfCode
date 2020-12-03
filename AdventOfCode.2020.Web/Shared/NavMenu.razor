@@ -22,7 +22,7 @@
             if (SolutionHandler.Solutions.TryGetValue(day, out var solution))
             {
                 <li class="nav-item px-3" style="line-height: 0; height:auto; padding-top: 0; padding-bottom: 0">
-                    <NavLink AdditionalAttributes='new Dictionary<string, object>(){ { "class", "nav-link" },{"href", href },{ "style", "display:block; line-height: 1; height:auto; padding-top: 4px; padding-bottom: 4px" } }'>
+                    <NavLink AdditionalAttributes='new Dictionary<string, object> { { "class", "nav-link" },{"href", href },{ "style", "display:block; line-height: 1; height:auto; padding-top: 4px; padding-bottom: 4px" } }'>
                         <span>
                             @if (VisualizerHandler.GetVisualizer(solution.Type) != null)
                             {
@@ -43,12 +43,12 @@
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
+    private bool _collapseNavMenu = true;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
-        collapseNavMenu = !collapseNavMenu;
+        _collapseNavMenu = !_collapseNavMenu;
     }
 }

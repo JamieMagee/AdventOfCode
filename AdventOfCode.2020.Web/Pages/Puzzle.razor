@@ -25,7 +25,7 @@ else
         </button>
 
         <div style="margin-right: 1em">
-            @{var isProgressBarRendered = false;}
+            @{ var isProgressBarRendered = false; }
             @foreach (var (result, number) in Results.Select((x, i) => (x, i + 1)))
             {
                 <table style="border:0">
@@ -35,17 +35,17 @@ else
                             @switch (result)
                             {
                                 case string text when text.Contains(Environment.NewLine):
-                                    var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                                    var lines = text.Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
                                     <textarea name="part@(number)result" value="@result" rows="@(lines.Length + 1)" cols="@lines.Max(x => x.Length)" readonly
-                                              style="border: none; resize: none; font-family: 'Source Code Pro', monospace; line-height: 12px; font-size: 14px; font-weight: bold;" />
+                                              style="border: none; resize: none; font-family: 'Source Code Pro', monospace; line-height: 12px; font-size: 14px; font-weight: bold;"></textarea>
                                     break;
-                                case string text:
-                                    <input name="part@(number)result" type="text" readonly value="@result" />
+                                case string:
+                                    <input name="part@(number)result" type="text" readonly value="@result"/>
                                     break;
-                                case TaskCanceledException _:
+                                case TaskCanceledException:
                                     <span>Canceled.</span>
                                     break;
-                                case NotImplementedException _:
+                                case NotImplementedException:
                                     <span>Not implemented.</span>
                                     break;
                                 case Exception exception:
@@ -56,15 +56,19 @@ else
                                     <div class="progress" style="width: 200px; height: 2em">
                                         @if (Progress.Percentage > 0)
                                         {
-                                            var percentage = (int)Progress.Percentage;
+                                            var percentage = (int) Progress.Percentage;
                                             var percentageString = $"{percentage}%";
                                             <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                                                 style="width: @percentageString" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">Calculating...</div>
+                                                 style="width: @percentageString" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">
+                                                Calculating...
+                                            </div>
                                         }
                                         else
                                         {
                                             <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated"
-                                                 style="width: 100%" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Calculating...</div>
+                                                 style="width: 100%" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                                Calculating...
+                                            </div>
                                         }
                                     </div>
                                     break;
@@ -106,7 +110,6 @@ else
                 @if (IsWorking)
                 {
                     <span>Calculating...</span>
-
                 }
                 else if (SolutionInstance == null)
                 {
@@ -120,7 +123,7 @@ else
             <TabPage Name="Description">
                 <div style="margin-top: 2em; font-size: 12px">Source: <a href="https://adventofcode.com/2020/day/@(SolutionMetadata.Day)">Advent of Code</a></div>
                 <div style="font-family: 'Source Code Pro', monospace; font-size: 14px; max-width: 60em">
-                    @((MarkupString)Description)
+                    @((MarkupString) Description)
                 </div>
             </TabPage>
             <TabPage Name="Input">
@@ -131,11 +134,11 @@ else
                         Restore original input
                     </button>
                 }
-                <textarea @bind="@Input" @oninput="(e) => { Input = (string)(e.Value); HasInputChanged = true; }"
+                <textarea @bind="@Input" @oninput="e => { Input = (string) e.Value; HasInputChanged = true; }"
                           disabled="@(IsWorking ? "disabled" : null)"
                           placeholder="Enter your puzzle input here."
                           rows="@(Input?.Split('\n').Length + 1)"
-                          style="box-sizing: border-box; width: 100%; white-space: nowrap; overflow: auto; font-family: 'Source Code Pro', monospace; font-size: 14px;" />
+                          style="box-sizing: border-box; width: 100%; white-space: nowrap; overflow: auto; font-family: 'Source Code Pro', monospace; font-size: 14px;"></textarea>
             </TabPage>
             <TabPage Name="Source">
                 <pre style="margin-top: 2em; font-family: 'Source Code Pro', monospace; font-size: 14px;">@SourceCode</pre>

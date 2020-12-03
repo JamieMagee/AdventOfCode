@@ -15,9 +15,9 @@ namespace AdventOfCode._2020.Puzzles.Core
 
         public CancellationToken CancellationToken { get; set; }
 
-        public virtual string Part1(string input) => throw new NotImplementedException();
+        protected virtual string Part1(string input) => throw new NotImplementedException();
 
-        public virtual string Part2(string input) => throw new NotImplementedException();
+        protected virtual string Part2(string input) => throw new NotImplementedException();
 
         public virtual Task<string> Part1Async(string input) => Task.FromResult(Part1(input));
 
@@ -41,7 +41,7 @@ namespace AdventOfCode._2020.Puzzles.Core
         /// Returns true if <see cref="UpdateProgressAsync"/> should be called to update the UI of the solution runner. This happens every couple of milliseconds.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected bool IsUpdateProgressNeeded() => Environment.TickCount >= myUpdateTick;
+        protected bool IsUpdateProgressNeeded() => Environment.TickCount >= _myUpdateTick;
 
         /// <summary>
         /// Updates the UI of the solution runner with the current progress, and schedules the next update a couple of milliseconds in the future.
@@ -57,7 +57,7 @@ namespace AdventOfCode._2020.Puzzles.Core
         /// </summary>
         protected Task UpdateProgressAsync()
         {
-            myUpdateTick = Environment.TickCount + MillisecondsBetweenProgressUpdates;
+            _myUpdateTick = Environment.TickCount + MillisecondsBetweenProgressUpdates;
             ProgressUpdated?.Invoke(this, new SolutionProgressEventArgs(Progress));
             return Task.Delay(1, CancellationToken);
         }
@@ -65,6 +65,6 @@ namespace AdventOfCode._2020.Puzzles.Core
         /// <summary>
         /// A scheduled tick from <see cref="Environment.TickCount"/>, when a progress update should happen.
         /// </summary>
-        private int myUpdateTick = Environment.TickCount;
+        private int _myUpdateTick = Environment.TickCount;
     }
 }

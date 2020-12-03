@@ -7,7 +7,7 @@ namespace AdventOfCode._2020.Puzzles.Solutions
     [Puzzle("Password Philosophy")]
     public sealed class Day02 : SolutionBase
     {
-        public override string Part1(string input)
+        protected override string Part1(string input)
         {
             return input.Trim()
                 .Split("\n")
@@ -16,7 +16,7 @@ namespace AdventOfCode._2020.Puzzles.Solutions
                 .ToString();
         }
 
-        public override string Part2(string input)
+        protected override string Part2(string input)
         {
             return input.Trim()
                 .Split("\n")

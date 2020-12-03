@@ -9,7 +9,7 @@ namespace AdventOfCode._2020.Web.Shared
     /// Tabbed container control with a single active page.
     /// Add pages using <see cref="TabPage"/> items as child content.
     /// </summary>
-    public sealed partial class TabControl : ComponentBase
+    public sealed partial class TabControl
     {
         /// <summary>
         /// The content of the TabControl, consisting of <see cref="TabPage"/> items.
@@ -26,12 +26,12 @@ namespace AdventOfCode._2020.Web.Shared
         /// <summary>
         /// The active page of the TabControl.
         /// </summary>
-        public TabPage ActivePage
+        private TabPage ActivePage
         {
-            get => myActivePage;
+            get => _myActivePage;
             set
             {
-                myActivePage = value;
+                _myActivePage = value;
                 OnActivatePage?.Invoke();
             }
         }
@@ -39,7 +39,7 @@ namespace AdventOfCode._2020.Web.Shared
         /// <summary>
         /// The pages of the TabControl.
         /// </summary>
-        public IReadOnlyList<TabPage> Pages => myPages;
+        private IReadOnlyList<TabPage> Pages => _myPages;
 
         /// <summary>
         /// Show the given page of the TabControl.
@@ -53,7 +53,7 @@ namespace AdventOfCode._2020.Web.Shared
         /// <param name="page">The page o be added.</param>
         internal void RegisterPage(TabPage page)
         {
-            myPages.Add(page);
+            _myPages.Add(page);
             StateHasChanged();
         }
 
@@ -66,7 +66,7 @@ namespace AdventOfCode._2020.Web.Shared
             }
         }
 
-        private readonly List<TabPage> myPages = new List<TabPage>();
-        private TabPage myActivePage;
+        private readonly List<TabPage> _myPages = new List<TabPage>();
+        private TabPage _myActivePage;
     }
 }

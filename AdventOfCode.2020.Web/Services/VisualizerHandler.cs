@@ -26,11 +26,7 @@ namespace AdventOfCode._2020.Web.Services
 
         public Type GetVisualizer(Type solutionType)
         {
-            if (VisualizersBySolutionType.TryGetValue(solutionType, out var visualizerType))
-            {
-                return visualizerType;
-            }
-            return null;
+            return VisualizersBySolutionType.TryGetValue(solutionType, out var visualizerType) ? visualizerType : null;
         }
 
         private static Dictionary<Type, Type> GatherPuzzleSolutions()
@@ -55,12 +51,12 @@ namespace AdventOfCode._2020.Web.Services
 
         public void CancelAllVisualizations()
         {
-            myCancellationTokenSource.Cancel();
-            myCancellationTokenSource = new CancellationTokenSource();
+            _myCancellationTokenSource.Cancel();
+            _myCancellationTokenSource = new CancellationTokenSource();
         }
 
-        public CancellationToken GetVisualizationCancellationToken() => myCancellationTokenSource.Token;
+        public CancellationToken GetVisualizationCancellationToken() => _myCancellationTokenSource.Token;
 
-        private CancellationTokenSource myCancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource _myCancellationTokenSource = new CancellationTokenSource();
     }
 }
