@@ -4,12 +4,6 @@ namespace AdventOfCode._2020.Puzzles.Core
 {
     public sealed class SolutionMetadata
     {
-        public int Day { get; }
-
-        public Type Type { get; }
-
-        public string Title { get; }
-
         public SolutionMetadata(Type type, int day, string name)
         {
             Type = type;
@@ -17,9 +11,15 @@ namespace AdventOfCode._2020.Puzzles.Core
             Title = name;
         }
 
+        public int Day { get; }
+
+        public Type Type { get; }
+
+        public string Title { get; }
+
         public ISolution CreateInstance()
         {
-            return (ISolution)Activator.CreateInstance(Type);
+            return (ISolution) Activator.CreateInstance(Type);
         }
     }
 }

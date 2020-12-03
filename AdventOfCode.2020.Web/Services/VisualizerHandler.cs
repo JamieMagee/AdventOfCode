@@ -17,16 +17,29 @@ namespace AdventOfCode._2020.Web.Services
 
     public sealed class VisualizerHandler : IVisualizerHandler
     {
-        public IReadOnlyDictionary<Type, Type> VisualizersBySolutionType { get; }
+        private CancellationTokenSource _myCancellationTokenSource = new CancellationTokenSource();
 
         public VisualizerHandler()
         {
             VisualizersBySolutionType = GatherPuzzleSolutions();
         }
 
+        public IReadOnlyDictionary<Type, Type> VisualizersBySolutionType { get; }
+
         public Type GetVisualizer(Type solutionType)
         {
             return VisualizersBySolutionType.TryGetValue(solutionType, out var visualizerType) ? visualizerType : null;
+        }
+
+        public void CancelAllVisualizations()
+        {
+            _myCancellationTokenSource.Cancel();
+            _myCancellationTokenSource = new CancellationTokenSource();
+        }
+
+        public CancellationToken GetVisualizationCancellationToken()
+        {
+            return _myCancellationTokenSource.Token;
         }
 
         private static Dictionary<Type, Type> GatherPuzzleSolutions()
@@ -39,7 +52,9 @@ namespace AdventOfCode._2020.Web.Services
 
             foreach (var visualizerType in visualizerTypes)
             {
-                var targetSolutionAttributes = visualizerType.GetCustomAttributes(typeof(TargetSolutionAttribute), false).OfType<TargetSolutionAttribute>().ToList();
+                var targetSolutionAttributes = visualizerType
+                    .GetCustomAttributes(typeof(TargetSolutionAttribute), false).OfType<TargetSolutionAttribute>()
+                    .ToList();
                 foreach (var targetSolutionType in targetSolutionAttributes.Select(x => x.TargetSolutionType))
                 {
                     visualizersBySolutionType[targetSolutionType] = visualizerType;
@@ -48,15 +63,5 @@ namespace AdventOfCode._2020.Web.Services
 
             return visualizersBySolutionType;
         }
-
-        public void CancelAllVisualizations()
-        {
-            _myCancellationTokenSource.Cancel();
-            _myCancellationTokenSource = new CancellationTokenSource();
-        }
-
-        public CancellationToken GetVisualizationCancellationToken() => _myCancellationTokenSource.Token;
-
-        private CancellationTokenSource _myCancellationTokenSource = new CancellationTokenSource();
     }
 }

@@ -18,7 +18,7 @@ namespace AdventOfCode._2020.Puzzles.Test.Solutions
         {
             Assert.Equal("514579", await Solution.Part1Async(Input));
         }
-        
+
         [Fact]
         public async Task Part2()
         {

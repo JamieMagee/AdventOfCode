@@ -17,41 +17,10 @@ namespace AdventOfCode._2020.Console
 {
     internal class Program
     {
+        private readonly Configuration _myConfig;
 
         private readonly Options _myOptions;
-        private readonly Configuration _myConfig;
         private readonly SolutionHandler _mySolutionHandler;
-
-        private sealed class Options
-        {
-            [Option('a', "all", HelpText = "Run all available solutions.")]
-            public bool RunAllDays { get; private set; }
-
-            [Option('l', "last", HelpText = "Run the last available solution.")]
-            public bool RunLastDay { get; set; }
-
-            [Option('d', "day", HelpText = "[Number of day] Run the solution for the given day.")]
-            public int? DayToRun { get; private set; }
-
-            [Option('s', "setup",
-                HelpText =
-                    "[Number of day] Download input and description for given day, and add it to AdventOfCode._2020.Puzzles along with an empty solution .cs file.")]
-            public int? DayToSetup { get; private set; }
-
-            [Usage(ApplicationAlias = "AdventOfCode.2020.Console")]
-            public static IEnumerable<Example> Examples => new[]
-            {
-                new Example("Run all available solutions", new Options {RunAllDays = true}),
-                new Example("Run the last available solution", new Options {RunLastDay = true}),
-                new Example("Run solution for day 12", new UnParserSettings {PreferShortName = true},
-                    new Options {DayToRun = 12}),
-                new Example(
-                    "Add input and description for day 23 to AdventOfCode._2020.Puzzles along with an empty test and solution .cs file",
-                    new Options {DayToSetup = 23})
-            };
-        }
-
-        public static async Task Main(string[] args) => await new Program(args).Run();
 
         private Program(string[] args)
         {
@@ -70,6 +39,11 @@ namespace AdventOfCode._2020.Console
             _myConfig = Configuration.Load();
             _myOptions = options;
             _mySolutionHandler = new SolutionHandler();
+        }
+
+        public static async Task Main(string[] args)
+        {
+            await new Program(args).Run();
         }
 
         private async Task Run()
@@ -183,10 +157,12 @@ namespace AdventOfCode._2020.Console
                 {
                     var prevLength = waitingMessage.Length;
                     waitingMessage = $"\r{emptyWaitingMessage}{Math.Min(99.99, args.Progress.Percentage):0.00}%";
-                    System.Console.Write(waitingMessage + new string(' ', Math.Max(0, prevLength - waitingMessage.Length)));
+                    System.Console.Write(waitingMessage +
+                                         new string(' ', Math.Max(0, prevLength - waitingMessage.Length)));
                 }
             }
         }
+
         private async Task SetupDay(int day)
         {
             var dayString = day.ToString().PadLeft(2, '0');
@@ -196,7 +172,7 @@ namespace AdventOfCode._2020.Console
 
             var cookieContainer = new CookieContainer();
             cookieContainer.Add(new Cookie("session", _myConfig.SessionCookie, "/", "adventofcode.com"));
-            using var httpClientHandler = new HttpClientHandler { CookieContainer = cookieContainer };
+            using var httpClientHandler = new HttpClientHandler {CookieContainer = cookieContainer};
             using var httpClient = new HttpClient(httpClientHandler);
 
             await SaveInputAsync(day, dayString, puzzleProjectPath, httpClient);
@@ -217,7 +193,8 @@ namespace AdventOfCode._2020.Console
             await File.WriteAllTextAsync(inputFile.FullName, input, Encoding.UTF8);
         }
 
-        private async Task<string> SaveDescriptionAsync(int day, string dayString, string puzzleProjectPath, HttpClient httpClient)
+        private async Task<string> SaveDescriptionAsync(int day, string dayString, string puzzleProjectPath,
+            HttpClient httpClient)
         {
             var descriptionAddress = $"https://adventofcode.com/{_myConfig.Year}/day/{day}";
             var descriptionFile = new FileInfo(Path.Combine(puzzleProjectPath, "Descriptions", $"day{dayString}.html"));
@@ -241,12 +218,14 @@ namespace AdventOfCode._2020.Console
             return puzzleTitle;
         }
 
-        private static async Task CreateSolutionSourceAsync(int day, string dayString, string consoleProjectBinPath, string puzzleProjectPath, string puzzleTitle)
+        private static async Task CreateSolutionSourceAsync(int day, string dayString, string consoleProjectBinPath,
+            string puzzleProjectPath, string puzzleTitle)
         {
             var solutionSourceFile = new FileInfo(Path.Combine(consoleProjectBinPath, "Template", "Day_DAYSTRING_.cs"));
             var solutionTargetFile = new FileInfo(Path.Combine(puzzleProjectPath, "Solutions", $"Day{dayString}.cs"));
             var testSourceFile = new FileInfo(Path.Combine(consoleProjectBinPath, "Template", "Day_DAYSTRING_Test.cs"));
-            var testTargetFile = new FileInfo(Path.Combine($"{puzzleProjectPath}.Test", "Solutions", $"Day{dayString}Test.cs"));
+            var testTargetFile =
+                new FileInfo(Path.Combine($"{puzzleProjectPath}.Test", "Solutions", $"Day{dayString}Test.cs"));
 
             if (solutionTargetFile.Exists)
             {
@@ -269,7 +248,6 @@ namespace AdventOfCode._2020.Console
             }
             else
             {
-
                 System.Console.WriteLine($"Saving test file to {testTargetFile.FullName}");
                 var testContent = await File.ReadAllTextAsync(testSourceFile.FullName);
                 testContent = testContent.Replace("_DAYSTRING_", dayString);
@@ -277,5 +255,33 @@ namespace AdventOfCode._2020.Console
             }
         }
 
+        private sealed class Options
+        {
+            [Option('a', "all", HelpText = "Run all available solutions.")]
+            public bool RunAllDays { get; private set; }
+
+            [Option('l', "last", HelpText = "Run the last available solution.")]
+            public bool RunLastDay { get; set; }
+
+            [Option('d', "day", HelpText = "[Number of day] Run the solution for the given day.")]
+            public int? DayToRun { get; private set; }
+
+            [Option('s', "setup",
+                HelpText =
+                    "[Number of day] Download input and description for given day, and add it to AdventOfCode._2020.Puzzles along with an empty solution .cs file.")]
+            public int? DayToSetup { get; private set; }
+
+            [Usage(ApplicationAlias = "AdventOfCode.2020.Console")]
+            public static IEnumerable<Example> Examples => new[]
+            {
+                new Example("Run all available solutions", new Options {RunAllDays = true}),
+                new Example("Run the last available solution", new Options {RunLastDay = true}),
+                new Example("Run solution for day 12", new UnParserSettings {PreferShortName = true},
+                    new Options {DayToRun = 12}),
+                new Example(
+                    "Add input and description for day 23 to AdventOfCode._2020.Puzzles along with an empty test and solution .cs file",
+                    new Options {DayToSetup = 23})
+            };
+        }
     }
 }

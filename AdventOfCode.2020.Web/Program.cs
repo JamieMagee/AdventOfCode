@@ -15,7 +15,8 @@ namespace AdventOfCode._2020.Web
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddSingleton(sp => new HttpClient
+                {BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
             builder.Services.AddSingleton<ISolutionHandler, SolutionHandler>();
             builder.Services.AddSingleton<IInputHandler, InputHandler>();
             builder.Services.AddSingleton<IVisualizerHandler, VisualizerHandler>();

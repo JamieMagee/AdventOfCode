@@ -6,11 +6,10 @@ namespace AdventOfCode._2020.Puzzles.Core
 {
     public interface ISolution
     {
-        event EventHandler<SolutionProgressEventArgs> ProgressUpdated;
-
         CancellationToken CancellationToken { get; set; }
 
         int MillisecondsBetweenProgressUpdates { get; set; }
+        event EventHandler<SolutionProgressEventArgs> ProgressUpdated;
 
         Task<string> Part1Async(string input);
 

@@ -21,12 +21,22 @@ namespace AdventOfCode._2020.Web.Services
 
     public sealed class InputHandler : IInputHandler
     {
+        private readonly Dictionary<int, string> _myDescriptionCache = new Dictionary<int, string>();
+
+        private readonly HttpClient _myHttpClient;
+        private readonly Dictionary<int, string> _myInputCache = new Dictionary<int, string>();
+        private readonly Dictionary<int, object[]> _myResultCache = new Dictionary<int, object[]>();
+        private readonly Dictionary<int, string> _mySourceCodeCache = new Dictionary<int, string>();
+
         public InputHandler(HttpClient httpClient)
         {
             _myHttpClient = httpClient;
         }
 
-        public bool IsCachedInputAvailable(int day) => _myInputCache.ContainsKey(day);
+        public bool IsCachedInputAvailable(int day)
+        {
+            return _myInputCache.ContainsKey(day);
+        }
 
         public async Task<string> GetInputAsync(int day)
         {
@@ -46,6 +56,26 @@ namespace AdventOfCode._2020.Web.Services
             return source ?? "No source file available.";
         }
 
+        public object[] GetResults(int day)
+        {
+            if (!_myResultCache.TryGetValue(day, out var results))
+            {
+                results = new object[2];
+                _myResultCache.Add(day, results);
+            }
+
+            return results;
+        }
+
+        public void ClearResults(int day)
+        {
+            var results = GetResults(day);
+            for (var i = 0; i < results.Length; i++)
+            {
+                results[i] = null;
+            }
+        }
+
         private async Task<string> GetFileAsync(int day, string pathTemplate, IDictionary<int, string> cache)
         {
             if (!cache.TryGetValue(day, out var description))
@@ -59,35 +89,11 @@ namespace AdventOfCode._2020.Web.Services
                 {
                     return null;
                 }
+
                 cache.Add(day, description);
             }
 
             return description;
         }
-
-        public object[] GetResults(int day)
-        {
-            if (!_myResultCache.TryGetValue(day, out var results))
-            {
-                results = new object[2];
-                _myResultCache.Add(day, results);
-            }
-            return results;
-        }
-
-        public void ClearResults(int day)
-        {
-            var results = GetResults(day);
-            for (var i = 0; i < results.Length; i++)
-            {
-                results[i] = null;
-            }
-        }
-
-        private readonly HttpClient _myHttpClient;
-        private readonly Dictionary<int, object[]> _myResultCache = new Dictionary<int, object[]>();
-        private readonly Dictionary<int, string> _myInputCache = new Dictionary<int, string>();
-        private readonly Dictionary<int, string> _myDescriptionCache = new Dictionary<int, string>();
-        private readonly Dictionary<int, string> _mySourceCodeCache = new Dictionary<int, string>();
     }
 }

@@ -7,12 +7,12 @@ namespace AdventOfCode._2020.Puzzles.Core
 {
     public class SolutionHandler : ISolutionHandler
     {
-        public IReadOnlyDictionary<int, SolutionMetadata> Solutions { get; }
-
         public SolutionHandler()
         {
             Solutions = GatherPuzzleSolutions();
         }
+
+        public IReadOnlyDictionary<int, SolutionMetadata> Solutions { get; }
 
         private static Dictionary<int, SolutionMetadata> GatherPuzzleSolutions()
         {
@@ -24,7 +24,8 @@ namespace AdventOfCode._2020.Puzzles.Core
 
             foreach (var solutionType in solutionTypes)
             {
-                var puzzleAttribute = solutionType.GetCustomAttributes(typeof(PuzzleAttribute), false).OfType<PuzzleAttribute>().FirstOrDefault();
+                var puzzleAttribute = solutionType.GetCustomAttributes(typeof(PuzzleAttribute), false)
+                    .OfType<PuzzleAttribute>().FirstOrDefault();
                 var day = puzzleAttribute?.Day ?? Convert.ToInt32(new Regex(@"[0-9]+").Match(solutionType.Name).Value);
                 var title = puzzleAttribute?.Title ?? $"Puzzle #{day}";
                 solutionsByDay.Add(day, new SolutionMetadata(solutionType, day, title));

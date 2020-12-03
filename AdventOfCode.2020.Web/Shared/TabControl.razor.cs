@@ -6,25 +6,28 @@ using Microsoft.AspNetCore.Components;
 namespace AdventOfCode._2020.Web.Shared
 {
     /// <summary>
-    /// Tabbed container control with a single active page.
-    /// Add pages using <see cref="TabPage"/> items as child content.
+    ///     Tabbed container control with a single active page.
+    ///     Add pages using <see cref="TabPage" /> items as child content.
     /// </summary>
     public sealed partial class TabControl
     {
+        private readonly List<TabPage> _myPages = new List<TabPage>();
+        private TabPage _myActivePage;
+
         /// <summary>
-        /// The content of the TabControl, consisting of <see cref="TabPage"/> items.
+        ///     The content of the TabControl, consisting of <see cref="TabPage" /> items.
         /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// Called when the <see cref="ActivePage"/> is changed.
+        ///     Called when the <see cref="ActivePage" /> is changed.
         /// </summary>
         [Parameter]
         public Action OnActivatePage { get; set; }
 
         /// <summary>
-        /// The active page of the TabControl.
+        ///     The active page of the TabControl.
         /// </summary>
         private TabPage ActivePage
         {
@@ -37,18 +40,21 @@ namespace AdventOfCode._2020.Web.Shared
         }
 
         /// <summary>
-        /// The pages of the TabControl.
+        ///     The pages of the TabControl.
         /// </summary>
         private IReadOnlyList<TabPage> Pages => _myPages;
 
         /// <summary>
-        /// Show the given page of the TabControl.
+        ///     Show the given page of the TabControl.
         /// </summary>
-        /// <param name="page">The page to activate, existing within <see cref="Pages"/>.</param>
-        public void ActivatePage(TabPage page) => ActivePage = page;
+        /// <param name="page">The page to activate, existing within <see cref="Pages" />.</param>
+        public void ActivatePage(TabPage page)
+        {
+            ActivePage = page;
+        }
 
         /// <summary>
-        /// Add a page to the TabControl.
+        ///     Add a page to the TabControl.
         /// </summary>
         /// <param name="page">The page o be added.</param>
         internal void RegisterPage(TabPage page)
@@ -65,8 +71,5 @@ namespace AdventOfCode._2020.Web.Shared
                 ActivatePage(firstEnabledPage);
             }
         }
-
-        private readonly List<TabPage> _myPages = new List<TabPage>();
-        private TabPage _myActivePage;
     }
 }

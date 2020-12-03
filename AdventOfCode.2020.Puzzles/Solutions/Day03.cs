@@ -26,13 +26,13 @@ namespace AdventOfCode._2020.Puzzles.Solutions
         protected override string Part2(string input)
         {
             return _day2Slopes.Select(tuple => CalculateTrees(input, tuple.Item1, tuple.Item2))
-                .Aggregate((uint)1, (acc, val) => acc * val)
+                .Aggregate((uint) 1, (acc, val) => acc * val)
                 .ToString();
         }
 
         private static uint CalculateTrees(string input, int xIncrement, int yIncrement)
         {
-            var parsedInput = ParseInput(input); 
+            var parsedInput = ParseInput(input);
             int x = 0, y = 0;
             uint countTrees = 0;
             do

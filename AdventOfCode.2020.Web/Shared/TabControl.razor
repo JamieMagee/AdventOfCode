@@ -2,7 +2,10 @@
 <div class="nav nav-tabs">
     @foreach (var page in Pages)
     {
-        if (!page.IsVisible) { continue; }
+        if (!page.IsVisible)
+        {
+            continue;
+        }
 
         var outlineClass = ActivePage == page ? "active" : "";
         <button class="nav-item nav-link @outlineClass" @onclick="() => ActivatePage(page)" disabled="@(page.IsEnabled ? null : "disabled")">@(page.Name)</button>
