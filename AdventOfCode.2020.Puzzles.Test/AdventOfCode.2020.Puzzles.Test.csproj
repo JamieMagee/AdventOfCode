@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <RootNamespace>AdventOfCode._2020.Puzzles.Test</RootNamespace>
   </PropertyGroup>
 
