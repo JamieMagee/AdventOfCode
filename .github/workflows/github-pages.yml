@@ -22,7 +22,7 @@ jobs:
         run: dotnet test --configuration Release
         
       - name: Publish
-        run: dotnet publish --configuration Release --output dist AdventOfCode.2020.Web
+        run: dotnet publish --configuration Release --output dist src/AdventOfCode.Web
         
       - name: Rewrite base href
         uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
