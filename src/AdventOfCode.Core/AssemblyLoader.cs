@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace AdventOfCode.Core
 {
-    public class AssemblyLoader
+    public static class AssemblyLoader
     {
         private const int Start = 2015;
         private static readonly int Current = DateTime.Now.Month == 12 ? DateTime.Now.Year : DateTime.Now.Year - 1;

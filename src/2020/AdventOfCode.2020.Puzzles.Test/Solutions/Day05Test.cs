@@ -7,18 +7,15 @@ namespace AdventOfCode._2020.Puzzles.Test.Solutions
 {
     public sealed class Day05Test : TestBase<Day05>
     {
-        [Fact(Skip = "NotImplemented")]
+        [Fact]
         public async Task Part1()
         {
-            var input = @"";
-            Assert.Equal("", await Solution.Part1Async(input));
-        }
-
-        [Fact(Skip = "NotImplemented")]
-        public async Task Part2()
-        {
-            var input = @"";
-            Assert.Equal("", await Solution.Part2Async(input));
+            const string input1 = "BFFFBBFRRR";
+            Assert.Equal("567", await Solution.Part1Async(input1));
+            const string input2 = "FFFBBBFRRR";
+            Assert.Equal("119", await Solution.Part1Async(input2));
+            const string input3 = "BBFFBBFRLL";
+            Assert.Equal("820", await Solution.Part1Async(input3));
         }
     }
 }
