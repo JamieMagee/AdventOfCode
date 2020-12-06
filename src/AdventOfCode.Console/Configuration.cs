@@ -2,7 +2,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 
-namespace AdventOfCode._2020.Console
+namespace AdventOfCode.Console
 {
     public sealed class Configuration
     {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace AdventOfCode._2020.Web.Services
+namespace AdventOfCode.Web.Services
 {
     public interface IInputHandler
     {

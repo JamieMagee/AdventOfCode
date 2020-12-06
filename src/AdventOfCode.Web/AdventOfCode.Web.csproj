@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-        <RootNamespace>AdventOfCode._2020.Web</RootNamespace>
+        <RootNamespace>AdventOfCode.Web</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

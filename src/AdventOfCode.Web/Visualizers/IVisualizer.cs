@@ -1,6 +1,6 @@
 using AdventOfCode.Core;
 
-namespace AdventOfCode._2020.Web.Visualizers
+namespace AdventOfCode.Web.Visualizers
 {
     public interface IVisualizer
     {

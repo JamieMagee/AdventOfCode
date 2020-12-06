@@ -2,11 +2,11 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AdventOfCode.Core;
-using AdventOfCode._2020.Web.Services;
+using AdventOfCode.Web.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AdventOfCode._2020.Web
+namespace AdventOfCode.Web
 {
     public class Program
     {

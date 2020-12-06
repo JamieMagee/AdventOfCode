@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using AdventOfCode._2020.Web.Visualizers;
+using AdventOfCode.Web.Visualizers;
 
-namespace AdventOfCode._2020.Web.Services
+namespace AdventOfCode.Web.Services
 {
     public interface IVisualizerHandler
     {

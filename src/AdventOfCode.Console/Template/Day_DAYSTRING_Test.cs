@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using AdventOfCode._2020.Puzzles.Solutions;
-using AdventOfCode._2020.Puzzles.Test;
+using AdventOfCode.Core.Test;
 using Xunit;
 
 namespace AdventOfCode._2020.Puzzles.Test.Solutions

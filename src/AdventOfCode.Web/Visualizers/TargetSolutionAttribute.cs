@@ -1,6 +1,6 @@
 using System;
 
-namespace AdventOfCode._2020.Web.Visualizers
+namespace AdventOfCode.Web.Visualizers
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public sealed class TargetSolutionAttribute : Attribute

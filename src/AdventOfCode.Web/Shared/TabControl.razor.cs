@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
 
-namespace AdventOfCode._2020.Web.Shared
+namespace AdventOfCode.Web.Shared
 {
     /// <summary>
     ///     Tabbed container control with a single active page.

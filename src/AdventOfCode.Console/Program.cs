@@ -13,7 +13,7 @@ using CommandLine;
 using CommandLine.Text;
 using HtmlAgilityPack;
 
-namespace AdventOfCode._2020.Console
+namespace AdventOfCode.Console
 {
     internal class Program
     {
