@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
 using AdventOfCode.Core;
-using MoreLinq;
 
 namespace AdventOfCode._2020.Puzzles.Solutions
 {
@@ -9,23 +9,22 @@ namespace AdventOfCode._2020.Puzzles.Solutions
     {
         protected override string Part1(string input)
         {
-            return Solve(input, 2);
+            var parsedInput = ParseInput(input).ToList();
+            return parsedInput.Where(x => parsedInput.Contains(2020 - x))
+                .Aggregate(1, (a, b) => a * b)
+                .ToString();
         }
 
         protected override string Part2(string input)
         {
-            return Solve(input, 3);
+            var parsedInput = ParseInput(input).ToList();
+            return parsedInput.Where(x => 0 < parsedInput.FirstOrDefault(y => parsedInput.Contains(2020 - x - y)))
+                .Aggregate(1, (a, b) => a * b).ToString();
         }
 
-        private static string Solve(string input, int length)
+        private static IEnumerable<int> ParseInput(string input)
         {
-            return input
-                .Trim()
-                .Split("\n")
-                .Subsets(length)
-                .First(list => list.Sum(int.Parse) == 2020)
-                .Aggregate(1, (acc, val) => acc * int.Parse(val))
-                .ToString();
+            return GetLines(input).Select(int.Parse);
         }
     }
 }
