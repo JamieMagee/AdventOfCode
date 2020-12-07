@@ -13,6 +13,8 @@ namespace AdventOfCode.Web.Pages
     {
         private CancellationTokenSource myCancellationTokenSource;
         private int myProgressRenderTick = Environment.TickCount;
+        
+        [Parameter] public string Year { get; set; }
 
         [Parameter] public string Day { get; set; }
 
@@ -59,8 +61,8 @@ namespace AdventOfCode.Web.Pages
             Progress = new SolutionProgress();
             CalculationStopwatch = null;
             SolutionInstance = null;
-            if (int.TryParse(Day, out var dayNumber) &&
-                SolutionHandler.Solutions.TryGetValue(dayNumber, out var solutionMetadata))
+            if (int.TryParse(Year, out var yearNumber) && int.TryParse(Day, out var dayNumber) &&
+                SolutionHandler.Solutions[yearNumber].TryGetValue(dayNumber, out var solutionMetadata))
             {
                 SolutionMetadata = solutionMetadata;
                 Results = InputHandler.GetResults(SolutionMetadata.Day);

@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using AdventOfCode.Core;
 using AdventOfCode.Web.Services;
+using MatBlazor;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +21,8 @@ namespace AdventOfCode.Web
             builder.Services.AddSingleton<ISolutionHandler, SolutionHandler>();
             builder.Services.AddSingleton<IInputHandler, InputHandler>();
             builder.Services.AddSingleton<IVisualizerHandler, VisualizerHandler>();
+            
+            builder.Services.AddMatBlazor();
 
             await builder.Build().RunAsync();
         }

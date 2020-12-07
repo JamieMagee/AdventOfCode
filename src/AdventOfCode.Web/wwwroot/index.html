@@ -2,50 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width"/>
-    <title>AdventOfCode.2020.Web</title>
+    <meta content="width=device-width" name="viewport"/>
+    <title>AdventOfCode.Web</title>
     <base href="/"/>
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="_content/MatBlazor/dist/matBlazor.css" rel="stylesheet"/>
+    <script src="_content/MatBlazor/dist/matBlazor.js"></script>
     <link href="css/app.css" rel="stylesheet"/>
     <script src="js/spa-redirect.js"></script>
 </head>
-<body onload="myload()">
-<div id="app">
-    <div class="content vw-100">
-        <div id="errordiv" class="d-none w-100">
-            <div class="container">
-                <!-- Jumbotron -->
-                <div class="jumbotron">
-                    <h1><span class="glyphicon glyphicon-fire red"></span> Error</h1>
-                    <p class="lead">This application is returning an internal error.</p>
-                    <a href="javascript:document.location.reload(true);"
-                       class="btn btn-default btn-lg text-center"><span class="green">Try This Page Again</span></a>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="row">
-                    <h2>What happened?</h2>
-                    <div class="col">
-                        <ul id="errordescription" class="list-group"></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <ul class="list-group-flush w-75">
-            <li class="list-group-item">
-                <div class="spinner-border spinner-border-sm" role="status"
-                     style="margin-right: 5px; margin-bottom: 2px"><span class="sr-only">Loading...</span></div>
-                Loading application...
-                <progress id="totalProgress" style="margin-bottom:-1px; margin-left: 1em; width: 200px" min="0" max="1"
-                          value="0"></progress>
-            </li>
-        </ul>
-        <ul id="file_list" class="list-group-flush w-75">
-            <!-- Placeholder for progress bars -->
-        </ul>
-    </div>
-</div>
-<script src="js/spa-loadprogress.js"></script>
+<body>
+<div id="app">Loading...</div>
+<!--    <div class="content vw-100">-->
+<!--        <div class="d-none w-100" id="errordiv">-->
+<!--            <div class="container">-->
+<!--                &lt;!&ndash; Jumbotron &ndash;&gt;-->
+<!--                <div class="jumbotron">-->
+<!--                    <h1><span class="glyphicon glyphicon-fire red"></span> Error</h1>-->
+<!--                    <p class="lead">This application is returning an internal error.</p>-->
+<!--                    <a class="btn btn-default btn-lg text-center"-->
+<!--                       href="javascript:document.location.reload(true);"><span class="green">Try This Page Again</span></a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="container-fluid">-->
+<!--                <div class="row">-->
+<!--                    <h2>What happened?</h2>-->
+<!--                    <div class="col">-->
+<!--                        <ul class="list-group" id="errordescription"></ul>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <ul class="list-group-flush w-75">-->
+<!--            <li class="list-group-item">-->
+<!--                <div class="spinner-border spinner-border-sm" role="status"-->
+<!--                     style="margin-right: 5px; margin-bottom: 2px"><span class="sr-only">Loading...</span></div>-->
+<!--                Loading application...-->
+<!--                <progress id="totalProgress" max="1" min="0" style="margin-bottom:-1px; margin-left: 1em; width: 200px"-->
+<!--                          value="0"></progress>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--        <ul class="list-group-flush w-75" id="file_list">-->
+<!--            &lt;!&ndash; Placeholder for progress bars &ndash;&gt;-->
+<!--        </ul>-->
+<!--    </div>-->
 <script src="_framework/blazor.webassembly.js"></script>
 </body>
 </html>

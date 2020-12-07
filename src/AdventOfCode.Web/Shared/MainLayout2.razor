@@ -1,0 +1,61 @@
+@inherits LayoutComponentBase
+@using MatBlazor
+
+<MatAnchorUtils></MatAnchorUtils>
+<MatAppBar Style="z-index: 100;" Class="mat">
+    <MatAppBarRow>
+        <MatAppBarSection>
+            <MatIconButton Icon="menu" OnClick="@((e) => MenuButtonClicked())"></MatIconButton>
+            <MatAppBarTitle>AdventOfCode.Web</MatAppBarTitle>
+        </MatAppBarSection>
+        <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+            <MatHidden BreakPoint="@MatBreakpoint.XS" Direction="@MatHiddenDirection.Down">
+                <MatIconButton Link="http://samprof.com" Target="_blank">
+                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                </MatIconButton>
+                <MatIconButton Link="https://github.com/SamProf/MatBlazor" Target="_blank">
+                    <i class="fa fa-github" aria-hidden="true"></i>
+                </MatIconButton>
+            </MatHidden>
+        </MatAppBarSection>
+    </MatAppBarRow>
+</MatAppBar>
+
+<MatDrawerContainer Style="width: 100vw; height: 100vh;">
+
+    <MatHidden Breakpoint="@MatBreakpoint.SM" Direction="@MatHiddenDirection.Up" HiddenChanged="@MenuButtonClicked">
+        <ChildContent>
+            <MatDrawer @bind-Opened="@_navMenuOpened" Mode="@MatDrawerMode.Modal">
+                <MatAppBarAdjust></MatAppBarAdjust>
+                <NavMenu2></NavMenu2>
+            </MatDrawer>
+        </ChildContent>
+        <ElseContent>
+            <MatDrawer @bind-Opened="@_navMenuOpened" Mode="@MatDrawerMode.Dismissible">
+                <MatAppBarAdjust></MatAppBarAdjust>
+                <NavMenu2></NavMenu2>
+            </MatDrawer>
+        </ElseContent>
+    </MatHidden>
+    <MatDrawerContent Class="mat">
+        <MatAppBarAdjust></MatAppBarAdjust>
+        <div class="body-wrapper">
+            @Body
+        </div>
+    </MatDrawerContent>
+
+</MatDrawerContainer>
+
+<MatPortalHost></MatPortalHost>
+
+@code {
+
+    bool _navMenuOpened = true;
+
+    void MenuButtonClicked()
+    {
+        _navMenuOpened = !_navMenuOpened;
+        this.StateHasChanged();
+    }
+
+}

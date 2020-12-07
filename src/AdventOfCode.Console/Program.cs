@@ -71,7 +71,7 @@ namespace AdventOfCode.Console
 
             if (_myOptions.DayToRun.HasValue)
             {
-                await SolveDay(_myOptions.DayToRun.Value);
+                await SolveDay(2020, _myOptions.DayToRun.Value);
             }
         }
 
@@ -80,7 +80,7 @@ namespace AdventOfCode.Console
             var count = 0;
             foreach (var day in _mySolutionHandler.Solutions.Keys.OrderBy(x => x))
             {
-                await SolveDay(day);
+                await SolveDay(2020, day);
                 if (++count < _mySolutionHandler.Solutions.Count)
                 {
                     System.Console.WriteLine();
@@ -90,10 +90,10 @@ namespace AdventOfCode.Console
 
         private async Task SolveLastDay()
         {
-            var lastSolutionDay = _mySolutionHandler.Solutions.Keys.LastOrDefault(x => x >= 1 && x <= 25);
+            var lastSolutionDay = _mySolutionHandler.Solutions[2020].Keys.LastOrDefault(x => x >= 1 && x <= 25);
             if (lastSolutionDay > 0)
             {
-                await SolveDay(lastSolutionDay);
+                await SolveDay(2020, lastSolutionDay);
             }
             else
             {
@@ -101,9 +101,9 @@ namespace AdventOfCode.Console
             }
         }
 
-        private async Task SolveDay(int day)
+        private async Task SolveDay(int year, int day)
         {
-            var solutionMetadata = _mySolutionHandler.Solutions[day];
+            var solutionMetadata = _mySolutionHandler.Solutions[year][day];
             var solution = solutionMetadata.CreateInstance();
 
             var dayString = day.ToString().PadLeft(2, '0');

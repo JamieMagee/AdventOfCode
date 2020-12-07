@@ -4,6 +4,6 @@ namespace AdventOfCode.Core
 {
     public interface ISolutionHandler
     {
-        IReadOnlyDictionary<int, SolutionMetadata> Solutions { get; }
+        IDictionary<int, IDictionary<int, SolutionMetadata>> Solutions { get; }
     }
 }
