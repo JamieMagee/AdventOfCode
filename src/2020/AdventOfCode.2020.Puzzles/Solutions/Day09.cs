@@ -8,11 +8,13 @@ namespace AdventOfCode._2020.Puzzles.Solutions
     [Puzzle("Encoding Error")]
     public sealed class Day09 : SolutionBase
     {
+        public int PreambleLength { get; set; } = 25;
+        
         protected override string Part1(string input)
         {
             var parsedInput = input.GetLines<long>().ToArray();
-            return parsedInput.Skip(25)
-                .Where((x, i) => parsedInput[i..(i + 25)].Subsets(2).All(l => l.Sum() != x))
+            return parsedInput.Skip(PreambleLength)
+                .Where((x, i) => parsedInput[i..(i + PreambleLength)].Subsets(2).All(l => l.Sum() != x))
                 .First()
                 .ToString();
         }

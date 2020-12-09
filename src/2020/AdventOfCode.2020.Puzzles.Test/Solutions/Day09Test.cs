@@ -30,12 +30,14 @@ namespace AdventOfCode._2020.Puzzles.Test.Solutions
         [Fact]
         public async Task Part1()
         {
+            Solution.PreambleLength = 5;
             Assert.Equal("127", await Solution.Part1Async(Input));
         }
 
         [Fact]
         public async Task Part2()
         {
+            Solution.PreambleLength = 5;
             Assert.Equal("62", await Solution.Part2Async(Input));
         }
     }

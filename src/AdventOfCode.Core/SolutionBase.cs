@@ -55,7 +55,7 @@ namespace AdventOfCode.Core
         /// <summary>
         ///     Breaks the input into lines and removes empty lines at the end.
         /// </summary>
-        protected static List<string> GetLines(string input)
+        protected static IEnumerable<string> GetLines(string input)
         {
             return input.Replace("\r", string.Empty)
                 .Split('\n')
