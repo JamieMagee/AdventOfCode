@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using AdventOfCode.Core;
 
 namespace AdventOfCode._2015.Puzzles.Solutions
@@ -7,14 +6,26 @@ namespace AdventOfCode._2015.Puzzles.Solutions
     [Puzzle("Not Quite Lisp")]
     public sealed class Day01 : SolutionBase
     {
-        public override async Task<string> Part1Async(string input)
-        { 
-            throw new NotImplementedException();
+        protected override string Part1(string input)
+        {
+            return input.Select(c => c == '(' ? 1 : -1)
+                .Sum()
+                .ToString();
         }
 
-        public override async Task<string> Part2Async(string input)
+        protected override string Part2(string input)
         {
-            throw new NotImplementedException();
+            var sum = 0;
+            for (var i = 0; i < input.Length; i++)
+            {
+                sum += input[i] == '(' ? 1 : -1;
+                if (sum < 0)
+                {
+                    return (i + 1).ToString();
+                }
+            }
+
+            return string.Empty;
         }
     }
 }

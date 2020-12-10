@@ -1,4 +1,3 @@
-using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 
@@ -9,10 +8,6 @@ namespace AdventOfCode.Console
         private Configuration()
         {
         }
-
-        public int Year { get; } = 2020;
-
-        public string PuzzleProjectPath { get; } = Path.Combine("..", "..", "..", "..", "2020", "AdventOfCode.2020.Puzzles");
 
         public string SessionCookie { get; set; }
 

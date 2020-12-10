@@ -55,45 +55,80 @@ namespace AdventOfCode.Console
 
             if (_myOptions.DayToSetup.HasValue)
             {
-                await SetupDay(_myOptions.DayToSetup.Value);
+                if (_myOptions.YearToRun.HasValue)
+                {
+                    await SetupDay(_myOptions.YearToRun.Value, _myOptions.DayToSetup.Value);
+                }
+                else
+                {
+                    await SetupDay(_mySolutionHandler.Solutions.Keys.Max(), _myOptions.DayToSetup.Value);
+                }
             }
 
             if (_myOptions.RunAllDays)
             {
-                await SolveAllDays();
+                if (_myOptions.YearToRun.HasValue)
+                {
+                    await SolveAllDaysByYear(_myOptions.YearToRun.Value);
+                }
+                else
+                {
+                    await SolveAllDays();
+                }
+
                 return;
             }
 
             if (_myOptions.RunLastDay)
             {
-                await SolveLastDay();
+                if (_myOptions.YearToRun.HasValue)
+                {
+                    await SolveLastDay(_myOptions.YearToRun.Value);
+                }
+                else
+                {
+                    await SolveLastDay(_mySolutionHandler.Solutions.Keys.Max());
+                }
             }
 
             if (_myOptions.DayToRun.HasValue)
             {
-                await SolveDay(2020, _myOptions.DayToRun.Value);
+                if (_myOptions.YearToRun.HasValue)
+                {
+                    await SolveDay(_myOptions.YearToRun.Value, _myOptions.DayToRun.Value);
+                }
+                else
+                {
+                    await SolveDay(_mySolutionHandler.Solutions.Keys.Max(), _myOptions.DayToRun.Value);
+                }
             }
         }
 
         private async Task SolveAllDays()
         {
-            var count = 0;
-            foreach (var day in _mySolutionHandler.Solutions.Keys.OrderBy(x => x))
+            foreach (var year in _mySolutionHandler.Solutions.Keys)
             {
-                await SolveDay(2020, day);
-                if (++count < _mySolutionHandler.Solutions.Count)
-                {
-                    System.Console.WriteLine();
-                }
+                await SolveAllDaysByYear(year);
             }
         }
 
-        private async Task SolveLastDay()
+        private async Task SolveAllDaysByYear(int year)
         {
-            var lastSolutionDay = _mySolutionHandler.Solutions[2020].Keys.LastOrDefault(x => x >= 1 && x <= 25);
+            System.Console.WriteLine($"{year}");
+            foreach (var day in _mySolutionHandler.Solutions[year].Keys.OrderBy(x => x))
+            {
+                await SolveDay(year, day);
+            }
+
+            System.Console.WriteLine();
+        }
+
+        private async Task SolveLastDay(int year)
+        {
+            var lastSolutionDay = _mySolutionHandler.Solutions[year].Keys.LastOrDefault(x => x >= 1 && x <= 25);
             if (lastSolutionDay > 0)
             {
-                await SolveDay(2020, lastSolutionDay);
+                await SolveDay(year, lastSolutionDay);
             }
             else
             {
@@ -107,8 +142,9 @@ namespace AdventOfCode.Console
             var solution = solutionMetadata.CreateInstance();
 
             var dayString = day.ToString().PadLeft(2, '0');
+            var yearString = year.ToString();
             var rootDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var input = await File.ReadAllTextAsync(Path.Combine(rootDir, "Input", $"day{dayString}.txt"));
+            var input = await File.ReadAllTextAsync(Path.Combine(rootDir, "Input", yearString, $"day{dayString}.txt"));
 
             System.Console.WriteLine($"Day {day}: {solutionMetadata.Title}");
             await SolvePart(1, input, solution.Part1Async, solution);
@@ -123,7 +159,7 @@ namespace AdventOfCode.Console
 
             System.Console.Write(waitingMessage);
 
-            string result = null;
+            string result;
             try
             {
                 solution.ProgressUpdated += ProgressUpdated;
@@ -163,28 +199,30 @@ namespace AdventOfCode.Console
             }
         }
 
-        private async Task SetupDay(int day)
+        private async Task SetupDay(int year, int day)
         {
             var dayString = day.ToString().PadLeft(2, '0');
             var consoleProjectBinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var puzzleProjectPath = Path.Combine(consoleProjectBinPath, _myConfig.PuzzleProjectPath);
-            System.Console.WriteLine($"Setting up input and description for {_myConfig.Year}/12/{dayString}...");
+            var puzzleProjectPath = Path.Combine(consoleProjectBinPath, "..", "..", "..", "..", $"{year}",
+                $"AdventOfCode.{year}.Puzzles");
+            System.Console.WriteLine($"Setting up input and description for {year}/{dayString}...");
 
             var cookieContainer = new CookieContainer();
             cookieContainer.Add(new Cookie("session", _myConfig.SessionCookie, "/", "adventofcode.com"));
             using var httpClientHandler = new HttpClientHandler {CookieContainer = cookieContainer};
             using var httpClient = new HttpClient(httpClientHandler);
 
-            await SaveInputAsync(day, dayString, puzzleProjectPath, httpClient);
-            var puzzleTitle = await SaveDescriptionAsync(day, dayString, puzzleProjectPath, httpClient);
+            await SaveInputAsync(year, day, dayString, puzzleProjectPath, httpClient);
+            var puzzleTitle = await SaveDescriptionAsync(year, day, dayString, puzzleProjectPath, httpClient);
             await CreateSolutionSourceAsync(day, dayString, consoleProjectBinPath, puzzleProjectPath, puzzleTitle);
 
             System.Console.WriteLine("Done.");
         }
 
-        private async Task SaveInputAsync(int day, string dayString, string puzzleProjectPath, HttpClient httpClient)
+        private async Task SaveInputAsync(int year, int day, string dayString, string puzzleProjectPath,
+            HttpClient httpClient)
         {
-            var inputAddress = $"https://adventofcode.com/{_myConfig.Year}/day/{day}/input";
+            var inputAddress = $"https://adventofcode.com/{year}/day/{day}/input";
             var inputFile = new FileInfo(Path.Combine(puzzleProjectPath, "Input", $"day{dayString}.txt"));
             System.Console.WriteLine($"Downloading input from {inputAddress}");
             var input = await httpClient.GetStringAsync(inputAddress);
@@ -193,10 +231,10 @@ namespace AdventOfCode.Console
             await File.WriteAllTextAsync(inputFile.FullName, input, Encoding.UTF8);
         }
 
-        private async Task<string> SaveDescriptionAsync(int day, string dayString, string puzzleProjectPath,
+        private async Task<string> SaveDescriptionAsync(int year, int day, string dayString, string puzzleProjectPath,
             HttpClient httpClient)
         {
-            var descriptionAddress = $"https://adventofcode.com/{_myConfig.Year}/day/{day}";
+            var descriptionAddress = $"https://adventofcode.com/{year}/day/{day}";
             var descriptionFile = new FileInfo(Path.Combine(puzzleProjectPath, "Descriptions", $"day{dayString}.html"));
             var puzzleTitleRegex = new Regex(@"---.*: (?'title'.*) ---");
 
@@ -262,6 +300,9 @@ namespace AdventOfCode.Console
 
             [Option('l', "last", HelpText = "Run the last available solution.")]
             public bool RunLastDay { get; set; }
+
+            [Option('y', "year", HelpText = "[Number of year] Run the solutions for the given year.")]
+            public int? YearToRun { get; private set; }
 
             [Option('d', "day", HelpText = "[Number of day] Run the solution for the given day.")]
             public int? DayToRun { get; private set; }

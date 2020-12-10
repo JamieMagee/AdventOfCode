@@ -10,9 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Input\*.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Update="Input\*.txt" CopyToOutputDirectory="PreserveNewest" Link="%(RecursiveDir)2015\%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>
