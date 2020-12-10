@@ -1,20 +1,20 @@
-using System.Threading.Tasks;
-using AdventOfCode._YEAR_.Puzzles.Solutions;
+﻿using System.Threading.Tasks;
+using AdventOfCode._2015.Puzzles.Solutions;
 using AdventOfCode.Core.Test;
 using Xunit;
 
-namespace AdventOfCode._YEAR_.Puzzles.Test.Solutions
+namespace AdventOfCode._2015.Puzzles.Test.Solutions
 {
-    public sealed class Day_DAYSTRING_Test : TestBase<Day_DAYSTRING_>
+    public sealed class Day03Test : TestBase<Day03>
     {
-        [Fact]
+        [Fact(Skip = "NotImplemented")]
         public async Task Part1()
         {
             var input = @"";
             Assert.Equal("", await Solution.Part1Async(input));
         }
 
-        [Fact]
+        [Fact(Skip = "NotImplemented")]
         public async Task Part2()
         {
             var input = @"";

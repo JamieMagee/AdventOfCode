@@ -55,9 +55,9 @@ namespace AdventOfCode.Console
 
             if (_myOptions.DayToSetup.HasValue)
             {
-                if (_myOptions.YearToRun.HasValue)
+                if (_myOptions.Year.HasValue)
                 {
-                    await SetupDay(_myOptions.YearToRun.Value, _myOptions.DayToSetup.Value);
+                    await SetupDay(_myOptions.Year.Value, _myOptions.DayToSetup.Value);
                 }
                 else
                 {
@@ -67,9 +67,9 @@ namespace AdventOfCode.Console
 
             if (_myOptions.RunAllDays)
             {
-                if (_myOptions.YearToRun.HasValue)
+                if (_myOptions.Year.HasValue)
                 {
-                    await SolveAllDaysByYear(_myOptions.YearToRun.Value);
+                    await SolveAllDaysByYear(_myOptions.Year.Value);
                 }
                 else
                 {
@@ -81,9 +81,9 @@ namespace AdventOfCode.Console
 
             if (_myOptions.RunLastDay)
             {
-                if (_myOptions.YearToRun.HasValue)
+                if (_myOptions.Year.HasValue)
                 {
-                    await SolveLastDay(_myOptions.YearToRun.Value);
+                    await SolveLastDay(_myOptions.Year.Value);
                 }
                 else
                 {
@@ -93,9 +93,9 @@ namespace AdventOfCode.Console
 
             if (_myOptions.DayToRun.HasValue)
             {
-                if (_myOptions.YearToRun.HasValue)
+                if (_myOptions.Year.HasValue)
                 {
-                    await SolveDay(_myOptions.YearToRun.Value, _myOptions.DayToRun.Value);
+                    await SolveDay(_myOptions.Year.Value, _myOptions.DayToRun.Value);
                 }
                 else
                 {
@@ -142,9 +142,8 @@ namespace AdventOfCode.Console
             var solution = solutionMetadata.CreateInstance();
 
             var dayString = day.ToString().PadLeft(2, '0');
-            var yearString = year.ToString();
             var rootDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var input = await File.ReadAllTextAsync(Path.Combine(rootDir, "Input", yearString, $"day{dayString}.txt"));
+            var input = await File.ReadAllTextAsync(Path.Combine(rootDir, "Input", year.ToString(), $"day{dayString}.txt"));
 
             System.Console.WriteLine($"Day {day}: {solutionMetadata.Title}");
             await SolvePart(1, input, solution.Part1Async, solution);
@@ -214,7 +213,7 @@ namespace AdventOfCode.Console
 
             await SaveInputAsync(year, day, dayString, puzzleProjectPath, httpClient);
             var puzzleTitle = await SaveDescriptionAsync(year, day, dayString, puzzleProjectPath, httpClient);
-            await CreateSolutionSourceAsync(day, dayString, consoleProjectBinPath, puzzleProjectPath, puzzleTitle);
+            await CreateSolutionSourceAsync(year, day, dayString, consoleProjectBinPath, puzzleProjectPath, puzzleTitle);
 
             System.Console.WriteLine("Done.");
         }
@@ -256,7 +255,7 @@ namespace AdventOfCode.Console
             return puzzleTitle;
         }
 
-        private static async Task CreateSolutionSourceAsync(int day, string dayString, string consoleProjectBinPath,
+        private static async Task CreateSolutionSourceAsync(int year, int day, string dayString, string consoleProjectBinPath,
             string puzzleProjectPath, string puzzleTitle)
         {
             var solutionSourceFile = new FileInfo(Path.Combine(consoleProjectBinPath, "Template", "Day_DAYSTRING_.cs"));
@@ -274,6 +273,7 @@ namespace AdventOfCode.Console
                 System.Console.WriteLine($"Saving source file to {solutionTargetFile.FullName}");
                 var sourceContent = await File.ReadAllTextAsync(solutionSourceFile.FullName);
                 sourceContent = sourceContent
+                    .Replace("_YEAR_", year.ToString())
                     .Replace("_DAYNUMBER_", day.ToString())
                     .Replace("_DAYSTRING_", dayString)
                     .Replace("_PUZZLETITLE_", puzzleTitle);
@@ -302,7 +302,7 @@ namespace AdventOfCode.Console
             public bool RunLastDay { get; set; }
 
             [Option('y', "year", HelpText = "[Number of year] Run the solutions for the given year.")]
-            public int? YearToRun { get; private set; }
+            public int? Year { get; private set; }
 
             [Option('d', "day", HelpText = "[Number of day] Run the solution for the given day.")]
             public int? DayToRun { get; private set; }
