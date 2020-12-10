@@ -1,36 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>5adb2560-81a5-4a32-aa5b-9daa67ab0874</UserSecretsId>
-    <RootNamespace>AdventOfCode.Console</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <UserSecretsId>5adb2560-81a5-4a32-aa5b-9daa67ab0874</UserSecretsId>
+        <RootNamespace>AdventOfCode.Console</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.8.0" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.28" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="CommandLineParser" Version="2.8.0"/>
+        <PackageReference Include="HtmlAgilityPack" Version="1.11.28"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Template\*.cs" />
-    <None Include="Template\*.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Template\*.cs"/>
+        <None Include="Template\*.cs" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AdventOfCode.Core\AdventOfCode.Core.csproj" />
-    <ProjectReference Include="..\2015\AdventOfCode.2015.Puzzles\AdventOfCode.2015.Puzzles.csproj" />
-    <ProjectReference Include="..\2020\AdventOfCode.2020.Puzzles\AdventOfCode.2020.Puzzles.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\AdventOfCode.Core\AdventOfCode.Core.csproj"/>
+        <ProjectReference Include="..\2015\AdventOfCode.2015.Puzzles\AdventOfCode.2015.Puzzles.csproj" />
+        <ProjectReference Include="..\2020\AdventOfCode.2020.Puzzles\AdventOfCode.2020.Puzzles.csproj"/>
+    </ItemGroup>
 
 </Project>

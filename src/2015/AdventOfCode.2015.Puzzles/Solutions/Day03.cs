@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using AdventOfCode.Core;
 
-namespace AdventOfCode._YEARSTRING_.Puzzles.Solutions
+namespace AdventOfCode._2015.Puzzles.Solutions
 {
     [Puzzle("Perfectly Spherical Houses in a Vacuum")]
     public sealed class Day03 : SolutionBase

@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>AdventOfCode._2015.Puzzles</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>AdventOfCode._2015.Puzzles</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\AdventOfCode.Core\AdventOfCode.Core.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\AdventOfCode.Core\AdventOfCode.Core.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Input\*.txt" CopyToOutputDirectory="PreserveNewest" Link="%(RecursiveDir)2015\%(Filename)%(Extension)" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="Input\*.txt" CopyToOutputDirectory="PreserveNewest" Link="%(RecursiveDir)2015\%(Filename)%(Extension)" />
+    </ItemGroup>
 
 </Project>
