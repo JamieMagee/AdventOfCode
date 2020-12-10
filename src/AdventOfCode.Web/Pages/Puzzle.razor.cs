@@ -82,12 +82,12 @@ namespace AdventOfCode.Web.Pages
             Task.Run(() => LoadInputAsync(), myCancellationTokenSource.Token);
             Task.Run(async () =>
             {
-                Description = await InputHandler.GetDescriptionAsync(SolutionMetadata.Day);
+                Description = await InputHandler.GetDescriptionAsync(SolutionMetadata.Year, SolutionMetadata.Day);
                 StateHasChanged();
             }, myCancellationTokenSource.Token);
             Task.Run(async () =>
             {
-                SourceCode = await InputHandler.GetSourceCodeAsync(SolutionMetadata.Day);
+                SourceCode = await InputHandler.GetSourceCodeAsync(SolutionMetadata.Year, SolutionMetadata.Day);
                 StateHasChanged();
             }, myCancellationTokenSource.Token);
         }
@@ -95,7 +95,7 @@ namespace AdventOfCode.Web.Pages
         private async Task LoadInputAsync(bool forceReload = false)
         {
             Input = forceReload ? null : Input;
-            Input ??= await InputHandler.GetInputAsync(SolutionMetadata.Day);
+            Input ??= await InputHandler.GetInputAsync(SolutionMetadata.Year, SolutionMetadata.Day);
             HasInputChanged = false;
             StateHasChanged();
         }
