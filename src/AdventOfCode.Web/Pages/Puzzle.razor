@@ -104,6 +104,8 @@ else
             }
         </div>
     </div>
+    
+    <div style="margin-top: 2em; font-size: 12px">Source: <a href="https://adventofcode.com/@SolutionMetadata.Year/day/@SolutionMetadata.Day">Advent of Code</a></div>
 
     <div style="margin-top: 4em; margin-bottom: 4em;">
         <TabControl OnActivatePage="VisualizerHandler.CancelAllVisualizations">
@@ -120,12 +122,6 @@ else
                 {
                     <DynamicVisualizer SolutionInstance="SolutionInstance"></DynamicVisualizer>
                 }
-            </TabPage>
-            <TabPage Name="Description">
-                <div style="margin-top: 2em; font-size: 12px">Source: <a href="https://adventofcode.com/@SolutionMetadata.Year/day/@SolutionMetadata.Day">Advent of Code</a></div>
-                <div style="font-family: 'Source Code Pro', monospace; font-size: 14px; max-width: 60em">
-                    @((MarkupString) Description)
-                </div>
             </TabPage>
             <TabPage Name="Input">
                 <div style="margin-top: 1em;">&nbsp;</div>

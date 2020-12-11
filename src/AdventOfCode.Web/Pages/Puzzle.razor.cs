@@ -82,11 +82,6 @@ namespace AdventOfCode.Web.Pages
             Task.Run(() => LoadInputAsync(), myCancellationTokenSource.Token);
             Task.Run(async () =>
             {
-                Description = await InputHandler.GetDescriptionAsync(SolutionMetadata.Year, SolutionMetadata.Day);
-                StateHasChanged();
-            }, myCancellationTokenSource.Token);
-            Task.Run(async () =>
-            {
                 SourceCode = await InputHandler.GetSourceCodeAsync(SolutionMetadata.Year, SolutionMetadata.Day);
                 StateHasChanged();
             }, myCancellationTokenSource.Token);

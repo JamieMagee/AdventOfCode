@@ -204,7 +204,7 @@ namespace AdventOfCode.Console
             var consoleProjectBinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var puzzleProjectPath = Path.Combine(consoleProjectBinPath, "..", "..", "..", "..", $"{year}",
                 $"AdventOfCode.{year}.Puzzles");
-            System.Console.WriteLine($"Setting up input and description for {year}/{dayString}...");
+            System.Console.WriteLine($"Setting up input for {year}/{dayString}...");
 
             var cookieContainer = new CookieContainer();
             cookieContainer.Add(new Cookie("session", _myConfig.SessionCookie, "/", "adventofcode.com"));
@@ -212,7 +212,7 @@ namespace AdventOfCode.Console
             using var httpClient = new HttpClient(httpClientHandler);
 
             await SaveInputAsync(year, day, dayString, puzzleProjectPath, httpClient);
-            var puzzleTitle = await SaveDescriptionAsync(year, day, dayString, puzzleProjectPath, httpClient);
+            var puzzleTitle = await GetPuzzleTitleAsync(year, day, dayString, puzzleProjectPath, httpClient);
             await CreateSolutionSourceAsync(year, day, dayString, consoleProjectBinPath, puzzleProjectPath, puzzleTitle);
 
             System.Console.WriteLine("Done.");
@@ -230,11 +230,10 @@ namespace AdventOfCode.Console
             await File.WriteAllTextAsync(inputFile.FullName, input, Encoding.UTF8);
         }
 
-        private async Task<string> SaveDescriptionAsync(int year, int day, string dayString, string puzzleProjectPath,
+        private async Task<string> GetPuzzleTitleAsync(int year, int day, string dayString, string puzzleProjectPath,
             HttpClient httpClient)
         {
             var descriptionAddress = $"https://adventofcode.com/{year}/day/{day}";
-            var descriptionFile = new FileInfo(Path.Combine(puzzleProjectPath, "Descriptions", $"day{dayString}.html"));
             var puzzleTitleRegex = new Regex(@"---.*: (?'title'.*) ---");
 
             System.Console.WriteLine($"Downloading description from {descriptionAddress}");
@@ -245,13 +244,7 @@ namespace AdventOfCode.Console
 
             var titleNode = articleNodes.First().SelectSingleNode("//h2");
             var puzzleTitle = puzzleTitleRegex.Match(titleNode.InnerText).Groups["title"].Value;
-            titleNode.InnerHtml = "--- Part One ---";
-            System.Console.WriteLine($"Found {articleNodes.Count} parts. Title: {puzzleTitle}");
-            var description = articleNodes.Aggregate(string.Empty, (result, node) => result + node.OuterHtml);
-
-            System.Console.WriteLine($"Saving description to {descriptionFile.FullName}");
-            await File.WriteAllTextAsync(descriptionFile.FullName, description, Encoding.UTF8);
-
+            
             return puzzleTitle;
         }
 
@@ -309,7 +302,7 @@ namespace AdventOfCode.Console
 
             [Option('s', "setup",
                 HelpText =
-                    "[Number of day] Download input and description for given day, and add it to AdventOfCode._2020.Puzzles along with an empty solution .cs file.")]
+                    "[Number of day] Download input for given day, and add it to AdventOfCode._2020.Puzzles along with an empty solution .cs file.")]
             public int? DayToSetup { get; private set; }
 
             [Usage(ApplicationAlias = "AdventOfCode.Console")]
@@ -320,7 +313,7 @@ namespace AdventOfCode.Console
                 new Example("Run solution for day 12", new UnParserSettings {PreferShortName = true},
                     new Options {DayToRun = 12}),
                 new Example(
-                    "Add input and description for day 23 to AdventOfCode._2020.Puzzles along with an empty test and solution .cs file",
+                    "Add input for day 23 to AdventOfCode._2020.Puzzles along with an empty test and solution .cs file",
                     new Options {DayToSetup = 23})
             };
         }

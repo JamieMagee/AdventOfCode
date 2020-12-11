@@ -9,9 +9,7 @@ namespace AdventOfCode.Web.Services
         bool IsCachedInputAvailable(int day);
 
         Task<string> GetInputAsync(int year, int day);
-
-        Task<string> GetDescriptionAsync(int year,int day);
-
+        
         Task<string> GetSourceCodeAsync(int year,int day);
 
         object[] GetResults(int day);
@@ -21,8 +19,6 @@ namespace AdventOfCode.Web.Services
 
     public sealed class InputHandler : IInputHandler
     {
-        private readonly Dictionary<int, string> _myDescriptionCache = new Dictionary<int, string>();
-
         private readonly HttpClient _myHttpClient;
         private readonly Dictionary<int, string> _myInputCache = new Dictionary<int, string>();
         private readonly Dictionary<int, object[]> _myResultCache = new Dictionary<int, object[]>();
@@ -44,15 +40,9 @@ namespace AdventOfCode.Web.Services
             return input;
         }
 
-        public async Task<string> GetDescriptionAsync(int year, int day)
-        {
-            var description = await GetFileAsync(year, day, "description/{0}/day{1}.html", _myDescriptionCache);
-            return description ?? "No description available.";
-        }
-
         public async Task<string> GetSourceCodeAsync(int year, int day)
         {
-            var source = await GetFileAsync(year, day, "source/{0}/day{1}.cs", _mySourceCodeCache);
+            var source = await GetFileAsync(year, day, "source/{0}/Day{1}.cs", _mySourceCodeCache);
             return source ?? "No source file available.";
         }
 
