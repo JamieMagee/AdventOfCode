@@ -266,7 +266,7 @@ namespace AdventOfCode.Console
                 System.Console.WriteLine($"Saving source file to {solutionTargetFile.FullName}");
                 var sourceContent = await File.ReadAllTextAsync(solutionSourceFile.FullName);
                 sourceContent = sourceContent
-                    .Replace("_YEAR_", year.ToString())
+                    .Replace("_YEAR_", $"_{year}")
                     .Replace("_DAYNUMBER_", day.ToString())
                     .Replace("_DAYSTRING_", dayString)
                     .Replace("_PUZZLETITLE_", puzzleTitle);
@@ -281,7 +281,9 @@ namespace AdventOfCode.Console
             {
                 System.Console.WriteLine($"Saving test file to {testTargetFile.FullName}");
                 var testContent = await File.ReadAllTextAsync(testSourceFile.FullName);
-                testContent = testContent.Replace("_DAYSTRING_", dayString);
+                testContent = testContent
+                    .Replace("_YEAR_", $"_{year}")
+                    .Replace("_DAYSTRING_", dayString);
                 await File.WriteAllTextAsync(testTargetFile.FullName, testContent, Encoding.UTF8);
             }
         }
