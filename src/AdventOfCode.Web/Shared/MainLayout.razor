@@ -25,12 +25,11 @@
 </MatAppBar>
 
 <MatDrawerContainer Style="width: 100vw; height: 100vh;">
-
     <MatHidden Breakpoint="@MatBreakpoint.SM" Direction="@MatHiddenDirection.Up" HiddenChanged="@MenuButtonClicked">
         <ChildContent>
             <MatDrawer @bind-Opened="@_navMenuOpened" Mode="@MatDrawerMode.Modal">
                 <MatAppBarAdjust></MatAppBarAdjust>
-                <NavMenu2></NavMenu2>
+                <NavMenu></NavMenu>
             </MatDrawer>
         </ChildContent>
         <ElseContent>
