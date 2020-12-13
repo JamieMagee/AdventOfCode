@@ -5,7 +5,7 @@
 <MatNavMenu Multi="true">
     <MatNavItem Href="@NavigationManager.ToAbsoluteUri("").AbsoluteUri" NavLinkMatch="NavLinkMatch.All"><MatIcon Icon="home"></MatIcon>&nbsp; Home</MatNavItem>
 
-    @foreach (var year in _years)
+    @foreach (var year in _years.OrderByDescending(x => x))
     {
         <MatNavSubMenu Expanded="true">
             <MatNavSubMenuHeader>
