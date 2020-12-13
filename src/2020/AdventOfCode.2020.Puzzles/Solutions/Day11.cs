@@ -34,7 +34,6 @@ namespace AdventOfCode._2020.Puzzles.Solutions
         private static int Solve(string[] curr, int threshold,
             Func<string[], (int, int), int> countAdjacent)
         {
-            bool mutated;
             string[] prev;
             do
             {

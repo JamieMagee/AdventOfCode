@@ -95,7 +95,8 @@ namespace AdventOfCode._2020.Puzzles.Solutions
                 0 => (x + val, y),
                 1 => (x, y - val),
                 2 => (x - val, y),
-                3 => (x, y + val)
+                3 => (x, y + val),
+                _ => (x, y)
             };
         }
         
@@ -106,7 +107,8 @@ namespace AdventOfCode._2020.Puzzles.Solutions
                 0 => (wayx + val, wayy),
                 1 => (wayx, wayy - val),
                 2 => (wayx - val, wayy),
-                3 => (wayx, wayy + val)
+                3 => (wayx, wayy + val),
+                _ => (wayx, wayy)
             };
         }
 
@@ -134,6 +136,7 @@ namespace AdventOfCode._2020.Puzzles.Solutions
                 1 => (wayy, -wayx),
                 2 => (-wayx, -wayy),
                 3 => (-wayy, wayx),
+                _ => (wayx, wayy)
             };
         }
 
