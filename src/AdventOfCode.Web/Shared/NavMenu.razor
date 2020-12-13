@@ -15,9 +15,11 @@
                 @foreach (var (day, solutionMetadata) in _solutions[year])
                 {
                     var href = $"puzzle/{year}/{day}";
-                    <MatNavItem Href=@href>
-                        Day @day - @solutionMetadata.Title
-                    </MatNavItem>
+                    <MatRipple>
+                        <MatNavItem Href=@href>
+                            Day @day - @solutionMetadata.Title
+                        </MatNavItem>
+                    </MatRipple>
                 }
             </MatNavSubMenuList>
         </MatNavSubMenu>

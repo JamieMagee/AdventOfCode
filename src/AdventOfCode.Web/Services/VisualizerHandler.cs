@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using AdventOfCode.Core;
 using AdventOfCode.Web.Visualizers;
 
 namespace AdventOfCode.Web.Services
@@ -46,6 +47,7 @@ namespace AdventOfCode.Web.Services
         {
             var visualizersBySolutionType = new Dictionary<Type, Type>();
             var visualizerInterface = typeof(IVisualizer);
+            AssemblyLoader.LoadAssemblies();
             var visualizerTypes = visualizerInterface.Assembly.GetTypes()
                 .Where(x => visualizerInterface.IsAssignableFrom(x) && !x.IsAbstract)
                 .ToList();

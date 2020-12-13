@@ -5,10 +5,6 @@ using Microsoft.AspNetCore.Components;
 
 namespace AdventOfCode.Web.Shared
 {
-    /// <summary>
-    ///     Tabbed container control with a single active page.
-    ///     Add pages using <see cref="TabPage" /> items as child content.
-    /// </summary>
     public sealed partial class TabControl
     {
         private readonly List<TabPage> _myPages = new List<TabPage>();

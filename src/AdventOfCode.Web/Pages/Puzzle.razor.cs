@@ -11,10 +11,11 @@ namespace AdventOfCode.Web.Pages
 {
     public sealed partial class Puzzle
     {
-        private CancellationTokenSource myCancellationTokenSource;
-        private int myProgressRenderTick = Environment.TickCount;
-        
-        [Parameter] public string Year { get; set; }
+        private CancellationTokenSource _myCancellationTokenSource;
+        private int _myProgressRenderTick = Environment.TickCount;
+
+        [Parameter]
+        public string Year { get; set; } = (DateTime.Now.Month == 12 ? DateTime.Now.Year : DateTime.Now.Year - 1).ToString();
 
         [Parameter] public string Day { get; set; }
 
@@ -78,13 +79,13 @@ namespace AdventOfCode.Web.Pages
 
         private void LoadPuzzleMetadataInBackground()
         {
-            myCancellationTokenSource = new CancellationTokenSource();
-            Task.Run(() => LoadInputAsync(), myCancellationTokenSource.Token);
+            _myCancellationTokenSource = new CancellationTokenSource();
+            Task.Run(() => LoadInputAsync(), _myCancellationTokenSource.Token);
             Task.Run(async () =>
             {
                 SourceCode = await InputHandler.GetSourceCodeAsync(SolutionMetadata.Year, SolutionMetadata.Day);
                 StateHasChanged();
-            }, myCancellationTokenSource.Token);
+            }, _myCancellationTokenSource.Token);
         }
 
         private async Task LoadInputAsync(bool forceReload = false)
@@ -97,7 +98,7 @@ namespace AdventOfCode.Web.Pages
 
         private async Task SolveAsync()
         {
-            myCancellationTokenSource = new CancellationTokenSource();
+            _myCancellationTokenSource = new CancellationTokenSource();
             SolutionInstance = null;
             try
             {
@@ -105,7 +106,7 @@ namespace AdventOfCode.Web.Pages
                 InputHandler.ClearResults(SolutionMetadata.Day);
                 SolutionInstance = SolutionMetadata.CreateInstance();
                 SolutionInstance.MillisecondsBetweenProgressUpdates = MillisBetweenProgressRender / 2;
-                SolutionInstance.CancellationToken = myCancellationTokenSource.Token;
+                SolutionInstance.CancellationToken = _myCancellationTokenSource.Token;
                 SolutionInstance.ProgressUpdated += OnProgressUpdate;
                 CalculationStopwatch = Stopwatch.StartNew();
                 foreach (var (part, index) in new Func<string, Task<string>>[]
@@ -139,17 +140,17 @@ namespace AdventOfCode.Web.Pages
         private void Cancel()
         {
             IsWorking = false;
-            myCancellationTokenSource?.Cancel(true);
+            _myCancellationTokenSource?.Cancel(true);
             VisualizerHandler.CancelAllVisualizations();
         }
 
         private void OnProgressUpdate(object sender, SolutionProgressEventArgs args)
         {
-            if (Environment.TickCount > myProgressRenderTick)
+            if (Environment.TickCount > _myProgressRenderTick)
             {
                 Progress = args.Progress;
                 StateHasChanged();
-                myProgressRenderTick = Environment.TickCount + MillisBetweenProgressRender;
+                _myProgressRenderTick = Environment.TickCount + MillisBetweenProgressRender;
             }
         }
 

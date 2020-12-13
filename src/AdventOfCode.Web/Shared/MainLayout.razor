@@ -20,6 +20,22 @@
                     <i class="fa fa-github" aria-hidden="true"></i>
                 </MatIconButton>
             </MatHidden>
+            <MatHidden BreakPoint="@MatBreakpoint.SM" Direction="@MatHiddenDirection.Up">
+                <MatIconButton Icon="more_vert" OnClick="@OpenSmallMenu" @ref="_smallMenuButton"></MatIconButton>
+                <MatMenu @ref="_smallMenu" style="z-index: 100;">
+                    <MatList>
+                        <MatListItem Href="https://jamiemagee.co.uk" target="_blank">
+                            JamieMagee.co.uk
+                        </MatListItem>
+                        <MatListItem Href="https://twitter.com/Jamie_Magee" target="_blank">
+                            Twitter
+                        </MatListItem>
+                        <MatListItem Href="https://github.com/JamieMagee/AdventOfCode" target="_blank">
+                            Github
+                        </MatListItem>
+                    </MatList>
+                </MatMenu>
+            </MatHidden>
         </MatAppBarSection>
     </MatAppBarRow>
 </MatAppBar>
@@ -49,11 +65,18 @@
 
 
 @code {
-    bool _navMenuOpened = true;
+    private bool _navMenuOpened = true;
+    private BaseMatIconButton _smallMenuButton;
+    private BaseMatMenu _smallMenu;
 
-    void MenuButtonClicked()
+    private void MenuButtonClicked()
     {
         _navMenuOpened = !_navMenuOpened;
-        this.StateHasChanged();
+        StateHasChanged();
+    }
+    
+    private async Task OpenSmallMenu(MouseEventArgs e)
+    {
+        await _smallMenu.OpenAsync(_smallMenuButton.Ref);
     }
 }
