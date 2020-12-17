@@ -1,6 +1,6 @@
 # Advent of Code
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/JamieMagee/AdventOfCode/GitHub%20Pages?style=for-the-badge)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/JamieMagee/AdventOfCode/GitHub%20Pages?style=for-the-badge)](https://github.com/JamieMagee/AdventOfCode/actions?query=workflow%3A%22GitHub+Pages%22)
 
 My solutions for [Advent of Code](https://adventofcode.com/) written in C# and Blazor WebAssembly
 
