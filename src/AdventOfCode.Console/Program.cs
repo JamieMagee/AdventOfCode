@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -153,11 +154,13 @@ namespace AdventOfCode.Console
         private static async Task SolvePart(int partNumber, string input, Func<string, Task<string>> action,
             ISolution solution)
         {
+            var stopwatch = new Stopwatch();
             var emptyWaitingMessage = $"Calculating Part {partNumber}... ";
             var waitingMessage = emptyWaitingMessage;
 
             System.Console.Write(waitingMessage);
 
+            stopwatch.Start();
             string result;
             try
             {
@@ -175,6 +178,7 @@ namespace AdventOfCode.Console
             finally
             {
                 solution.ProgressUpdated -= ProgressUpdated;
+                stopwatch.Stop();
             }
 
             System.Console.Write($"\r{new string(' ', waitingMessage.Length)}\r");
@@ -184,7 +188,8 @@ namespace AdventOfCode.Console
                 result = Environment.NewLine + result;
             }
 
-            System.Console.WriteLine(result);
+            System.Console.Write(result);
+            System.Console.WriteLine($" ({stopwatch.ElapsedMilliseconds}ms)");
 
             void ProgressUpdated(object _, SolutionProgressEventArgs args)
             {
