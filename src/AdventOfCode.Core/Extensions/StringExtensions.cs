@@ -16,6 +16,16 @@ namespace AdventOfCode.Core.Extensions
                 .Select(s => (T) Convert.ChangeType(s, typeof(T)));
         }
 
+        public static char? TryGetCharAt(this string input, int index)
+        {
+            if (index < 0 || index >= input.Length)
+            {
+                return null;
+            }
+
+            return input[index];
+        }
+
         public static char? Get(this string[] map, (int, int) pos)
         {
             var (r, c) = pos;
