@@ -40,7 +40,7 @@ namespace AdventOfCode._2020.Puzzles.Solutions
                 x = (x + xIncrement) % parsedInput[0].Length;
                 y += yIncrement;
                 var item = parsedInput[y][x];
-                countTrees += item == Tree ? 1 : 0;
+                countTrees += item == Tree ? 1u : 0u;
             } while (y < parsedInput.Count - 1);
 
             return countTrees;
