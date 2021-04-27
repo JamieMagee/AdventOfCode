@@ -2,7 +2,11 @@ name: GitHub Pages
 
 on:
   push:
-    branches: [master]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -22,15 +26,18 @@ jobs:
         run: dotnet test --configuration Release
         
       - name: Publish
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: dotnet publish --configuration Release --output dist src/AdventOfCode.Web
         
       - name: Rewrite base href
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
         with:
           html_path: dist/wwwroot/index.html
           base_href: /AdventOfCode/
         
       - name: Deploy
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
