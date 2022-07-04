@@ -2,7 +2,7 @@
 
   <PropertyGroup Label="Build">
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <UserSecretsId>5adb2560-81a5-4a32-aa5b-9daa67ab0874</UserSecretsId>
     <RootNamespace>AdventOfCode.Console</RootNamespace>
   </PropertyGroup>
