@@ -1,30 +1,26 @@
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 using AdventOfCode.Core;
 using AdventOfCode.Web.Services;
 using MatBlazor;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace AdventOfCode.Web
+namespace AdventOfCode.Web;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
+        builder.RootComponents.Add<App>("#app");
+
+        builder.Services.AddSingleton(sp => new HttpClient
         {
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("#app");
+            BaseAddress = new Uri(builder.HostEnvironment.BaseAddress),
+        });
+        builder.Services.AddSingleton<ISolutionHandler, SolutionHandler>();
+        builder.Services.AddSingleton<IInputHandler, InputHandler>();
+        builder.Services.AddSingleton<IVisualizerHandler, VisualizerHandler>();
+        builder.Services.AddMatBlazor();
 
-            builder.Services.AddSingleton(sp => new HttpClient
-                {BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
-            builder.Services.AddSingleton<ISolutionHandler, SolutionHandler>();
-            builder.Services.AddSingleton<IInputHandler, InputHandler>();
-            builder.Services.AddSingleton<IVisualizerHandler, VisualizerHandler>();
-            
-            builder.Services.AddMatBlazor();
-
-            await builder.Build().RunAsync();
-        }
+        await builder.Build().RunAsync();
     }
 }

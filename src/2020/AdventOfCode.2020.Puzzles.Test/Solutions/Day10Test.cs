@@ -1,14 +1,8 @@
-﻿using System.Threading.Tasks;
-using AdventOfCode._2020.Puzzles.Solutions;
-using AdventOfCode.Core.Test;
-using Xunit;
+﻿namespace AdventOfCode._2020.Puzzles.Test.Solutions;
 
-namespace AdventOfCode._2020.Puzzles.Test.Solutions
+public sealed class Day10Test : TestBase<Day10>
 {
-    public sealed class Day10Test : TestBase<Day10>
-    {
-        
-        const string Input = @"28
+    private const string Input = @"28
 33
 18
 42
@@ -39,17 +33,10 @@ namespace AdventOfCode._2020.Puzzles.Test.Solutions
 34
 10
 3";
-        [Fact]
-        public async Task Part1()
-        {
-            
-            Assert.Equal("220", await Solution.Part1Async(Input));
-        }
 
-        [Fact]
-        public async Task Part2()
-        {
-            Assert.Equal("19208", await Solution.Part2Async(Input));
-        }
-    }
+    [Fact]
+    public async Task Part1Async() => Assert.Equal("220", await this.Solution.Part1Async(Input));
+
+    [Fact]
+    public async Task Part2Async() => Assert.Equal("19208", await this.Solution.Part2Async(Input));
 }

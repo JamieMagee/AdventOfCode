@@ -1,9 +1,6 @@
-using System.Collections.Generic;
+namespace AdventOfCode.Core;
 
-namespace AdventOfCode.Core
+public interface ISolutionHandler
 {
-    public interface ISolutionHandler
-    {
-        IDictionary<int, IDictionary<int, SolutionMetadata>> Solutions { get; }
-    }
+    IDictionary<int, IDictionary<int, SolutionMetadata>> Solutions { get; }
 }

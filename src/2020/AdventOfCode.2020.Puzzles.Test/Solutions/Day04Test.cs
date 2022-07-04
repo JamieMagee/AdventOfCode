@@ -1,17 +1,11 @@
-﻿using System.Threading.Tasks;
-using AdventOfCode._2020.Puzzles.Solutions;
-using AdventOfCode._2020.Puzzles.Test;
-using AdventOfCode.Core.Test;
-using Xunit;
+﻿namespace AdventOfCode._2020.Puzzles.Test.Solutions;
 
-namespace AdventOfCode._2020.Puzzles.Test.Solutions
+public sealed class Day04Test : TestBase<Day04>
 {
-    public sealed class Day04Test : TestBase<Day04>
+    [Fact]
+    public async Task Part1Async()
     {
-        [Fact]
-        public async Task Part1()
-        {
-            const string input = @"ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
+        const string input = @"ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
 
 iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
@@ -24,13 +18,13 @@ hgt:179cm
 
 hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in";
-            Assert.Equal("2", await Solution.Part1Async(input));
-        }
+        Assert.Equal("2", await this.Solution.Part1Async(input));
+    }
 
-        [Fact]
-        public async Task Part2()
-        {
-            const string invalid = @"eyr:1972 cid:100
+    [Fact]
+    public async Task Part2Async()
+    {
+        const string invalid = @"eyr:1972 cid:100
 hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
 
 iyr:2019
@@ -43,7 +37,7 @@ ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
 hgt:59cm ecl:zzz
 eyr:2038 hcl:74454a iyr:2023
 pid:3556412378 byr:2007";
-            const string valid = @"pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
+        const string valid = @"pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
 hcl:#623a2f
 
 eyr:2029 ecl:blu cid:129 byr:1989
@@ -55,8 +49,7 @@ pid:545766238 ecl:hzl
 eyr:2022
 
 iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719";
-            Assert.Equal("0", await Solution.Part2Async(invalid));
-            Assert.Equal("4", await Solution.Part2Async(valid));
-        }
+        Assert.Equal("0", await this.Solution.Part2Async(invalid));
+        Assert.Equal("4", await this.Solution.Part2Async(valid));
     }
 }

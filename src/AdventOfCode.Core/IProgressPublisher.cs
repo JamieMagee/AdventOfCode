@@ -1,10 +1,8 @@
-using System.Threading.Tasks;
+namespace AdventOfCode.Core;
 
-namespace AdventOfCode.Core
+public interface IProgressPublisher
 {
-    public interface IProgressPublisher
-    {
-        bool IsUpdateProgressNeeded();
-        Task UpdateProgressAsync(double current, double total);
-    }
+    bool IsUpdateProgressNeeded();
+
+    Task UpdateProgressAsync(double current, double total);
 }

@@ -1,69 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using AdventOfCode.Core;
 using AdventOfCode.Web.Visualizers;
 
-namespace AdventOfCode.Web.Services
+namespace AdventOfCode.Web.Services;
+
+public sealed class VisualizerHandler : IVisualizerHandler
 {
-    public interface IVisualizerHandler
+    private CancellationTokenSource myCancellationTokenSource = new();
+
+    public VisualizerHandler() => this.VisualizersBySolutionType = GatherPuzzleSolutions();
+
+    public IReadOnlyDictionary<Type, Type> VisualizersBySolutionType { get; }
+
+    public Type GetVisualizer(Type solutionType) => this.VisualizersBySolutionType.TryGetValue(solutionType, out var visualizerType) ? visualizerType : null;
+
+    public void CancelAllVisualizations()
     {
-        Type GetVisualizer(Type solutionType);
-
-        void CancelAllVisualizations();
-
-        CancellationToken GetVisualizationCancellationToken();
+        this.myCancellationTokenSource.Cancel();
+        this.myCancellationTokenSource = new CancellationTokenSource();
     }
 
-    public sealed class VisualizerHandler : IVisualizerHandler
+    public CancellationToken GetVisualizationCancellationToken() => this.myCancellationTokenSource.Token;
+
+    private static Dictionary<Type, Type> GatherPuzzleSolutions()
     {
-        private CancellationTokenSource _myCancellationTokenSource = new CancellationTokenSource();
+        var visualizersBySolutionType = new Dictionary<Type, Type>();
+        var visualizerInterface = typeof(IVisualizer);
+        AssemblyLoader.LoadAssemblies();
+        var visualizerTypes = visualizerInterface.Assembly.GetTypes()
+            .Where(x => visualizerInterface.IsAssignableFrom(x) && !x.IsAbstract)
+            .ToList();
 
-        public VisualizerHandler()
+        foreach (var visualizerType in visualizerTypes)
         {
-            VisualizersBySolutionType = GatherPuzzleSolutions();
-        }
-
-        public IReadOnlyDictionary<Type, Type> VisualizersBySolutionType { get; }
-
-        public Type GetVisualizer(Type solutionType)
-        {
-            return VisualizersBySolutionType.TryGetValue(solutionType, out var visualizerType) ? visualizerType : null;
-        }
-
-        public void CancelAllVisualizations()
-        {
-            _myCancellationTokenSource.Cancel();
-            _myCancellationTokenSource = new CancellationTokenSource();
-        }
-
-        public CancellationToken GetVisualizationCancellationToken()
-        {
-            return _myCancellationTokenSource.Token;
-        }
-
-        private static Dictionary<Type, Type> GatherPuzzleSolutions()
-        {
-            var visualizersBySolutionType = new Dictionary<Type, Type>();
-            var visualizerInterface = typeof(IVisualizer);
-            AssemblyLoader.LoadAssemblies();
-            var visualizerTypes = visualizerInterface.Assembly.GetTypes()
-                .Where(x => visualizerInterface.IsAssignableFrom(x) && !x.IsAbstract)
+            var targetSolutionAttributes = visualizerType
+                .GetCustomAttributes(typeof(TargetSolutionAttribute), false).OfType<TargetSolutionAttribute>()
                 .ToList();
-
-            foreach (var visualizerType in visualizerTypes)
+            foreach (var targetSolutionType in targetSolutionAttributes.Select(x => x.TargetSolutionType))
             {
-                var targetSolutionAttributes = visualizerType
-                    .GetCustomAttributes(typeof(TargetSolutionAttribute), false).OfType<TargetSolutionAttribute>()
-                    .ToList();
-                foreach (var targetSolutionType in targetSolutionAttributes.Select(x => x.TargetSolutionType))
-                {
-                    visualizersBySolutionType[targetSolutionType] = visualizerType;
-                }
+                visualizersBySolutionType[targetSolutionType] = visualizerType;
             }
-
-            return visualizersBySolutionType;
         }
+
+        return visualizersBySolutionType;
     }
 }

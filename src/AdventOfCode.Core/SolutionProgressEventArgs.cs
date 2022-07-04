@@ -1,14 +1,8 @@
-using System;
+namespace AdventOfCode.Core;
 
-namespace AdventOfCode.Core
+public sealed class SolutionProgressEventArgs : EventArgs
 {
-    public sealed class SolutionProgressEventArgs : EventArgs
-    {
-        public readonly SolutionProgress Progress;
+    public SolutionProgressEventArgs(SolutionProgress solutionProgress) => this.Progress = solutionProgress;
 
-        public SolutionProgressEventArgs(SolutionProgress solutionProgress)
-        {
-            Progress = solutionProgress;
-        }
-    }
+    public SolutionProgress Progress { get; }
 }

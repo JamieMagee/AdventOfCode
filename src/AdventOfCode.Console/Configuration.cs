@@ -1,27 +1,26 @@
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 
-namespace AdventOfCode.Console
+namespace AdventOfCode.Console;
+
+public sealed class Configuration
 {
-    public sealed class Configuration
+    private Configuration()
     {
-        private Configuration()
-        {
-        }
+    }
 
-        public string SessionCookie { get; set; }
+    public string SessionCookie { get; set; }
 
-        public static Configuration Load()
-        {
-            IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", false, true)
-                .AddUserSecrets(Assembly.GetExecutingAssembly(), true, true)
-                .Build();
+    public static Configuration Load()
+    {
+        IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", false, true)
+            .AddUserSecrets(Assembly.GetExecutingAssembly(), true, true)
+            .Build();
 
-            var configuration = new Configuration();
-            config.Bind(configuration);
+        var configuration = new Configuration();
+        config.Bind(configuration);
 
-            return configuration;
-        }
+        return configuration;
     }
 }

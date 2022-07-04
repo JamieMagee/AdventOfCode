@@ -1,7 +1,6 @@
-namespace AdventOfCode.Core
+namespace AdventOfCode.Core;
+
+public class SolutionProgress
 {
-    public class SolutionProgress
-    {
-        public double Percentage { get; set; } = -1;
-    }
+    public double Percentage { get; set; } = -1;
 }

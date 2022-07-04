@@ -1,42 +1,42 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>AdventOfCode.Web</RootNamespace>
-    </PropertyGroup>
+  <PropertyGroup Label="Build">
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>AdventOfCode.Web</RootNamespace>
+  </PropertyGroup>
 
+  <ItemGroup Label="Package References">
+    <PackageReference Include="MatBlazor" Version="2.8.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.12" PrivateAssets="all" />
+    <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AdventOfCode.Core\AdventOfCode.Core.csproj" />
+    <ProjectReference Include="..\2015\AdventOfCode.2015.Puzzles\AdventOfCode.2015.Puzzles.csproj" />
+    <ProjectReference Include="..\2020\AdventOfCode.2020.Puzzles\AdventOfCode.2020.Puzzles.csproj" />
+  </ItemGroup>
+
+  <Target Name="DeleteInputs" BeforeTargets="BeforeBuild">
+    <Message Importance="high" Text="Deleting puzzle files from WebApp wwwroot..." />
+    <RemoveDir Directories="$(MSBuildThisFileDirectory)wwwroot\input" />
+    <RemoveDir Directories="$(MSBuildThisFileDirectory)wwwroot\source" />
+  </Target>
+
+  <Target Name="CopyInputs" BeforeTargets="BeforeBuild">
+    <Message Importance="high" Text="Copying puzzle files to WebApp wwwroot..." />
     <ItemGroup>
-        <PackageReference Include="MatBlazor" Version="2.8.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.12" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.12" PrivateAssets="all" />
-        <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+      <InputFiles2015 Include="$(MSBuildThisFileDirectory)..\2015\AdventOfCode.2015.Puzzles\Input\day*.txt" />
+      <SourceFiles2015 Include="$(MSBuildThisFileDirectory)..\2015\AdventOfCode.2015.Puzzles\Solutions\Day*.cs" />
+      <InputFiles2020 Include="$(MSBuildThisFileDirectory)..\2020\AdventOfCode.2020.Puzzles\Input\day*.txt" />
+      <SourceFiles2020 Include="$(MSBuildThisFileDirectory)..\2020\AdventOfCode.2020.Puzzles\Solutions\Day*.cs" />
     </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\AdventOfCode.Core\AdventOfCode.Core.csproj" />
-        <ProjectReference Include="..\2015\AdventOfCode.2015.Puzzles\AdventOfCode.2015.Puzzles.csproj" />
-        <ProjectReference Include="..\2020\AdventOfCode.2020.Puzzles\AdventOfCode.2020.Puzzles.csproj" />
-    </ItemGroup>
-
-    <Target Name="DeleteInputs" BeforeTargets="BeforeBuild">
-        <Message Importance="high" Text="Deleting puzzle files from WebApp wwwroot..." />
-        <RemoveDir Directories="$(MSBuildThisFileDirectory)wwwroot\input" />
-        <RemoveDir Directories="$(MSBuildThisFileDirectory)wwwroot\source" />
-    </Target>
-
-    <Target Name="CopyInputs" BeforeTargets="BeforeBuild">
-        <Message Importance="high" Text="Copying puzzle files to WebApp wwwroot..." />
-        <ItemGroup>
-            <InputFiles2015 Include="$(MSBuildThisFileDirectory)..\2015\AdventOfCode.2015.Puzzles\Input\day*.txt" />
-            <SourceFiles2015 Include="$(MSBuildThisFileDirectory)..\2015\AdventOfCode.2015.Puzzles\Solutions\Day*.cs" />
-            <InputFiles2020 Include="$(MSBuildThisFileDirectory)..\2020\AdventOfCode.2020.Puzzles\Input\day*.txt" />
-            <SourceFiles2020 Include="$(MSBuildThisFileDirectory)..\2020\AdventOfCode.2020.Puzzles\Solutions\Day*.cs" />
-        </ItemGroup>
-        <Copy SourceFiles="@(InputFiles2015)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\input\2015" />
-        <Copy SourceFiles="@(SourceFiles2015)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\source\2015" />
-        <Copy SourceFiles="@(InputFiles2020)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\input\2020" />
-        <Copy SourceFiles="@(SourceFiles2020)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\source\2020" />
-    </Target>
+    <Copy SourceFiles="@(InputFiles2015)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\input\2015" />
+    <Copy SourceFiles="@(SourceFiles2015)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\source\2015" />
+    <Copy SourceFiles="@(InputFiles2020)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\input\2020" />
+    <Copy SourceFiles="@(SourceFiles2020)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\source\2020" />
+  </Target>
 
 
 </Project>

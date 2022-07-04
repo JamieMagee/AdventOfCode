@@ -1,169 +1,164 @@
-using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AdventOfCode.Core;
 using AdventOfCode.Web.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace AdventOfCode.Web.Pages
+namespace AdventOfCode.Web.Pages;
+
+public sealed partial class Puzzle
 {
-    public sealed partial class Puzzle
+    private CancellationTokenSource myCancellationTokenSource;
+    private int myProgressRenderTick = Environment.TickCount;
+
+    [Parameter]
+    public string Year { get; set; } = (DateTime.Now.Month == 12 ? DateTime.Now.Year : DateTime.Now.Year - 1).ToString();
+
+    [Parameter]
+    public string Day { get; set; }
+
+    [Parameter]
+    public int MillisBetweenProgressRender { get; set; } = 100;
+
+    [Inject]
+    private ISolutionHandler SolutionHandler { get; set; }
+
+    [Inject]
+    private IInputHandler InputHandler { get; set; }
+
+    [Inject]
+    private IVisualizerHandler VisualizerHandler { get; set; }
+
+    private SolutionMetadata SolutionMetadata { get; set; }
+
+    private string Input { get; set; }
+
+    private string SourceCode { get; set; }
+
+    private object[] Results { get; set; }
+
+    private bool IsWorking { get; set; }
+
+    private Stopwatch CalculationStopwatch { get; set; }
+
+    private bool HasInputChanged { get; set; }
+
+    private SolutionProgress Progress { get; set; }
+
+    private ISolution SolutionInstance { get; set; }
+
+    protected override Task OnParametersSetAsync() => this.InitAsync();
+
+    private async Task InitAsync()
     {
-        private CancellationTokenSource _myCancellationTokenSource;
-        private int _myProgressRenderTick = Environment.TickCount;
-
-        [Parameter]
-        public string Year { get; set; } = (DateTime.Now.Month == 12 ? DateTime.Now.Year : DateTime.Now.Year - 1).ToString();
-
-        [Parameter] public string Day { get; set; }
-
-        [Parameter] public int MillisBetweenProgressRender { get; set; } = 100;
-
-        [Inject] private ISolutionHandler SolutionHandler { get; set; }
-
-        [Inject] private IInputHandler InputHandler { get; set; }
-
-        [Inject] private IVisualizerHandler VisualizerHandler { get; set; }
-
-        private SolutionMetadata SolutionMetadata { get; set; }
-
-        private string Input { get; set; }
-
-        private string Description { get; set; }
-
-        private string SourceCode { get; set; }
-
-        private object[] Results { get; set; }
-
-        private bool IsWorking { get; set; }
-
-        private Stopwatch CalculationStopwatch { get; set; }
-
-        private bool HasInputChanged { get; set; }
-
-        private SolutionProgress Progress { get; set; }
-
-        private ISolution SolutionInstance { get; set; }
-
-        protected override Task OnParametersSetAsync()
+        this.Cancel();
+        this.SolutionMetadata = null;
+        this.Input = null;
+        this.HasInputChanged = false;
+        this.Results = null;
+        this.Progress = new SolutionProgress();
+        this.CalculationStopwatch = null;
+        this.SolutionInstance = null;
+        if (int.TryParse(this.Year, out var yearNumber) && int.TryParse(this.Day, out var dayNumber) && this.SolutionHandler.Solutions[yearNumber].TryGetValue(dayNumber, out var solutionMetadata))
         {
-            return InitAsync();
-        }
-
-        private async Task InitAsync()
-        {
-            Cancel();
-            SolutionMetadata = null;
-            Input = null;
-            HasInputChanged = false;
-            Results = null;
-            Progress = new SolutionProgress();
-            CalculationStopwatch = null;
-            SolutionInstance = null;
-            if (int.TryParse(Year, out var yearNumber) && int.TryParse(Day, out var dayNumber) &&
-                SolutionHandler.Solutions[yearNumber].TryGetValue(dayNumber, out var solutionMetadata))
+            this.SolutionMetadata = solutionMetadata;
+            this.Results = this.InputHandler.GetResults(this.SolutionMetadata.Day);
+            if (this.InputHandler.IsCachedInputAvailable(solutionMetadata.Day))
             {
-                SolutionMetadata = solutionMetadata;
-                Results = InputHandler.GetResults(SolutionMetadata.Day);
-                if (InputHandler.IsCachedInputAvailable(solutionMetadata.Day))
+                await this.LoadInputAsync();
+            }
+
+            this.LoadPuzzleMetadataInBackground();
+        }
+    }
+
+    private void LoadPuzzleMetadataInBackground()
+    {
+        this.myCancellationTokenSource = new CancellationTokenSource();
+        Task.Run(() => this.LoadInputAsync(), this.myCancellationTokenSource.Token);
+        Task.Run(
+            async () =>
+        {
+            this.SourceCode = await this.InputHandler.GetSourceCodeAsync(this.SolutionMetadata.Year, this.SolutionMetadata.Day);
+            this.StateHasChanged();
+        },
+            this.myCancellationTokenSource.Token);
+    }
+
+    private async Task LoadInputAsync(bool forceReload = false)
+    {
+        this.Input = forceReload ? null : this.Input;
+        this.Input ??= await this.InputHandler.GetInputAsync(this.SolutionMetadata.Year, this.SolutionMetadata.Day);
+        this.HasInputChanged = false;
+        this.StateHasChanged();
+    }
+
+    private async Task SolveAsync()
+    {
+        this.myCancellationTokenSource = new CancellationTokenSource();
+        this.SolutionInstance = null;
+        try
+        {
+            this.IsWorking = true;
+            this.InputHandler.ClearResults(this.SolutionMetadata.Day);
+            this.SolutionInstance = this.SolutionMetadata.CreateInstance();
+            this.SolutionInstance.MillisecondsBetweenProgressUpdates = this.MillisBetweenProgressRender / 2;
+            this.SolutionInstance.CancellationToken = this.myCancellationTokenSource.Token;
+            this.SolutionInstance.ProgressUpdated += this.OnProgressUpdate;
+            this.CalculationStopwatch = Stopwatch.StartNew();
+            foreach (var (part, index) in new Func<string, Task<string>>[]
+                     {
+                         this.SolutionInstance.Part1Async, this.SolutionInstance.Part2Async,
+                     }.Select((x, i) => (x, i)))
+            {
+                this.Progress = new SolutionProgress();
+                this.StateHasChanged();
+                await Task.Delay(1);
+                if (this.IsWorking == false)
                 {
-                    await LoadInputAsync();
+                    break;
                 }
 
-                Description = "Loading description...";
-                LoadPuzzleMetadataInBackground();
+                this.Results[index] = await this.ExceptionToResultAsync(part);
             }
         }
-
-        private void LoadPuzzleMetadataInBackground()
+        finally
         {
-            _myCancellationTokenSource = new CancellationTokenSource();
-            Task.Run(() => LoadInputAsync(), _myCancellationTokenSource.Token);
-            Task.Run(async () =>
+            if (this.SolutionInstance != null)
             {
-                SourceCode = await InputHandler.GetSourceCodeAsync(SolutionMetadata.Year, SolutionMetadata.Day);
-                StateHasChanged();
-            }, _myCancellationTokenSource.Token);
-        }
-
-        private async Task LoadInputAsync(bool forceReload = false)
-        {
-            Input = forceReload ? null : Input;
-            Input ??= await InputHandler.GetInputAsync(SolutionMetadata.Year, SolutionMetadata.Day);
-            HasInputChanged = false;
-            StateHasChanged();
-        }
-
-        private async Task SolveAsync()
-        {
-            _myCancellationTokenSource = new CancellationTokenSource();
-            SolutionInstance = null;
-            try
-            {
-                IsWorking = true;
-                InputHandler.ClearResults(SolutionMetadata.Day);
-                SolutionInstance = SolutionMetadata.CreateInstance();
-                SolutionInstance.MillisecondsBetweenProgressUpdates = MillisBetweenProgressRender / 2;
-                SolutionInstance.CancellationToken = _myCancellationTokenSource.Token;
-                SolutionInstance.ProgressUpdated += OnProgressUpdate;
-                CalculationStopwatch = Stopwatch.StartNew();
-                foreach (var (part, index) in new Func<string, Task<string>>[]
-                {
-                    SolutionInstance.Part1Async, SolutionInstance.Part2Async
-                }.Select((x, i) => (x, i)))
-                {
-                    Progress = new SolutionProgress();
-                    StateHasChanged();
-                    await Task.Delay(1);
-                    if (IsWorking == false)
-                    {
-                        break;
-                    }
-
-                    Results[index] = await ExceptionToResult(part);
-                }
+                this.SolutionInstance.ProgressUpdated -= this.OnProgressUpdate;
             }
-            finally
-            {
-                if (SolutionInstance != null)
-                {
-                    SolutionInstance.ProgressUpdated -= OnProgressUpdate;
-                }
 
-                IsWorking = false;
-                CalculationStopwatch?.Stop();
-            }
+            this.IsWorking = false;
+            this.CalculationStopwatch?.Stop();
         }
+    }
 
-        private void Cancel()
+    private void Cancel()
+    {
+        this.IsWorking = false;
+        this.myCancellationTokenSource?.Cancel(true);
+        this.VisualizerHandler.CancelAllVisualizations();
+    }
+
+    private void OnProgressUpdate(object sender, SolutionProgressEventArgs args)
+    {
+        if (Environment.TickCount > this.myProgressRenderTick)
         {
-            IsWorking = false;
-            _myCancellationTokenSource?.Cancel(true);
-            VisualizerHandler.CancelAllVisualizations();
+            this.Progress = args.Progress;
+            this.StateHasChanged();
+            this.myProgressRenderTick = Environment.TickCount + this.MillisBetweenProgressRender;
         }
+    }
 
-        private void OnProgressUpdate(object sender, SolutionProgressEventArgs args)
+    private async Task<object> ExceptionToResultAsync(Func<string, Task<string>> func)
+    {
+        try
         {
-            if (Environment.TickCount > _myProgressRenderTick)
-            {
-                Progress = args.Progress;
-                StateHasChanged();
-                _myProgressRenderTick = Environment.TickCount + MillisBetweenProgressRender;
-            }
+            return await (func(this.Input) ?? Task.FromResult<string>(null));
         }
-
-        private async Task<object> ExceptionToResult(Func<string, Task<string>> func)
+        catch (Exception exception)
         {
-            try
-            {
-                return await (func(Input) ?? Task.FromResult<string>(null));
-            }
-            catch (Exception exception)
-            {
-                return exception;
-            }
+            return exception;
         }
     }
 }

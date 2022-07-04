@@ -1,56 +1,45 @@
-﻿using System.Linq;
+﻿namespace AdventOfCode._2020.Puzzles.Solutions;
+
+using System.Globalization;
 using System.Text.RegularExpressions;
-using AdventOfCode.Core;
 
-namespace AdventOfCode._2020.Puzzles.Solutions
+[Puzzle("Password Philosophy")]
+public sealed class Day02 : SolutionBase
 {
-    [Puzzle("Password Philosophy")]
-    public sealed class Day02 : SolutionBase
+    protected override string Part1(string input) => input.Trim()
+        .Split("\n")
+        .Select(x => new PasswordPolicy(x))
+        .Count(x => x.PartOneValid())
+        .ToString(CultureInfo.InvariantCulture);
+
+    protected override string Part2(string input) => input.Trim()
+        .Split("\n")
+        .Select(x => new PasswordPolicy(x))
+        .Count(x => x.PartTwoValid())
+        .ToString(CultureInfo.InvariantCulture);
+
+    private sealed record PasswordPolicy
     {
-        protected override string Part1(string input)
+        private readonly char letter;
+        private readonly int max;
+        private readonly int min;
+        private readonly string password;
+
+        public PasswordPolicy(string input)
         {
-            return input.Trim()
-                .Split("\n")
-                .Select(x => new PasswordPolicy(x))
-                .Count(x => x.PartOneValid())
-                .ToString();
+            var matches = Regex.Split(input, @"(\d+)\-(\d+) (\w): (\w+)");
+            this.min = int.Parse(matches[1], CultureInfo.InvariantCulture);
+            this.max = int.Parse(matches[2], CultureInfo.InvariantCulture);
+            this.letter = char.Parse(matches[3]);
+            this.password = matches[4];
         }
 
-        protected override string Part2(string input)
+        public bool PartOneValid()
         {
-            return input.Trim()
-                .Split("\n")
-                .Select(x => new PasswordPolicy(x))
-                .Count(x => x.PartTwoValid())
-                .ToString();
+            var count = this.password.Count(x => x == this.letter);
+            return count >= this.min && count <= this.max;
         }
 
-        private class PasswordPolicy
-        {
-            private readonly char _letter;
-            private readonly int _max;
-            private readonly int _min;
-            private readonly string _password;
-
-            public PasswordPolicy(string input)
-            {
-                var matches = Regex.Split(input, @"(\d+)\-(\d+) (\w): (\w+)");
-                _min = int.Parse(matches[1]);
-                _max = int.Parse(matches[2]);
-                _letter = char.Parse(matches[3]);
-                _password = matches[4];
-            }
-
-            public bool PartOneValid()
-            {
-                var count = _password.Count(x => x == _letter);
-                return count >= _min && count <= _max;
-            }
-
-            public bool PartTwoValid()
-            {
-                return (_password[_min - 1] == _letter) ^ (_password[_max - 1] == _letter);
-            }
-        }
+        public bool PartTwoValid() => (this.password[this.min - 1] == this.letter) ^ (this.password[this.max - 1] == this.letter);
     }
 }

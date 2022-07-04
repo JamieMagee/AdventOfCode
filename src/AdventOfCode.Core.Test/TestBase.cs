@@ -1,14 +1,9 @@
-using System;
+namespace AdventOfCode.Core.Test;
 
-namespace AdventOfCode.Core.Test
+public abstract class TestBase<TSolution>
+    where TSolution : ISolution
 {
-    public abstract class TestBase<TSolution> where TSolution : ISolution
-    {
-        protected TestBase()
-        {
-            Solution = Activator.CreateInstance<TSolution>();
-        }
+    protected TestBase() => this.Solution = Activator.CreateInstance<TSolution>();
 
-        protected TSolution Solution { get; }
-    }
+    protected TSolution Solution { get; }
 }

@@ -1,89 +1,65 @@
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
+namespace AdventOfCode.Web.Services;
 
-namespace AdventOfCode.Web.Services
+public sealed class InputHandler : IInputHandler
 {
-    public interface IInputHandler
+    private readonly HttpClient myHttpClient;
+    private readonly Dictionary<int, string> myInputCache = new();
+    private readonly Dictionary<int, object[]> myResultCache = new();
+    private readonly Dictionary<int, string> mySourceCodeCache = new();
+
+    public InputHandler(HttpClient httpClient) => this.myHttpClient = httpClient;
+
+    public bool IsCachedInputAvailable(int day) => this.myInputCache.ContainsKey(day);
+
+    public async Task<string> GetInputAsync(int year, int day)
     {
-        bool IsCachedInputAvailable(int day);
-
-        Task<string> GetInputAsync(int year, int day);
-        
-        Task<string> GetSourceCodeAsync(int year,int day);
-
-        object[] GetResults(int day);
-
-        void ClearResults(int day);
+        var input = await this.GetFileAsync(year, day, "input/{0}/day{1}.txt", this.myInputCache);
+        return input;
     }
 
-    public sealed class InputHandler : IInputHandler
+    public async Task<string> GetSourceCodeAsync(int year, int day)
     {
-        private readonly HttpClient _myHttpClient;
-        private readonly Dictionary<int, string> _myInputCache = new Dictionary<int, string>();
-        private readonly Dictionary<int, object[]> _myResultCache = new Dictionary<int, object[]>();
-        private readonly Dictionary<int, string> _mySourceCodeCache = new Dictionary<int, string>();
+        var source = await this.GetFileAsync(year, day, "source/{0}/Day{1}.cs", this.mySourceCodeCache);
+        return source ?? "No source file available.";
+    }
 
-        public InputHandler(HttpClient httpClient)
+    public object[] GetResults(int day)
+    {
+        if (!this.myResultCache.TryGetValue(day, out var results))
         {
-            _myHttpClient = httpClient;
+            results = new object[2];
+            this.myResultCache.Add(day, results);
         }
 
-        public bool IsCachedInputAvailable(int day)
-        {
-            return _myInputCache.ContainsKey(day);
-        }
+        return results;
+    }
 
-        public async Task<string> GetInputAsync(int year, int day)
+    public void ClearResults(int day)
+    {
+        var results = this.GetResults(day);
+        for (var i = 0; i < results.Length; i++)
         {
-            var input = await GetFileAsync(year, day, "input/{0}/day{1}.txt", _myInputCache);
-            return input;
+            results[i] = null;
         }
+    }
 
-        public async Task<string> GetSourceCodeAsync(int year, int day)
+    private async Task<string> GetFileAsync(int year, int day, string pathTemplate, IDictionary<int, string> cache)
+    {
+        if (!cache.TryGetValue(day, out var description))
         {
-            var source = await GetFileAsync(year, day, "source/{0}/Day{1}.cs", _mySourceCodeCache);
-            return source ?? "No source file available.";
-        }
-
-        public object[] GetResults(int day)
-        {
-            if (!_myResultCache.TryGetValue(day, out var results))
+            var dayString = day.ToString().PadLeft(2, '0');
+            try
             {
-                results = new object[2];
-                _myResultCache.Add(day, results);
+                description = await this.myHttpClient.GetStringAsync(string.Format(pathTemplate, year, dayString));
+            }
+            catch (HttpRequestException)
+            {
+                return null;
             }
 
-            return results;
+            cache.Add(day, description);
         }
 
-        public void ClearResults(int day)
-        {
-            var results = GetResults(day);
-            for (var i = 0; i < results.Length; i++)
-            {
-                results[i] = null;
-            }
-        }
-
-        private async Task<string> GetFileAsync(int year, int day, string pathTemplate, IDictionary<int, string> cache)
-        {
-            if (!cache.TryGetValue(day, out var description))
-            {
-                var dayString = day.ToString().PadLeft(2, '0');
-                try
-                {
-                    description = await _myHttpClient.GetStringAsync(string.Format(pathTemplate, year, dayString));
-                }
-                catch (HttpRequestException)
-                {
-                    return null;
-                }
-
-                cache.Add(day, description);
-            }
-
-            return description;
-        }
+        return description;
     }
 }

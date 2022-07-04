@@ -1,18 +1,14 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+namespace AdventOfCode.Core;
 
-namespace AdventOfCode.Core
+public interface ISolution
 {
-    public interface ISolution
-    {
-        CancellationToken CancellationToken { get; set; }
+    event EventHandler<SolutionProgressEventArgs> ProgressUpdated;
 
-        int MillisecondsBetweenProgressUpdates { get; set; }
-        event EventHandler<SolutionProgressEventArgs> ProgressUpdated;
+    CancellationToken CancellationToken { get; set; }
 
-        Task<string> Part1Async(string input);
+    int MillisecondsBetweenProgressUpdates { get; set; }
 
-        Task<string> Part2Async(string input);
-    }
+    Task<string> Part1Async(string input);
+
+    Task<string> Part2Async(string input);
 }
