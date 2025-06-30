@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace AdventOfCode.Console;
 
-public sealed class Configuration
+internal sealed class Configuration
 {
     private Configuration()
     {
