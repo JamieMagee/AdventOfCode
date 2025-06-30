@@ -1,13 +1,13 @@
-@using MatBlazor
+@using MudBlazor
 
-<MatTabGroup>
+<MudTabs>
     @foreach (var page in Pages.Where(p => p.IsVisible))
     {
-        <MatTab Label=@(page.Name)>
+        <MudTabPanel Text=@(page.Name)>
             @(page.ChildContent)
-        </MatTab>
+        </MudTabPanel>
     }
-</MatTabGroup>
+</MudTabs>
 
 <div style="display: none">
     <CascadingValue Name="Parent" Value="this">

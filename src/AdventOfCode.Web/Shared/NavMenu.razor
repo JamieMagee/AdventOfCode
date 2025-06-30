@@ -1,30 +1,26 @@
-@using MatBlazor
+@using MudBlazor
 @inject NavigationManager NavigationManager
 @inject ISolutionHandler SolutionHandler
 
-<MatNavMenu Multi="true">
-    <MatNavItem Href="@NavigationManager.ToAbsoluteUri("").AbsoluteUri" NavLinkMatch="NavLinkMatch.All"><MatIcon Icon="home"></MatIcon>&nbsp; Home</MatNavItem>
+<MudNavMenu>
+    <MudNavLink Href="@NavigationManager.ToAbsoluteUri("").AbsoluteUri" Match="NavLinkMatch.All">
+        <MudIcon Icon="@Icons.Material.Filled.Home" />
+        &nbsp; Home
+    </MudNavLink>
 
     @foreach (var year in _years.OrderByDescending(x => x))
     {
-        <MatNavSubMenu Expanded="true">
-            <MatNavSubMenuHeader>
-                <MatNavItem AllowSelection="false">@year</MatNavItem>
-            </MatNavSubMenuHeader>
-            <MatNavSubMenuList>
-                @foreach (var (day, solutionMetadata) in _solutions[year])
-                {
-                    var href = $"puzzle/{year}/{day}";
-                    <MatRipple>
-                        <MatNavItem Href=@href>
-                            Day @day - @solutionMetadata.Title
-                        </MatNavItem>
-                    </MatRipple>
-                }
-            </MatNavSubMenuList>
-        </MatNavSubMenu>
+        <MudNavGroup Title="@year.ToString()" Expanded="true">
+            @foreach (var (day, solutionMetadata) in _solutions[year])
+            {
+                var href = $"puzzle/{year}/{day}";
+                <MudNavLink Href=@href>
+                    Day @day - @solutionMetadata.Title
+                </MudNavLink>
+            }
+        </MudNavGroup>
     }
-</MatNavMenu>
+</MudNavMenu>
 
 
 @code {

@@ -1,82 +1,43 @@
 @inherits LayoutComponentBase
-@using MatBlazor
 
-<MatAnchorUtils></MatAnchorUtils>
-<MatAppBar Style="z-index: 100;" Class="mat">
-    <MatAppBarRow>
-        <MatAppBarSection>
-            <MatIconButton Icon="menu" OnClick="@(e => MenuButtonClicked())"></MatIconButton>
-            <MatAppBarTitle>AdventOfCode.Web</MatAppBarTitle>
-        </MatAppBarSection>
-        <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-            <MatHidden BreakPoint="@MatBreakpoint.XS" Direction="@MatHiddenDirection.Down">
-                <MatIconButton Link="https://jamiemagee.co.uk" Target="_blank">
-                    <i class="fa fa-user-circle" aria-hidden="true"></i>
-                </MatIconButton>
-                <MatIconButton Link="https://twitter.com/Jamie_Magee" Target="_blank">
-                    <i class="fa fa-twitter"></i>
-                </MatIconButton>
-                <MatIconButton Link="https://github.com/JamieMagee/AdventOfCode" Target="_blank">
-                    <i class="fa fa-github" aria-hidden="true"></i>
-                </MatIconButton>
-            </MatHidden>
-            <MatHidden BreakPoint="@MatBreakpoint.SM" Direction="@MatHiddenDirection.Up">
-                <MatIconButton Icon="more_vert" OnClick="@OpenSmallMenu" @ref="_smallMenuButton"></MatIconButton>
-                <MatMenu @ref="_smallMenu" style="z-index: 100;">
-                    <MatList>
-                        <MatListItem Href="https://jamiemagee.co.uk" target="_blank">
-                            JamieMagee.co.uk
-                        </MatListItem>
-                        <MatListItem Href="https://twitter.com/Jamie_Magee" target="_blank">
-                            Twitter
-                        </MatListItem>
-                        <MatListItem Href="https://github.com/JamieMagee/AdventOfCode" target="_blank">
-                            Github
-                        </MatListItem>
-                    </MatList>
-                </MatMenu>
-            </MatHidden>
-        </MatAppBarSection>
-    </MatAppBarRow>
-</MatAppBar>
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-<MatDrawerContainer Style="width: 100vw; height: 100vh;">
-    <MatHidden Breakpoint="@MatBreakpoint.SM" Direction="@MatHiddenDirection.Up" HiddenChanged="@MenuButtonClicked">
-        <ChildContent>
-            <MatDrawer @bind-Opened="@_navMenuOpened" Mode="@MatDrawerMode.Modal">
-                <MatAppBarAdjust></MatAppBarAdjust>
-                <NavMenu></NavMenu>
-            </MatDrawer>
-        </ChildContent>
-        <ElseContent>
-            <MatDrawer @bind-Opened="@_navMenuOpened" Mode="@MatDrawerMode.Dismissible">
-                <MatAppBarAdjust></MatAppBarAdjust>
-                <NavMenu></NavMenu>
-            </MatDrawer>
-        </ElseContent>
-    </MatHidden>
-    <MatDrawerContent Class="mat">
-        <MatAppBarAdjust></MatAppBarAdjust>
-        <div class="body-wrapper">
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+        <MudSpacer />
+        <MudText Typo="Typo.h6">AdventOfCode.Web</MudText>
+        <MudSpacer />
+        <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Href="https://github.com/JamieMagee/AdventOfCode" Target="_blank" />
+            <MudIconButton Icon="@Icons.Custom.Brands.Twitter" Color="Color.Inherit" Href="https://twitter.com/Jamie_Magee" Target="_blank" />
+            <MudIconButton Icon="@Icons.Material.Filled.Person" Color="Color.Inherit" Href="https://jamiemagee.co.uk" Target="_blank" />
+        </MudHidden>
+        <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
+            <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+                <MudMenuItem Href="https://jamiemagee.co.uk" Target="_blank">JamieMagee.co.uk</MudMenuItem>
+                <MudMenuItem Href="https://twitter.com/Jamie_Magee" Target="_blank">Twitter</MudMenuItem>
+                <MudMenuItem Href="https://github.com/JamieMagee/AdventOfCode" Target="_blank">Github</MudMenuItem>
+            </MudMenu>
+        </MudHidden>
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.False" Class="my-16 pt-16">
             @Body
-        </div>
-    </MatDrawerContent>
-</MatDrawerContainer>
-
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
 @code {
-    private bool _navMenuOpened = true;
-    private BaseMatIconButton _smallMenuButton;
-    private BaseMatMenu _smallMenu;
+    private bool _drawerOpen = true;
 
-    private void MenuButtonClicked()
+    private void ToggleDrawer()
     {
-        _navMenuOpened = !_navMenuOpened;
-        StateHasChanged();
-    }
-    
-    private async Task OpenSmallMenu(MouseEventArgs e)
-    {
-        await _smallMenu.OpenAsync(_smallMenuButton.Ref);
+        _drawerOpen = !_drawerOpen;
     }
 }

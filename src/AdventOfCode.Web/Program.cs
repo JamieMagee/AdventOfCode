@@ -1,7 +1,7 @@
 using AdventOfCode.Core;
 using AdventOfCode.Web.Services;
-using MatBlazor;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 
 namespace AdventOfCode.Web;
 
@@ -19,7 +19,7 @@ public class Program
         builder.Services.AddSingleton<ISolutionHandler, SolutionHandler>();
         builder.Services.AddSingleton<IInputHandler, InputHandler>();
         builder.Services.AddSingleton<IVisualizerHandler, VisualizerHandler>();
-        builder.Services.AddMatBlazor();
+        builder.Services.AddMudServices();
 
         await builder.Build().RunAsync();
     }

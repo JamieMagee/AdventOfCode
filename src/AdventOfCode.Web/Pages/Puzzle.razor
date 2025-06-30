@@ -2,84 +2,84 @@
 @page "/puzzle/{day}"
 @page "/puzzle"
 
-@using MatBlazor
-
 @if (SolutionMetadata == null)
 {
-    <MatHeadline3>Day @Day (no solution available)</MatHeadline3>
+    <MudText Typo="Typo.h3">Day @Day (no solution available)</MudText>
 }
 else
 {
-    <MatHeadline3>Day @SolutionMetadata.Day - @SolutionMetadata.Title</MatHeadline3>
-    <div class="mat-layout-grid">
-        <div class="mat-layout-grid-inner">
-            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
-                <MatButton Raised="true" Style="height: 100%; width: 100%" OnClick="@SolveAsync">Solve</MatButton>
-            </div>
-            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-10">
-                <div class="mat-layout-grid-inner">
-                    @{ var isProgressBarRendered = false; }
-                    @foreach (var (result, number) in Results.Select((x, i) => (x, i + 1)))
-                    {
-                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
-                            <span>Part @number:</span>
-                        </div>
-                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-10">
-                            @switch (result)
-                            {
-                                case string text when text.Contains(Environment.NewLine):
-                                    var lines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-                                    <textarea name="part@(number)result" value="@result" rows="@(lines.Length + 1)" cols="@lines.Max(x => x.Length)" readonly
-                                              style="border: none; resize: none; font-family: 'Source Code Pro', monospace; line-height: 12px; font-size: 14px; font-weight: bold;"></textarea>
-                                    break;
-                                case string:
-                                    <input name="part@(number)result" type="text" readonly value="@result"/>
-                                    break;
-                                case TaskCanceledException:
-                                    <span>Canceled.</span>
-                                    break;
-                                case NotImplementedException:
-                                    <span>Not implemented.</span>
-                                    break;
-                                case Exception exception:
-                                    <span>Error - @exception.Message (@exception.GetType().Name)</span>
-                                    break;
-                                case null when IsWorking && !isProgressBarRendered:
-                                    isProgressBarRendered = true;
-                                    <div class="progress" style="width: 200px; height: 2em">
-                                        @if (Progress.Percentage > 0)
-                                        {
-                                            <MatProgressBar Progress="@(Progress.Percentage / 100)"/>
-                                        }
-                                        else
-                                        {
-                                            <MatProgressBar Indeterminate="true"/>
-                                        }
-                                    </div>
-                                    break;
-                                case null when IsWorking && isProgressBarRendered:
-                                    <span>Waiting...</span>
-                                    break;
-                                default:
-                                    <span>no result.</span>
-                                    break;
-                            }
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
+    <MudText Typo="Typo.h3">Day @SolutionMetadata.Day - @SolutionMetadata.Title</MudText>
+    <MudGrid>
+        <MudItem xs="2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Style="height: 100%" OnClick="@SolveAsync">Solve</MudButton>
+        </MudItem>
+        <MudItem xs="10">
+            <MudGrid>
+                @{ var isProgressBarRendered = false; }
+                @foreach (var (result, number) in Results.Select((x, i) => (x, i + 1)))
+                {
+                    <MudItem xs="2">
+                        <MudText>Part @number:</MudText>
+                    </MudItem>
+                    <MudItem xs="10">
+                        @switch (result)
+                        {
+                            case string text when text.Contains(Environment.NewLine):
+                                var lines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+                                <MudTextField T="string" 
+                                             Value="@result.ToString()" 
+                                             Lines="@(lines.Length + 1)" 
+                                             ReadOnly="true"
+                                             Variant="Variant.Outlined"
+                                             Style="font-family: 'Source Code Pro', monospace; line-height: 12px; font-size: 14px; font-weight: bold;" />
+                                break;
+                            case string:
+                                <MudTextField T="string" Value="@result.ToString()" ReadOnly="true" Variant="Variant.Outlined" />
+                                break;
+                            case TaskCanceledException:
+                                <MudText>Canceled.</MudText>
+                                break;
+                            case NotImplementedException:
+                                <MudText>Not implemented.</MudText>
+                                break;
+                            case Exception exception:
+                                <MudText Color="Color.Error">Error - @exception.Message (@exception.GetType().Name)</MudText>
+                                break;
+                            case null when IsWorking && !isProgressBarRendered:
+                                isProgressBarRendered = true;
+                                <div style="width: 200px; height: 2em">
+                                    @if (Progress.Percentage > 0)
+                                    {
+                                        <MudProgressLinear Value="@Progress.Percentage" />
+                                    }
+                                    else
+                                    {
+                                        <MudProgressLinear Indeterminate="true" />
+                                    }
+                                </div>
+                                break;
+                            case null when IsWorking && isProgressBarRendered:
+                                <MudText>Waiting...</MudText>
+                                break;
+                            default:
+                                <MudText>no result.</MudText>
+                                break;
+                        }
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudItem>
+    </MudGrid>
 
     <TabControl OnActivatePage="VisualizerHandler.CancelAllVisualizations">
         <TabPage Name="Visualization" IsVisible="SolutionMetadata != null && VisualizerHandler.GetVisualizer(SolutionMetadata.Type) != null" IsActive>
             @if (IsWorking)
             {
-                <span>Calculating...</span>
+                <MudText>Calculating...</MudText>
             }
             else if (SolutionInstance == null)
             {
-                <span>Click 'Solve' to see the visualization!</span>
+                <MudText>Click 'Solve' to see the visualization!</MudText>
             }
             else
             {
@@ -90,18 +90,18 @@ else
             <div style="margin-top: 1em;">&nbsp;</div>
             @if (HasInputChanged)
             {
-                <MatButton OnClick="@ReloadInput" style="margin-bottom: 1em;" Disabled="@(IsWorking)">
+                <MudButton OnClick="@ReloadInput" Style="margin-bottom: 1em;" Disabled="@(IsWorking)" Variant="Variant.Filled">
                     Restore original input
-                </MatButton>
+                </MudButton>
             }
-            <MatTextField TValue="string"
+            <MudTextField T="string"
                           Value="@Input"
-                          OnInput="@SetInput"
-                          TextArea="@true"
-                          FullWidth="@true"
+                          ValueChanged="@SetInput"
+                          Lines="@((Input?.Split('\n').Length ?? 0) + 1)"
+                          FullWidth="true"
                           Disabled="@IsWorking"
-                          PlaceHolder="Enter your puzzle input here."
-                          rows="@(Input?.Split('\n').Length + 1)"/>
+                          Placeholder="Enter your puzzle input here."
+                          Variant="Variant.Outlined" />
         </TabPage>
         <TabPage Name="Source">
             <pre style="margin-top: 2em; font-family: 'Source Code Pro', monospace; font-size: 14px;">@SourceCode</pre>
@@ -116,9 +116,9 @@ else
         await LoadInputAsync(true);
     }
 
-    private void SetInput(ChangeEventArgs e)
+    private void SetInput(string value)
     {
-        Input = e.Value.ToString();
+        Input = value;
         HasInputChanged = true;
         StateHasChanged();
     }
