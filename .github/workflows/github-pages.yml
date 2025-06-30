@@ -12,9 +12,6 @@ jobs:
 
       - name: Setup .NET
         uses: actions/setup-dotnet@c0d4ad69d8bd405d234f1c9166d383b7a4f69ed8 # tag=v2
-        with:
-            dotnet-version: '7.0.x'
-            include-prerelease: true
 
       - name: Build
         run: dotnet build --configuration Release
