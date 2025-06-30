@@ -1,8 +1,6 @@
 namespace AdventOfCode.Core;
 
-public sealed class SolutionProgressEventArgs : EventArgs
+public sealed class SolutionProgressEventArgs(SolutionProgress solutionProgress) : EventArgs
 {
-    public SolutionProgressEventArgs(SolutionProgress solutionProgress) => this.Progress = solutionProgress;
-
-    public SolutionProgress Progress { get; }
+    public SolutionProgress Progress { get; } = solutionProgress;
 }

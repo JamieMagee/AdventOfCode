@@ -5,8 +5,7 @@ using System.Globalization;
 [Puzzle("Not Quite Lisp")]
 public sealed class Day01 : SolutionBase
 {
-    protected override string Part1(string input) => input.Select(c => c == '(' ? 1 : -1)
-        .Sum()
+    protected override string Part1(string input) => input.Sum(c => c == '(' ? 1 : -1)
         .ToString(CultureInfo.InvariantCulture);
 
     protected override string Part2(string input)

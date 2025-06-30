@@ -9,7 +9,7 @@ public abstract class SolutionBase : ISolution, IProgressPublisher
     /// </summary>
     private int myUpdateTick = Environment.TickCount;
 
-    public event EventHandler<SolutionProgressEventArgs> ProgressUpdated;
+    public event EventHandler<SolutionProgressEventArgs>? ProgressUpdated;
 
     public int MillisecondsBetweenProgressUpdates { get; set; } = 200;
 
@@ -28,19 +28,24 @@ public abstract class SolutionBase : ISolution, IProgressPublisher
     /// <summary>
     ///     Breaks the input into lines and removes empty lines at the end.
     /// </summary>
-    protected static IEnumerable<string> GetLines(string input) => input.Replace("\r", string.Empty)
-        .Split('\n')
-        .Reverse()
-        .SkipWhile(string.IsNullOrEmpty)
-        .Reverse()
-        .ToList();
+    /// <param name="input">The input string to process.</param>
+    protected static IEnumerable<string> GetLines(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+
+        return [..input.Replace("\r", string.Empty, StringComparison.Ordinal)
+            .Split('\n')
+            .Reverse()
+            .SkipWhile(string.IsNullOrEmpty)
+            .Reverse()];
+    }
 
     protected virtual string Part1(string input) => throw new NotImplementedException();
 
     protected virtual string Part2(string input) => throw new NotImplementedException();
 
     /// <summary>
-    ///     Returns true if <see cref="UpdateProgressAsync" /> should be called to update the UI of the solution runner. This
+    ///     Returns true if <see cref="UpdateProgressAsync(double, double)" /> should be called to update the UI of the solution runner. This
     ///     happens every couple of milliseconds.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -50,6 +55,9 @@ public abstract class SolutionBase : ISolution, IProgressPublisher
     ///     Updates the UI of the solution runner with the current progress, and schedules the next update a couple of
     ///     milliseconds in the future.
     /// </summary>
+    /// <param name="current">The current progress value.</param>
+    /// <param name="total">The total value to calculate the percentage from.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected Task UpdateProgressAsync(double current, double total)
     {
         this.Progress.Percentage = current / Math.Max(total, double.Epsilon) * 100;

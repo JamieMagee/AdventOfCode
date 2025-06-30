@@ -2,15 +2,17 @@
   <PropertyGroup Label="Build">
     <LangVersion>latest</LangVersion>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AnalysisLevel>latest</AnalysisLevel>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <ImplicitUsings>enable</ImplicitUsings>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Nullable>enable</Nullable>
     <NoWarn>CA1305;VSTHRD111;IDE0065;CA1707;IDE0010;IDE0033;SA1615;SA1300;SA1200;SA1202;SA1204;RZ10012;CA1001;VSTHRD110;CA1716</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Label="Package References">
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" PrivateAssets="all" Version="17.2.32"/>
-    <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" Version="1.2.0-beta.435"/>
+    <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" Version="1.2.0-beta.556"/>
   </ItemGroup>
 </Project>

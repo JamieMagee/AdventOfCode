@@ -2,7 +2,7 @@ namespace AdventOfCode.Core;
 
 public interface IProgressPublisher
 {
-    bool IsUpdateProgressNeeded();
+    public bool IsUpdateProgressNeeded();
 
-    Task UpdateProgressAsync(double current, double total);
+    public Task UpdateProgressAsync(double current, double total);
 }

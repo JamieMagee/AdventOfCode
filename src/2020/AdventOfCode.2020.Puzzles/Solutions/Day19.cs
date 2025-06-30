@@ -65,7 +65,7 @@ public sealed class Day19 : SolutionBase
                         part.StartsWith(@"""", StringComparison.Ordinal) ? new CharRule(part[1]) : new PointerRule(int.Parse(part)))));
             return entry;
         })
-        .ToDictionary();
+        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
     private static IEnumerable<int> RuleMatch(
         IReadOnlyDictionary<int, IEnumerable<IEnumerable<Rule>>> rules,

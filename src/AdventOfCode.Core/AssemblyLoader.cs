@@ -15,9 +15,17 @@ public static class AssemblyLoader
                     $"AdventOfCode.{year}.Puzzles",
                     $"AdventOfCode._{year}.Puzzles.Solutions.Day01");
             }
-            catch (Exception)
+            catch (FileNotFoundException)
             {
-                // ignored
+                // Assembly not found - ignore
+            }
+            catch (TypeLoadException)
+            {
+                // Type not found - ignore
+            }
+            catch (MissingMethodException)
+            {
+                // Constructor not found - ignore
             }
         });
 }
