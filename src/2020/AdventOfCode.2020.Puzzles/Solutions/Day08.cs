@@ -67,13 +67,12 @@ public sealed class Day08 : SolutionBase
         return (true, acc);
     }
 
-    private static IList<Instruction> ParseInput(string input) => GetLines(input).Select(x => x.Split(' '))
+    private static IList<Instruction> ParseInput(string input) => [.. GetLines(input).Select(x => x.Split(' '))
         .Select(x => new Instruction
         {
             Command = x[0],
             Argument = int.Parse(x[1]),
-        })
-        .ToList();
+        })];
 
     private sealed record Instruction
     {

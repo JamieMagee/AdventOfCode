@@ -5,14 +5,14 @@ public sealed class Day03 : SolutionBase
 {
     private const char Tree = '#';
 
-    private readonly List<(int, int)> day2Slopes = new()
-    {
+    private readonly List<(int, int)> day2Slopes =
+    [
         (1, 1),
         (3, 1),
         (5, 1),
         (7, 1),
         (1, 2),
-    };
+    ];
 
     protected override string Part1(string input) => CalculateTrees(input, 3, 1).ToString();
 
@@ -37,8 +37,7 @@ public sealed class Day03 : SolutionBase
         return countTrees;
     }
 
-    private static IList<char[]> ParseInput(string input) => input.Trim()
+    private static IList<char[]> ParseInput(string input) => [.. input.Trim()
         .Split('\n')
-        .Select(line => line.ToCharArray())
-        .ToList();
+        .Select(line => line.ToCharArray())];
 }

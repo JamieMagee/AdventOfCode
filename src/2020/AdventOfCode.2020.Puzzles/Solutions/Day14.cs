@@ -29,7 +29,7 @@ public sealed class Day14 : SolutionBase
                 var value = Convert.ToString(Convert.ToInt32(match.Groups["value"].Value), 2)
                     .PadLeft(36, '0');
                 var result =
-                    Convert.ToUInt64(new string(value.Select((c, i) => mask[i] == 'X' ? c : mask[i]).ToArray()), 2);
+                    Convert.ToUInt64(new string([.. value.Select((c, i) => mask[i] == 'X' ? c : mask[i])]), 2);
                 var address = int.Parse(match.Groups["address"].Value);
                 memory[address] = result;
             }
@@ -57,7 +57,7 @@ public sealed class Day14 : SolutionBase
                 var address = Convert.ToString(Convert.ToInt32(match.Groups["address"].Value), 2)
                     .PadLeft(36, '0');
                 var result =
-                    new string(address.Select((c, i) => mask[i] == '0' ? c : mask[i]).ToArray());
+                    new string([.. address.Select((c, i) => mask[i] == '0' ? c : mask[i])]);
                 var addresses = GetAddresses(result);
                 var value = ulong.Parse(match.Groups["value"].Value);
                 foreach (var a in addresses)
