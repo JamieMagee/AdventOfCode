@@ -16,7 +16,7 @@ public sealed class Day13 : SolutionBase
             .Where(x => x != "x")
             .Select(int.Parse)
             .Select(x => (x - (start % x), x))
-            .MinBy(x => x.Item1)
+            .Minima(x => x.Item1)
             .Select(x => x.Item1 * x.x)
             .First()
             .ToString();

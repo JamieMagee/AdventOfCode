@@ -2,7 +2,7 @@
 
 namespace AdventOfCode._2020.Puzzles.Solutions;
 
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 [Puzzle("Rain Risk")]
 public sealed class Day12 : SolutionBase
@@ -11,7 +11,7 @@ public sealed class Day12 : SolutionBase
     {
         var lines = input.GetLines<string>();
         var ship = new Ship();
-        foreach (var (op, val) in lines.Select(l => (l[0], int.Parse(l[1..]))))
+        foreach (var (op, val) in lines.Select(l => (l[0], int.Parse(l[1..], CultureInfo.InvariantCulture))))
         {
             switch (op)
             {
@@ -46,7 +46,7 @@ public sealed class Day12 : SolutionBase
     {
         var lines = input.GetLines<string>();
         var ship = new Ship();
-        foreach (var (op, val) in lines.Select(l => (l[0], int.Parse(l[1..]))))
+        foreach (var (op, val) in lines.Select(l => (l[0], int.Parse(l[1..], CultureInfo.InvariantCulture))))
         {
             switch (op)
             {
@@ -78,7 +78,6 @@ public sealed class Day12 : SolutionBase
     }
 }
 
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Justification")]
 public sealed class Ship
 {
     private int Dir { get; set; }

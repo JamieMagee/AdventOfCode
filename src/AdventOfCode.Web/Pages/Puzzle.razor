@@ -15,57 +15,65 @@ else
         </MudItem>
         <MudItem xs="10">
             <MudGrid>
-                @{ var isProgressBarRendered = false; }
-                @foreach (var (result, number) in Results.Select((x, i) => (x, i + 1)))
+                @if (Results != null)
                 {
-                    <MudItem xs="2">
-                        <MudText>Part @number:</MudText>
-                    </MudItem>
-                    <MudItem xs="10">
-                        @switch (result)
-                        {
-                            case string text when text.Contains(Environment.NewLine):
-                                var lines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-                                <MudTextField T="string" 
-                                             Value="@result.ToString()" 
-                                             Lines="@(lines.Length + 1)" 
-                                             ReadOnly="true"
-                                             Variant="Variant.Outlined"
-                                             Style="font-family: 'Source Code Pro', monospace; line-height: 12px; font-size: 14px; font-weight: bold;" />
-                                break;
-                            case string:
-                                <MudTextField T="string" Value="@result.ToString()" ReadOnly="true" Variant="Variant.Outlined" />
-                                break;
-                            case TaskCanceledException:
-                                <MudText>Canceled.</MudText>
-                                break;
-                            case NotImplementedException:
-                                <MudText>Not implemented.</MudText>
-                                break;
-                            case Exception exception:
-                                <MudText Color="Color.Error">Error - @exception.Message (@exception.GetType().Name)</MudText>
-                                break;
-                            case null when IsWorking && !isProgressBarRendered:
-                                isProgressBarRendered = true;
-                                <div style="width: 200px; height: 2em">
-                                    @if (Progress.Percentage > 0)
+                    @for (int i = 0; i < Results.Length; i++)
+                    {
+                        var result = Results[i];
+                        var partNumber = i + 1;
+                        
+                        <MudItem xs="2">
+                            <MudText>Part @partNumber:</MudText>
+                        </MudItem>
+                        <MudItem xs="10">
+                            @switch (result)
+                            {
+                                case string text when text.Contains(Environment.NewLine):
+                                    var lines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+                                    <MudTextField T="string" 
+                                                 Value="@text" 
+                                                 Lines="@(lines.Length + 1)" 
+                                                 ReadOnly="true"
+                                                 Variant="Variant.Outlined"
+                                                 Style="font-family: 'Source Code Pro', monospace; line-height: 12px; font-size: 14px; font-weight: bold;" />
+                                    break;
+                                case string singleLineText:
+                                    <MudTextField T="string" Value="@singleLineText" ReadOnly="true" Variant="Variant.Outlined" />
+                                    break;
+                                case TaskCanceledException:
+                                    <MudText>Canceled.</MudText>
+                                    break;
+                                case NotImplementedException:
+                                    <MudText>Not implemented.</MudText>
+                                    break;
+                                case Exception exception:
+                                    <MudText Color="Color.Error">Error - @exception.Message (@exception.GetType().Name)</MudText>
+                                    break;
+                                case null when IsWorking:
+                                    @if (ShouldShowProgressBar(i))
                                     {
-                                        <MudProgressLinear Value="@Progress.Percentage" />
+                                        <div style="width: 200px; height: 2em">
+                                            @if (Progress.Percentage > 0)
+                                            {
+                                                <MudProgressLinear Value="@Progress.Percentage" />
+                                            }
+                                            else
+                                            {
+                                                <MudProgressLinear Indeterminate="true" />
+                                            }
+                                        </div>
                                     }
                                     else
                                     {
-                                        <MudProgressLinear Indeterminate="true" />
+                                        <MudText>Waiting...</MudText>
                                     }
-                                </div>
-                                break;
-                            case null when IsWorking && isProgressBarRendered:
-                                <MudText>Waiting...</MudText>
-                                break;
-                            default:
-                                <MudText>no result.</MudText>
-                                break;
-                        }
-                    </MudItem>
+                                    break;
+                                default:
+                                    <MudText>no result.</MudText>
+                                    break;
+                            }
+                        </MudItem>
+                    }
                 }
             </MudGrid>
         </MudItem>
@@ -111,6 +119,21 @@ else
 
 @code
 {
+    private bool ShouldShowProgressBar(int resultIndex)
+    {
+        // Show progress bar only for the first null result when working
+        if (!IsWorking || Results == null) return false;
+        
+        for (int i = 0; i < Results.Length; i++)
+        {
+            if (Results[i] == null)
+            {
+                return i == resultIndex;
+            }
+        }
+        return false;
+    }
+
     private async Task ReloadInput(MouseEventArgs e)
     {
         await LoadInputAsync(true);

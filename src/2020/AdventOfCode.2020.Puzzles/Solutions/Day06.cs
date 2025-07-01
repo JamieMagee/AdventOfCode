@@ -13,5 +13,5 @@ public sealed class Day06 : SolutionBase
         .Sum(x => x.Length)
         .ToString();
 
-    private static IEnumerable<string> ParseInput(string input) => input.Trim().Split("\n\n");
+    private static string[] ParseInput(string input) => input.Trim().Split("\n\n");
 }

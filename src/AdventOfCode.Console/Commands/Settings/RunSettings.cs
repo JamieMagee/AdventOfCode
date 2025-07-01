@@ -3,7 +3,7 @@ namespace AdventOfCode.Console.Commands.Settings;
 using Spectre.Console.Cli;
 using System.ComponentModel;
 
-internal class RunSettings : BaseSettings
+internal sealed class RunSettings : BaseSettings
 {
     [CommandOption("-d|--day")]
     [Description("The specific day to run")]

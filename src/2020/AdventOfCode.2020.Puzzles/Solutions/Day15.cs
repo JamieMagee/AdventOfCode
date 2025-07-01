@@ -20,13 +20,13 @@ public sealed class Day15 : SolutionBase
         return await this.SolveAsync(numbers, 30_000_000);
     }
 
-    private async Task<string> SolveAsync(IReadOnlyList<int> input, int number)
+    private async Task<string> SolveAsync(int[] input, int number)
     {
         var spoken = new int[number];
         Array.Fill(spoken, -1);
 
         var turn = 1;
-        for (; turn < input.Count + 1; turn++)
+        for (; turn < input.Length + 1; turn++)
         {
             spoken[input[turn - 1]] = turn;
         }

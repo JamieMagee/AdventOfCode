@@ -2,7 +2,7 @@
 
 public interface IVisualizerHandler
 {
-    Type GetVisualizer(Type solutionType);
+    Type? GetVisualizer(Type solutionType);
 
     void CancelAllVisualizations();
 

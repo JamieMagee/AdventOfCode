@@ -5,7 +5,7 @@ using Spectre.Console;
 using System.Diagnostics;
 using System.Reflection;
 
-internal class SolutionRunner
+internal sealed class SolutionRunner
 {
     private readonly Configuration _config;
     private readonly SolutionHandler _solutionHandler;
@@ -69,19 +69,18 @@ internal class SolutionRunner
 
     public async Task RunDayAsync(int year, int day)
     {
-        if (!this._solutionHandler.Solutions.ContainsKey(year) ||
-            !this._solutionHandler.Solutions[year].ContainsKey(day))
+        if (!_solutionHandler.Solutions.TryGetValue(year, out IDictionary<int, SolutionMetadata>? value) ||
+            !value.TryGetValue(day, out SolutionMetadata? solutionMetadata))
         {
             AnsiConsole.MarkupLine($"[red]No solution found for {year} Day {day}[/]");
             return;
         }
 
-        var solutionMetadata = this._solutionHandler.Solutions[year][day];
-        var solution = solutionMetadata.CreateInstance();
+    var solution = solutionMetadata.CreateInstance();
 
         var dayString = day.ToString().PadLeft(2, '0');
         var rootDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        var inputFile = Path.Combine(rootDir, "Input", year.ToString(), $"day{dayString}.txt");
+        var inputFile = Path.Combine(rootDir!, "Input", year.ToString(), $"day{dayString}.txt");
 
         if (!File.Exists(inputFile))
         {
@@ -103,12 +102,12 @@ internal class SolutionRunner
             .BorderColor(Color.Blue));
 
         // Run Part 1
-        var (result1, time1) = await this.RunPartAsync(input, solution.Part1Async, solution);
+        var (result1, time1) = await RunPartAsync(input, solution.Part1Async, solution);
         table.AddRow("[yellow]1[/]", result1.Contains(Environment.NewLine) ?
             $"[dim]{Environment.NewLine}{result1}[/]" : result1, $"[green]{time1}ms[/]");
 
         // Run Part 2
-        var (result2, time2) = await this.RunPartAsync(input, solution.Part2Async, solution);
+        var (result2, time2) = await RunPartAsync(input, solution.Part2Async, solution);
         table.AddRow("[yellow]2[/]", result2.Contains(Environment.NewLine) ?
             $"[dim]{Environment.NewLine}{result2}[/]" : result2, $"[green]{time2}ms[/]");
 
@@ -116,7 +115,7 @@ internal class SolutionRunner
         AnsiConsole.WriteLine();
     }
 
-    private async Task<(string result, long time)> RunPartAsync(
+    private static async Task<(string result, long time)> RunPartAsync(
         string input,
         Func<string, Task<string>> action,
         ISolution solution)

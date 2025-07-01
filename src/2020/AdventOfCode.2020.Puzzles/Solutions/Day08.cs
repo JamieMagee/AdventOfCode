@@ -76,7 +76,7 @@ public sealed class Day08 : SolutionBase
 
     private sealed record Instruction
     {
-        public string Command { get; set; }
+        public required string Command { get; set; }
 
         public int Argument { get; set; }
     }

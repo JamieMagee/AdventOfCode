@@ -9,7 +9,7 @@ internal sealed class Configuration
     {
     }
 
-    public string SessionCookie { get; set; }
+    public required string SessionCookie { get; set; }
 
     public static Configuration Load()
     {
@@ -18,7 +18,10 @@ internal sealed class Configuration
             .AddUserSecrets(Assembly.GetExecutingAssembly(), true, true)
             .Build();
 
-        var configuration = new Configuration();
+        var configuration = new Configuration
+        {
+            SessionCookie = string.Empty
+        };
         config.Bind(configuration);
 
         return configuration;

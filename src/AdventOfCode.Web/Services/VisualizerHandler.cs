@@ -3,7 +3,7 @@ using AdventOfCode.Web.Visualizers;
 
 namespace AdventOfCode.Web.Services;
 
-public sealed class VisualizerHandler : IVisualizerHandler
+public sealed class VisualizerHandler : IVisualizerHandler, IDisposable
 {
     private CancellationTokenSource myCancellationTokenSource = new();
 
@@ -11,15 +11,21 @@ public sealed class VisualizerHandler : IVisualizerHandler
 
     public IReadOnlyDictionary<Type, Type> VisualizersBySolutionType { get; }
 
-    public Type GetVisualizer(Type solutionType) => this.VisualizersBySolutionType.TryGetValue(solutionType, out var visualizerType) ? visualizerType : null;
+    public Type? GetVisualizer(Type solutionType) => this.VisualizersBySolutionType.TryGetValue(solutionType, out var visualizerType) ? visualizerType : null;
 
     public void CancelAllVisualizations()
     {
         this.myCancellationTokenSource.Cancel();
+        this.myCancellationTokenSource.Dispose();
         this.myCancellationTokenSource = new CancellationTokenSource();
     }
 
     public CancellationToken GetVisualizationCancellationToken() => this.myCancellationTokenSource.Token;
+
+    public void Dispose()
+    {
+        this.myCancellationTokenSource?.Dispose();
+    }
 
     private static Dictionary<Type, Type> GatherPuzzleSolutions()
     {

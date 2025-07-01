@@ -6,7 +6,7 @@ using AdventOfCode.Core;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-internal class RunCommand : AsyncCommand<RunSettings>
+internal sealed class RunCommand : AsyncCommand<RunSettings>
 {
     private readonly SolutionRunner _solutionRunner;
 

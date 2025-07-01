@@ -62,7 +62,7 @@ public sealed class Day19 : SolutionBase
                 int.Parse(id),
                 combinations.Select(combination => combination.Split(" ")
                     .Select<string, Rule>(part =>
-                        part.StartsWith(@"""", StringComparison.Ordinal) ? new CharRule(part[1]) : new PointerRule(int.Parse(part)))));
+                        part.StartsWith('"') ? new CharRule(part[1]) : new PointerRule(int.Parse(part)))));
             return entry;
         })
         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);

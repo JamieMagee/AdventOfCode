@@ -5,19 +5,19 @@ namespace AdventOfCode.Web.Shared;
 public sealed partial class TabControl
 {
     private readonly List<TabPage> myPages = new();
-    private TabPage myActivePage;
+    private TabPage myActivePage = null!;
 
     /// <summary>
     ///     The content of the TabControl, consisting of <see cref="TabPage" /> items.
     /// </summary>
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public required RenderFragment ChildContent { get; set; }
 
     /// <summary>
     ///     Called when the <see cref="ActivePage" /> is changed.
     /// </summary>
     [Parameter]
-    public Action OnActivatePage { get; set; }
+    public Action? OnActivatePage { get; set; }
 
     /// <summary>
     ///     The active page of the TabControl.
@@ -58,7 +58,10 @@ public sealed partial class TabControl
         if (this.ActivePage != null && (!this.ActivePage.IsEnabled || !this.ActivePage.IsVisible))
         {
             var firstEnabledPage = this.Pages.FirstOrDefault(x => x.IsEnabled && x.IsVisible);
-            this.ActivatePage(firstEnabledPage);
+            if (firstEnabledPage != null)
+            {
+                this.ActivatePage(firstEnabledPage);
+            }
         }
     }
 }

@@ -25,9 +25,9 @@
 
 @code {
 
-    IEnumerable<int> _years;
+    IEnumerable<int> _years = Enumerable.Empty<int>();
 
-    IDictionary<int, IDictionary<int, SolutionMetadata>> _solutions;
+    IDictionary<int, IDictionary<int, SolutionMetadata>> _solutions = new Dictionary<int, IDictionary<int, SolutionMetadata>>();
 
     protected override async Task OnInitializedAsync()
     {

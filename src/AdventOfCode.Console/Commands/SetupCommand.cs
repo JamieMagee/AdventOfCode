@@ -5,7 +5,7 @@ using AdventOfCode.Console.Services;
 using AdventOfCode.Core;
 using Spectre.Console.Cli;
 
-internal class SetupCommand : AsyncCommand<SetupSettings>
+internal sealed class SetupCommand : AsyncCommand<SetupSettings>
 {
     private readonly DaySetupService _daySetupService;
 

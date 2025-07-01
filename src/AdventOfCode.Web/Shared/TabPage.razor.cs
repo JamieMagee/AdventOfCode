@@ -11,7 +11,7 @@ public sealed class TabPage : ComponentBase
     ///     The name of the page, displayed on the tab button.
     /// </summary>
     [Parameter]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     ///     True if this page is the active one within the parent <see cref="TabControl" />.
@@ -32,13 +32,13 @@ public sealed class TabPage : ComponentBase
     ///     The content of the page.
     /// </summary>
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public required RenderFragment ChildContent { get; set; }
 
     /// <summary>
     ///     The parent TabControl.
     /// </summary>
     [CascadingParameter(Name = "Parent")]
-    private TabControl Parent { get; set; }
+    private TabControl Parent { get; set; } = null!;
 
     protected override void OnInitialized()
     {

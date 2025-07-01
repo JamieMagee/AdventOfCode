@@ -14,7 +14,7 @@ public sealed class InputHandler : IInputHandler
     public async Task<string> GetInputAsync(int year, int day)
     {
         var input = await this.GetFileAsync(year, day, "input/{0}/day{1}.txt", this.myInputCache);
-        return input;
+        return input ?? string.Empty;
     }
 
     public async Task<string> GetSourceCodeAsync(int year, int day)
@@ -39,11 +39,11 @@ public sealed class InputHandler : IInputHandler
         var results = this.GetResults(day);
         for (var i = 0; i < results.Length; i++)
         {
-            results[i] = null;
+            results[i] = null!;
         }
     }
 
-    private async Task<string> GetFileAsync(int year, int day, string pathTemplate, IDictionary<int, string> cache)
+    private async Task<string?> GetFileAsync(int year, int day, string pathTemplate, Dictionary<int, string> cache)
     {
         if (!cache.TryGetValue(day, out var description))
         {

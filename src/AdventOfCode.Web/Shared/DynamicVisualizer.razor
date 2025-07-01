@@ -1,0 +1,19 @@
+@using AdventOfCode.Core
+@using MudBlazor
+
+@if (SolutionInstance == null)
+{
+    <MudText>No solution instance available for visualization.</MudText>
+}
+else
+{
+    <MudText>Visualization for @SolutionInstance.GetType().Name</MudText>
+    <MudText Typo="Typo.body2" Class="mt-2">
+        Visualization component would display dynamic content based on the solution type.
+    </MudText>
+}
+
+@code {
+    [Parameter]
+    public ISolution? SolutionInstance { get; set; }
+}

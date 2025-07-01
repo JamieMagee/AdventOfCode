@@ -1,6 +1,5 @@
 namespace AdventOfCode.Console.Services;
 
-using AdventOfCode.Core;
 using HtmlAgilityPack;
 using Spectre.Console;
 using System.Net;
@@ -8,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-internal class DaySetupService
+internal sealed class DaySetupService
 {
     private readonly Configuration _config;
 
@@ -22,7 +21,7 @@ internal class DaySetupService
         var dayString = day.ToString().PadLeft(2, '0');
         var consoleProjectBinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         var puzzleProjectPath = Path.Combine(
-            consoleProjectBinPath,
+            consoleProjectBinPath!,
             "..",
             "..",
             "..",
@@ -51,7 +50,7 @@ internal class DaySetupService
                 var puzzleTitle = await GetPuzzleTitleAsync(year, day, httpClient);
 
                 ctx.Status("Creating solution files...");
-                await CreateSolutionSourceAsync(year, day, dayString, consoleProjectBinPath, puzzleProjectPath, puzzleTitle);
+                await CreateSolutionSourceAsync(year, day, dayString, consoleProjectBinPath!, puzzleProjectPath, puzzleTitle);
             });
 
         AnsiConsole.MarkupLine("[green]✓ Setup completed successfully![/]");
@@ -84,8 +83,8 @@ internal class DaySetupService
         descriptionPage.LoadHtml(descriptionPageSource);
         var articleNodes = descriptionPage.DocumentNode.SelectNodes("//article[@class='day-desc']");
 
-        var titleNode = articleNodes.First().SelectSingleNode("//h2");
-        var puzzleTitle = puzzleTitleRegex.Match(titleNode.InnerText).Groups["title"].Value;
+        var titleNode = articleNodes!.First().SelectSingleNode("//h2");
+        var puzzleTitle = puzzleTitleRegex.Match(titleNode!.InnerText).Groups["title"].Value;
 
         return puzzleTitle;
     }
