@@ -47,6 +47,10 @@ public sealed partial class Puzzle : IDisposable
 
     private ISolution? SolutionInstance { get; set; }
 
+    private TimeSpan[]? PartTimings { get; set; }
+
+    private Stopwatch[]? PartStopwatches { get; set; }
+
     protected override Task OnParametersSetAsync() => this.InitAsync();
 
     private async Task InitAsync()
@@ -78,6 +82,8 @@ public sealed partial class Puzzle : IDisposable
         Progress = new SolutionProgress();
         CalculationStopwatch = null;
         SolutionInstance = null;
+        PartTimings = null;
+        PartStopwatches = null;
     }
 
     private bool TryParseParameters(out int yearNumber, out int dayNumber)
@@ -125,9 +131,13 @@ public sealed partial class Puzzle : IDisposable
         {
             IsWorking = true;
             InputHandler.ClearResults(SolutionMetadata.Day);
-            
+            Results = InputHandler.GetResults(SolutionMetadata.Day);
+
             SolutionInstance = CreateAndConfigureSolution();
             CalculationStopwatch = Stopwatch.StartNew();
+            PartTimings = new TimeSpan[2];
+            PartStopwatches = new Stopwatch[2];
+            liveTimerUpdate = CreateLiveTimerUpdate();
 
             var solutionParts = new Func<string, Task<string>>[]
             {
@@ -143,10 +153,13 @@ public sealed partial class Puzzle : IDisposable
                 StateHasChanged();
                 await Task.Delay(1);
 
-                if (Results != null)
-                {
-                    Results[i] = await ExecuteSolutionPartAsync(solutionParts[i]);
-                }
+                PartStopwatches[i] = Stopwatch.StartNew();
+                Results[i] = await ExecuteSolutionPartAsync(solutionParts[i]);
+                PartStopwatches[i].Stop();
+                PartTimings[i] = PartStopwatches[i].Elapsed;
+
+                // Update UI after each part completes
+                StateHasChanged();
             }
         }
         finally
@@ -171,6 +184,8 @@ public sealed partial class Puzzle : IDisposable
             SolutionInstance.ProgressUpdated -= OnProgressUpdate;
         }
 
+        liveTimerUpdate?.Dispose();
+        liveTimerUpdate = null;
         IsWorking = false;
         CalculationStopwatch?.Stop();
     }
@@ -190,6 +205,8 @@ public sealed partial class Puzzle : IDisposable
     private void Cancel()
     {
         IsWorking = false;
+        liveTimerUpdate?.Dispose();
+        liveTimerUpdate = null;
         myCancellationTokenSource?.Cancel();
         VisualizerHandler.CancelAllVisualizations();
     }
@@ -204,9 +221,54 @@ public sealed partial class Puzzle : IDisposable
         }
     }
 
+    private Timer? liveTimerUpdate;
+    private Timer CreateLiveTimerUpdate()
+    {
+        return new Timer(_ => _ = InvokeAsync(StateHasChanged), null, TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100));
+    }
+
+    private static string FormatElapsedTime(TimeSpan elapsed)
+    {
+        if (elapsed.TotalMilliseconds < 1000)
+        {
+            return $"{elapsed.TotalMilliseconds:F0}ms";
+        }
+        else if (elapsed.TotalSeconds < 60)
+        {
+            return $"{elapsed.TotalSeconds:F2}s";
+        }
+        else if (elapsed.TotalMinutes < 60)
+        {
+            return $"{elapsed.Minutes}m {elapsed.Seconds}s";
+        }
+        else
+        {
+            return $"{elapsed.Hours}h {elapsed.Minutes}m {elapsed.Seconds}s";
+        }
+    }
+
+    private TimeSpan GetCurrentPartElapsed(int partIndex)
+    {
+        if (PartStopwatches == null || partIndex >= PartStopwatches.Length)
+            return TimeSpan.Zero;
+
+        // If the part is already completed, return its timing
+        if (PartTimings != null && partIndex < PartTimings.Length && PartTimings[partIndex] != TimeSpan.Zero)
+            return PartTimings[partIndex];
+
+        // If this is the currently running part, return its current elapsed time
+        if (ShouldShowProgressBar(partIndex) && PartStopwatches[partIndex] != null && PartStopwatches[partIndex].IsRunning)
+        {
+            return PartStopwatches[partIndex].Elapsed;
+        }
+
+        return TimeSpan.Zero;
+    }
+
     public void Dispose()
     {
         Cancel();
         myCancellationTokenSource?.Dispose();
+        liveTimerUpdate?.Dispose();
     }
 }

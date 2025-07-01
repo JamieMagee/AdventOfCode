@@ -1,9 +1,129 @@
 ﻿@page "/"
+@inject ISolutionHandler SolutionHandler
+@inject NavigationManager NavigationManager
 
-<h1>Advent of Code 2020 Solutions</h1>
-<h5>by Jamie Magee</h5>
+<div style="max-width: 1200px; margin: 0 auto;">
+    <!-- Hero Section -->
+    <MudPaper Elevation="0" Style="padding: 3rem 2rem; text-align: center; background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); border-radius: 16px; margin-bottom: 3rem; color: white;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 1.5rem;">
+            <MudIcon Icon="@Icons.Material.Filled.Star" Size="Size.Large" />
+            <MudText Typo="Typo.h2" Style="font-weight: 700; margin: 0;">Advent of Code</MudText>
+        </div>
+        <MudText Typo="Typo.h5" Style="font-weight: 400; opacity: 0.9; margin-bottom: 1rem;">C# Solutions by Jamie Magee</MudText>
+        <MudText Typo="Typo.body1" Style="opacity: 0.8; max-width: 600px; margin: 0 auto 2rem;">
+            Interactive Blazor WebAssembly runner for <a href="https://adventofcode.com" target="_blank" style="color: white; text-decoration: underline;">Advent of Code</a> puzzles.
+            Explore solutions, visualizations, and source code.
+        </MudText>
+        <MudButton Variant="Variant.Filled" 
+                   Color="Color.Surface" 
+                   Size="Size.Large"
+                   StartIcon="@Icons.Material.Filled.PlayArrow"
+                   Style="color: #2563eb; font-weight: 600; padding: 12px 24px; border-radius: 8px;"
+                   Href="/puzzle">
+            Explore Solutions
+        </MudButton>
+    </MudPaper>
 
-<p style="margin-top: 2em">
-    C# solutions for <a href="https://adventofcode.com">Advent of Code 2020</a> using a Blazor WebAssembly runner.<br/>
-    Use the menu bar to browse solutions.
-</p>
+    <!-- Stats Section -->
+    <MudGrid>
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="1" Style="padding: 2rem; text-align: center; border-radius: 12px; height: 100%;">
+                <MudIcon Icon="@Icons.Material.Filled.Code" Size="Size.Large" Color="Color.Primary" Style="margin-bottom: 1rem;" />
+                <MudText Typo="Typo.h4" Style="font-weight: 700; color: var(--mud-palette-primary); margin-bottom: 0.5rem;">@_totalSolutions</MudText>
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 500;">Solutions</MudText>
+                <MudText Typo="Typo.body2" Style="color: var(--mud-palette-text-secondary);">Completed puzzles</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="1" Style="padding: 2rem; text-align: center; border-radius: 12px; height: 100%;">
+                <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Large" Color="Color.Secondary" Style="margin-bottom: 1rem;" />
+                <MudText Typo="Typo.h4" Style="font-weight: 700; color: var(--mud-palette-secondary); margin-bottom: 0.5rem;">@_availableYears</MudText>
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 500;">Years</MudText>
+                <MudText Typo="Typo.body2" Style="color: var(--mud-palette-text-secondary);">Event years covered</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="1" Style="padding: 2rem; text-align: center; border-radius: 12px; height: 100%;">
+                <MudIcon Icon="@Icons.Material.Filled.Visibility" Size="Size.Large" Color="Color.Tertiary" Style="margin-bottom: 1rem;" />
+                <MudText Typo="Typo.h4" Style="font-weight: 700; color: var(--mud-palette-tertiary); margin-bottom: 0.5rem;">@_visualizations</MudText>
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 500;">Visualizations</MudText>
+                <MudText Typo="Typo.body2" Style="color: var(--mud-palette-text-secondary);">Interactive demos</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Recent Solutions -->
+    <div style="margin-top: 3rem;">
+        <MudText Typo="Typo.h4" Style="font-weight: 600; margin-bottom: 1.5rem;">Recent Solutions</MudText>
+        <MudGrid>
+            @foreach (var (year, solutions) in _recentSolutions)
+            {
+                @foreach (var (day, metadata) in solutions.Take(3))
+                {
+                    <MudItem xs="12" md="4">
+                        <MudCard Style="height: 100%; border-radius: 12px; transition: transform 0.2s, box-shadow 0.2s;" 
+                                 Class="cursor-pointer hover:scale-105"
+                                 @onclick="() => NavigateToSolution(year, day)">
+                            <MudCardContent Style="padding: 1.5rem;">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+                                    <MudChip T="string"
+                                             Size="Size.Small" 
+                                             Color="Color.Primary" 
+                                             Variant="Variant.Filled"
+                                             Style="font-weight: 600;">
+                                        @year Day @day
+                                    </MudChip>
+                                </div>
+                                <MudText Typo="Typo.h6" Style="font-weight: 600; margin-bottom: 0.5rem;">@metadata.Title</MudText>
+                                <MudText Typo="Typo.body2" Style="color: var(--mud-palette-text-secondary);">
+                                    Click to view solution and visualization
+                                </MudText>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                }
+            }
+        </MudGrid>
+    </div>
+
+    <!-- Call to Action -->
+    <MudPaper Elevation="1" Style="padding: 2rem; margin-top: 3rem; text-align: center; border-radius: 12px;">
+        <MudText Typo="Typo.h5" Style="font-weight: 600; margin-bottom: 1rem;">Ready to explore?</MudText>
+        <MudText Typo="Typo.body1" Style="color: var(--mud-palette-text-secondary); margin-bottom: 1.5rem;">
+            Use the navigation menu to browse solutions by year and day.
+        </MudText>
+        <MudButton Variant="Variant.Outlined" 
+                   Color="Color.Primary" 
+                   StartIcon="@Icons.Material.Filled.MenuOpen"
+                   OnClick="@(() => NavigationManager.NavigateTo("/puzzle"))">
+            Browse All Solutions
+        </MudButton>
+    </MudPaper>
+</div>
+
+@code {
+    private int _totalSolutions;
+    private int _availableYears;
+    private int _visualizations;
+    private IEnumerable<(int year, IEnumerable<(int day, SolutionMetadata metadata)> solutions)> _recentSolutions = new List<(int, IEnumerable<(int, SolutionMetadata)>)>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        
+        var solutions = SolutionHandler.Solutions;
+        _totalSolutions = solutions.Sum(kvp => kvp.Value.Count);
+        _availableYears = solutions.Keys.Count;
+        _visualizations = 0; // TODO: Count visualizations when implemented
+        
+        _recentSolutions = solutions
+            .OrderByDescending(kvp => kvp.Key)
+            .Take(2)
+            .Select(kvp => (kvp.Key, kvp.Value.OrderByDescending(s => s.Key).Take(3).Select(s => (s.Key, s.Value))));
+    }
+
+    private void NavigateToSolution(int year, int day)
+    {
+        NavigationManager.NavigateTo($"/puzzle/{year}/{day}");
+    }
+}

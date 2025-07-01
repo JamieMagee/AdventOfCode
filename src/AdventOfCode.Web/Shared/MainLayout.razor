@@ -1,33 +1,90 @@
 @inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider Theme="_theme" IsDarkMode="_isDarkMode" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+    <MudAppBar Elevation="0" Style="backdrop-filter: blur(8px); background: rgba(var(--mud-palette-surface), 0.8); border-bottom: 1px solid var(--mud-palette-divider);">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" 
+                       Color="Color.Inherit" 
+                       Edge="Edge.Start" 
+                       OnClick="@ToggleDrawer"
+                       Style="transition: background-color 0.2s;" />
         <MudSpacer />
-        <MudText Typo="Typo.h6">AdventOfCode.Web</MudText>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <MudIcon Icon="@Icons.Material.Filled.Star" Color="Color.Primary" Size="Size.Medium" />
+            <MudText Typo="Typo.h6" Style="font-weight: 600; color: var(--mud-palette-primary);">Advent of Code</MudText>
+        </div>
         <MudSpacer />
-        <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Href="https://github.com/JamieMagee/AdventOfCode" Target="_blank" />
-            <MudIconButton Icon="@Icons.Custom.Brands.Twitter" Color="Color.Inherit" Href="https://twitter.com/Jamie_Magee" Target="_blank" />
-            <MudIconButton Icon="@Icons.Material.Filled.Person" Color="Color.Inherit" Href="https://jamiemagee.co.uk" Target="_blank" />
-        </MudHidden>
-        <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
-            <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
-                <MudMenuItem Href="https://jamiemagee.co.uk" Target="_blank">JamieMagee.co.uk</MudMenuItem>
-                <MudMenuItem Href="https://twitter.com/Jamie_Magee" Target="_blank">Twitter</MudMenuItem>
-                <MudMenuItem Href="https://github.com/JamieMagee/AdventOfCode" Target="_blank">Github</MudMenuItem>
-            </MudMenu>
-        </MudHidden>
+        <div style="display: flex; align-items: center; gap: 4px;">
+            <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+                <MudTooltip Text="GitHub Repository">
+                    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" 
+                                   Color="Color.Inherit" 
+                                   Href="https://github.com/JamieMagee/AdventOfCode" 
+                                   Target="_blank"
+                                   Style="transition: background-color 0.2s;" />
+                </MudTooltip>
+                <MudTooltip Text="Twitter">
+                    <MudIconButton Icon="@Icons.Custom.Brands.Twitter" 
+                                   Color="Color.Inherit" 
+                                   Href="https://twitter.com/Jamie_Magee" 
+                                   Target="_blank"
+                                   Style="transition: background-color 0.2s;" />
+                </MudTooltip>
+                <MudTooltip Text="Personal Website">
+                    <MudIconButton Icon="@Icons.Material.Filled.Person" 
+                                   Color="Color.Inherit" 
+                                   Href="https://jamiemagee.co.uk" 
+                                   Target="_blank"
+                                   Style="transition: background-color 0.2s;" />
+                </MudTooltip>
+            </MudHidden>
+            <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
+                <MudMenu Icon="@Icons.Material.Filled.MoreVert" 
+                         Color="Color.Inherit" 
+                         AnchorOrigin="Origin.BottomLeft" 
+                         TransformOrigin="Origin.TopLeft"
+                         Style="transition: background-color 0.2s;">
+                    <MudMenuItem Href="https://jamiemagee.co.uk" Target="_blank">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" />
+                            <MudText>Personal Website</MudText>
+                        </div>
+                    </MudMenuItem>
+                    <MudMenuItem Href="https://twitter.com/Jamie_Magee" Target="_blank">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <MudIcon Icon="@Icons.Custom.Brands.Twitter" Size="Size.Small" />
+                            <MudText>Twitter</MudText>
+                        </div>
+                    </MudMenuItem>
+                    <MudMenuItem Href="https://github.com/JamieMagee/AdventOfCode" Target="_blank">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <MudIcon Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small" />
+                            <MudText>GitHub</MudText>
+                        </div>
+                    </MudMenuItem>
+                </MudMenu>
+            </MudHidden>
+            <MudTooltip Text="Toggle Dark Mode">
+                <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)" 
+                               Color="Color.Inherit" 
+                               OnClick="@ToggleDarkMode"
+                               Style="transition: background-color 0.2s;" />
+            </MudTooltip>
+        </div>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+    <MudDrawer @bind-Open="_drawerOpen" 
+               ClipMode="DrawerClipMode.Always" 
+               Elevation="0" 
+               Variant="DrawerVariant.Mini" 
+               OpenMiniOnHover="true"
+               Style="border-right: 1px solid var(--mud-palette-divider);">
         <NavMenu />
     </MudDrawer>
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.False" Class="my-16 pt-16">
+    <MudMainContent Style="background: var(--mud-palette-background);">
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="padding: 2rem 1.5rem;">
             @Body
         </MudContainer>
     </MudMainContent>
@@ -35,9 +92,62 @@
 
 @code {
     private bool _drawerOpen = true;
+    private bool _isDarkMode = false;
 
     private void ToggleDrawer()
     {
         _drawerOpen = !_drawerOpen;
     }
+
+    private void ToggleDarkMode()
+    {
+        _isDarkMode = !_isDarkMode;
+        StateHasChanged();
+    }
+
+    private readonly MudTheme _theme = new()
+    {
+        PaletteLight = new PaletteLight()
+        {
+            Primary = "#2563eb",
+            Secondary = "#64748b",
+            AppbarBackground = "rgba(255, 255, 255, 0.8)",
+            Background = "#f8fafc",
+            Surface = "#ffffff",
+            DrawerBackground = "#ffffff",
+            AppbarText = "#1e293b",
+            TextPrimary = "#1e293b",
+            TextSecondary = "#64748b",
+            ActionDefault = "#64748b",
+            ActionDisabled = "#cbd5e1",
+            ActionDisabledBackground = "#f1f5f9",
+            Divider = "#e2e8f0",
+            DividerLight = "#f1f5f9",
+            TableLines = "#e2e8f0",
+            LinesDefault = "#e2e8f0",
+            LinesInputs = "#cbd5e1",
+            TextDisabled = "#94a3b8"
+        },
+        PaletteDark = new PaletteDark()
+        {
+            Primary = "#3b82f6",
+            Secondary = "#64748b",
+            AppbarBackground = "rgba(15, 23, 42, 0.8)",
+            Background = "#0f172a",
+            Surface = "#1e293b",
+            DrawerBackground = "#1e293b",
+            AppbarText = "#f1f5f9",
+            TextPrimary = "#f1f5f9",
+            TextSecondary = "#cbd5e1",
+            ActionDefault = "#cbd5e1",
+            ActionDisabled = "#475569",
+            ActionDisabledBackground = "#334155",
+            Divider = "#334155",
+            DividerLight = "#475569",
+            TableLines = "#334155",
+            LinesDefault = "#334155",
+            LinesInputs = "#475569",
+            TextDisabled = "#64748b"
+        }
+    };
 }

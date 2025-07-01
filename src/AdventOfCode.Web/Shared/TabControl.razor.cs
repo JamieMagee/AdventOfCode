@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 namespace AdventOfCode.Web.Shared;
 
@@ -63,5 +64,16 @@ public sealed partial class TabControl
                 this.ActivatePage(firstEnabledPage);
             }
         }
+    }
+
+    private static string GetTabIcon(string tabName)
+    {
+        return tabName switch
+        {
+            "Visualization" => Icons.Material.Filled.Visibility,
+            "Input" => Icons.Material.Filled.Input,
+            "Source" => Icons.Material.Filled.Code,
+            _ => Icons.Material.Filled.Tab
+        };
     }
 }

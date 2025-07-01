@@ -2,25 +2,51 @@
 @inject NavigationManager NavigationManager
 @inject ISolutionHandler SolutionHandler
 
-<MudNavMenu>
-    <MudNavLink Href="@NavigationManager.ToAbsoluteUri("").AbsoluteUri" Match="NavLinkMatch.All">
-        <MudIcon Icon="@Icons.Material.Filled.Home" />
-        &nbsp; Home
-    </MudNavLink>
+<div style="padding: 1rem;">
+    <MudNavMenu>
+        <MudNavLink Href="@NavigationManager.ToAbsoluteUri("").AbsoluteUri" 
+                    Match="NavLinkMatch.All"
+                    Style="border-radius: 8px; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Medium" />
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 500;">Home</MudText>
+            </div>
+        </MudNavLink>
 
-    @foreach (var year in _years.OrderByDescending(x => x))
-    {
-        <MudNavGroup Title="@year.ToString()" Expanded="true">
-            @foreach (var (day, solutionMetadata) in _solutions[year])
-            {
-                var href = $"puzzle/{year}/{day}";
-                <MudNavLink Href=@href>
-                    Day @day - @solutionMetadata.Title
-                </MudNavLink>
-            }
-        </MudNavGroup>
-    }
-</MudNavMenu>
+        @foreach (var year in _years.OrderByDescending(x => x))
+        {
+            <MudNavGroup Title="@year.ToString()" 
+                         Expanded="@(year == _years.OrderByDescending(x => x).FirstOrDefault())"
+                         Style="margin-bottom: 8px;">
+                <TitleContent>
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 8px 0;">
+                        <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Medium" Color="Color.Primary" />
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 600; color: var(--mud-palette-primary);">@year</MudText>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    @foreach (var (day, solutionMetadata) in _solutions[year])
+                    {
+                        var href = $"puzzle/{year}/{day}";
+                        <MudNavLink Href="@href" 
+                                    Style="border-radius: 6px; margin: 2px 0;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <MudChip T="string"
+                                         Size="Size.Small" 
+                                         Color="Color.Primary" 
+                                         Variant="Variant.Text"
+                                         Style="font-weight: 600; min-height: 24px; font-size: 0.75rem;">
+                                    @day
+                                </MudChip>
+                                <MudText Typo="Typo.body2" Style="font-weight: 400;">@solutionMetadata.Title</MudText>
+                            </div>
+                        </MudNavLink>
+                    }
+                </ChildContent>
+            </MudNavGroup>
+        }
+    </MudNavMenu>
+</div>
 
 
 @code {

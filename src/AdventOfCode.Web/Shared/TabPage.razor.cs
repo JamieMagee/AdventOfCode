@@ -5,7 +5,7 @@ namespace AdventOfCode.Web.Shared;
 /// <summary>
 ///     Represents a single page of a <see cref="TabControl" />.
 /// </summary>
-public sealed class TabPage : ComponentBase
+public sealed partial class TabPage : ComponentBase
 {
     /// <summary>
     ///     The name of the page, displayed on the tab button.

@@ -4,117 +4,257 @@
 
 @if (SolutionMetadata == null)
 {
-    <MudText Typo="Typo.h3">Day @Day (no solution available)</MudText>
+    <div style="max-width: 800px; margin: 0 auto; text-align: center; padding: 3rem;">
+        <MudIcon Icon="@Icons.Material.Filled.SearchOff" Size="Size.Large" Color="Color.Secondary" Style="margin-bottom: 1rem;" />
+        <MudText Typo="Typo.h4" Style="font-weight: 600; margin-bottom: 0.5rem;">Day @Day</MudText>
+        <MudText Typo="Typo.body1" Style="color: var(--mud-palette-text-secondary);">No solution available</MudText>
+    </div>
 }
 else
 {
-    <MudText Typo="Typo.h3">Day @SolutionMetadata.Day - @SolutionMetadata.Title</MudText>
-    <MudGrid>
-        <MudItem xs="2">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Style="height: 100%" OnClick="@SolveAsync">Solve</MudButton>
-        </MudItem>
-        <MudItem xs="10">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <!-- Header -->
+        <MudPaper Elevation="1" Style="padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
             <MudGrid>
-                @if (Results != null)
-                {
+                <MudItem xs="12" md="8">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 0.5rem;">
+                        <MudChip T="string"
+                                 Size="Size.Medium" 
+                                 Color="Color.Primary" 
+                                 Variant="Variant.Filled"
+                                 Style="font-weight: 600;">
+                            Day @SolutionMetadata.Day
+                        </MudChip>
+                    </div>
+                    <MudText Typo="Typo.h4" Style="font-weight: 700; margin-bottom: 0.5rem;">@SolutionMetadata.Title</MudText>
+                    <MudText Typo="Typo.body2" Style="color: var(--mud-palette-text-secondary);">
+                        Click solve to run the solution and see results
+                    </MudText>
+                </MudItem>
+                <MudItem xs="12" md="4" Style="text-align: right;">
+                    <MudButton Variant="Variant.Filled" 
+                               Color="Color.Primary" 
+                               Size="Size.Large"
+                               StartIcon="@Icons.Material.Filled.PlayArrow"
+                               OnClick="@SolveAsync"
+                               Disabled="@IsWorking"
+                               Style="font-weight: 600; padding: 12px 24px; border-radius: 8px; min-width: 140px;">
+                        @if (IsWorking)
+                        {
+                            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                            <span style="margin-left: 8px;">Running...</span>
+                        }
+                        else
+                        {
+                            <span>Solve</span>
+                        }
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        <!-- Results Section -->
+        @if (Results != null)
+        {
+            <MudPaper Elevation="1" Style="padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                    <MudText Typo="Typo.h5" Style="font-weight: 600;">Results</MudText>
+                    @if (CalculationStopwatch != null && !IsWorking)
+                    {
+                        <MudChip T="string" 
+                                 Size="Size.Medium" 
+                                 Color="Color.Secondary" 
+                                 Variant="Variant.Outlined"
+                                 Icon="@Icons.Material.Filled.Timer"
+                                 Style="font-weight: 500;">
+                            @FormatElapsedTime(CalculationStopwatch.Elapsed)
+                        </MudChip>
+                    }
+                    else if (IsWorking && CalculationStopwatch != null)
+                    {
+                        <MudChip T="string" 
+                                 Size="Size.Medium" 
+                                 Color="Color.Primary" 
+                                 Variant="Variant.Outlined"
+                                 Icon="@Icons.Material.Filled.Timer"
+                                 Style="font-weight: 500;">
+                            @FormatElapsedTime(CalculationStopwatch.Elapsed)
+                        </MudChip>
+                    }
+                </div>
+                <MudGrid>
                     @for (int i = 0; i < Results.Length; i++)
                     {
                         var result = Results[i];
                         var partNumber = i + 1;
                         
-                        <MudItem xs="2">
-                            <MudText>Part @partNumber:</MudText>
-                        </MudItem>
-                        <MudItem xs="10">
-                            @switch (result)
-                            {
-                                case string text when text.Contains(Environment.NewLine):
-                                    var lines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-                                    <MudTextField T="string" 
-                                                 Value="@text" 
-                                                 Lines="@(lines.Length + 1)" 
-                                                 ReadOnly="true"
-                                                 Variant="Variant.Outlined"
-                                                 Style="font-family: 'Source Code Pro', monospace; line-height: 12px; font-size: 14px; font-weight: bold;" />
-                                    break;
-                                case string singleLineText:
-                                    <MudTextField T="string" Value="@singleLineText" ReadOnly="true" Variant="Variant.Outlined" />
-                                    break;
-                                case TaskCanceledException:
-                                    <MudText>Canceled.</MudText>
-                                    break;
-                                case NotImplementedException:
-                                    <MudText>Not implemented.</MudText>
-                                    break;
-                                case Exception exception:
-                                    <MudText Color="Color.Error">Error - @exception.Message (@exception.GetType().Name)</MudText>
-                                    break;
-                                case null when IsWorking:
-                                    @if (ShouldShowProgressBar(i))
-                                    {
-                                        <div style="width: 200px; height: 2em">
-                                            @if (Progress.Percentage > 0)
+                        <MudItem xs="12" md="6">
+                            <MudCard Style="height: 100%; border-radius: 8px;">
+                                <MudCardContent Style="padding: 1.5rem;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                                        <MudText Typo="Typo.subtitle1" Style="font-weight: 600; color: var(--mud-palette-primary);">
+                                            Part @partNumber
+                                        </MudText>
+                                        @if (PartTimings != null && i < PartTimings.Length + 1)
+                                        {
+                                            @if (!IsWorking && Results[i] != null && PartTimings[i] != TimeSpan.Zero)
                                             {
-                                                <MudProgressLinear Value="@Progress.Percentage" />
+                                                <MudChip T="string" 
+                                                         Size="Size.Small" 
+                                                         Color="Color.Tertiary" 
+                                                         Variant="Variant.Text"
+                                                         Icon="@Icons.Material.Filled.AccessTime"
+                                                         Style="font-size: 0.75rem;">
+                                                    @FormatElapsedTime(PartTimings[i])
+                                                </MudChip>
+                                            }
+                                            else if (IsWorking && ShouldShowProgressBar(i))
+                                            {
+                                                <MudChip T="string" 
+                                                         Size="Size.Small" 
+                                                         Color="Color.Primary" 
+                                                         Variant="Variant.Text"
+                                                         Icon="@Icons.Material.Filled.AccessTime"
+                                                         Style="font-size: 0.75rem;">
+                                                    @FormatElapsedTime(GetCurrentPartElapsed(i))
+                                                </MudChip>
+                                            }
+                                        }
+                                    </div>
+                                    @switch (result)
+                                    {
+                                        case string text when text.Contains(Environment.NewLine):
+                                            var lines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+                                            <MudTextField T="string" 
+                                                         Value="@text" 
+                                                         Lines="@(Math.Min(lines.Length + 1, 10))" 
+                                                         ReadOnly="true"
+                                                         Variant="Variant.Outlined"
+                                                         Style="font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 14px; line-height: 1.4;" />
+                                            break;
+                                        case string singleLineText:
+                                            <MudAlert Severity="Severity.Success" Variant="Variant.Outlined" Style="border-radius: 8px;">
+                                                <div style="font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 16px; font-weight: 600;">
+                                                    @singleLineText
+                                                </div>
+                                            </MudAlert>
+                                            break;
+                                        case TaskCanceledException:
+                                            <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined" Style="border-radius: 8px;">
+                                                Solution was canceled
+                                            </MudAlert>
+                                            break;
+                                        case NotImplementedException:
+                                            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Style="border-radius: 8px;">
+                                                Solution not yet implemented
+                                            </MudAlert>
+                                            break;
+                                        case Exception exception:
+                                            <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Style="border-radius: 8px;">
+                                                <strong>@exception.GetType().Name:</strong> @exception.Message
+                                            </MudAlert>
+                                            break;
+                                        case null when IsWorking:
+                                            @if (ShouldShowProgressBar(i))
+                                            {
+                                                <div style="padding: 1rem;">
+                                                    @if (Progress.Percentage > 0)
+                                                    {
+                                                        <MudProgressLinear Value="@Progress.Percentage" Color="Color.Primary" Style="border-radius: 4px;" />
+                                                        <MudText Typo="Typo.caption" Style="margin-top: 0.5rem; text-align: center;">@Progress.Percentage.ToString("F1")%</MudText>
+                                                    }
+                                                    else
+                                                    {
+                                                        <MudProgressLinear Indeterminate="true" Color="Color.Primary" Style="border-radius: 4px;" />
+                                                        <MudText Typo="Typo.caption" Style="margin-top: 0.5rem; text-align: center;">Processing...</MudText>
+                                                    }
+                                                </div>
                                             }
                                             else
                                             {
-                                                <MudProgressLinear Indeterminate="true" />
+                                                <div style="padding: 2rem; text-align: center; color: var(--mud-palette-text-secondary);">
+                                                    <MudIcon Icon="@Icons.Material.Filled.HourglassEmpty" Size="Size.Medium" Style="margin-bottom: 0.5rem;" />
+                                                    <MudText Typo="Typo.body2">Waiting...</MudText>
+                                                </div>
                                             }
-                                        </div>
+                                            break;
+                                        default:
+                                            <div style="padding: 2rem; text-align: center; color: var(--mud-palette-text-secondary);">
+                                                <MudIcon Icon="@Icons.Material.Filled.Remove" Size="Size.Medium" Style="margin-bottom: 0.5rem;" />
+                                                <MudText Typo="Typo.body2">No result</MudText>
+                                            </div>
+                                            break;
                                     }
-                                    else
-                                    {
-                                        <MudText>Waiting...</MudText>
-                                    }
-                                    break;
-                                default:
-                                    <MudText>no result.</MudText>
-                                    break;
-                            }
+                                </MudCardContent>
+                            </MudCard>
                         </MudItem>
                     }
-                }
-            </MudGrid>
-        </MudItem>
-    </MudGrid>
+                </MudGrid>
+            </MudPaper>
+        }
 
-    <TabControl OnActivatePage="VisualizerHandler.CancelAllVisualizations">
-        <TabPage Name="Visualization" IsVisible="SolutionMetadata != null && VisualizerHandler.GetVisualizer(SolutionMetadata.Type) != null" IsActive>
-            @if (IsWorking)
-            {
-                <MudText>Calculating...</MudText>
-            }
-            else if (SolutionInstance == null)
-            {
-                <MudText>Click 'Solve' to see the visualization!</MudText>
-            }
-            else
-            {
-                <DynamicVisualizer SolutionInstance="SolutionInstance"></DynamicVisualizer>
-            }
-        </TabPage>
-        <TabPage Name="Input">
-            <div style="margin-top: 1em;">&nbsp;</div>
-            @if (HasInputChanged)
-            {
-                <MudButton OnClick="@ReloadInput" Style="margin-bottom: 1em;" Disabled="@(IsWorking)" Variant="Variant.Filled">
-                    Restore original input
-                </MudButton>
-            }
-            <MudTextField T="string"
-                          Value="@Input"
-                          ValueChanged="@SetInput"
-                          Lines="@((Input?.Split('\n').Length ?? 0) + 1)"
-                          FullWidth="true"
-                          Disabled="@IsWorking"
-                          Placeholder="Enter your puzzle input here."
-                          Variant="Variant.Outlined" />
-        </TabPage>
-        <TabPage Name="Source">
-            <pre style="margin-top: 2em; font-family: 'Source Code Pro', monospace; font-size: 14px;">@SourceCode</pre>
-        </TabPage>
-    </TabControl>
+        <!-- Tabs Section -->
+        <TabControl OnActivatePage="VisualizerHandler.CancelAllVisualizations">
+            <TabPage Name="Visualization" IsVisible="SolutionMetadata != null && VisualizerHandler.GetVisualizer(SolutionMetadata.Type) != null" IsActive>
+                <MudPaper Elevation="1" Style="padding: 2rem; border-radius: 12px; min-height: 400px;">
+                    @if (IsWorking)
+                    {
+                        <div style="text-align: center; padding: 3rem;">
+                            <MudProgressCircular Size="Size.Large" Indeterminate="true" Color="Color.Primary" />
+                            <MudText Typo="Typo.h6" Style="margin-top: 1rem; color: var(--mud-palette-text-secondary);">Calculating...</MudText>
+                        </div>
+                    }
+                    else if (SolutionInstance == null)
+                    {
+                        <div style="text-align: center; padding: 3rem;">
+                            <MudIcon Icon="@Icons.Material.Filled.PlayCircleOutline" Size="Size.Large" Color="Color.Primary" Style="margin-bottom: 1rem;" />
+                            <MudText Typo="Typo.h6" Style="margin-bottom: 0.5rem;">Ready for Visualization</MudText>
+                            <MudText Typo="Typo.body2" Style="color: var(--mud-palette-text-secondary);">Click 'Solve' to see the visualization!</MudText>
+                        </div>
+                    }
+                    else
+                    {
+                        <DynamicVisualizer SolutionInstance="SolutionInstance"></DynamicVisualizer>
+                    }
+                </MudPaper>
+            </TabPage>
+            <TabPage Name="Input">
+                <MudPaper Elevation="1" Style="padding: 2rem; border-radius: 12px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                        <MudText Typo="Typo.h5" Style="font-weight: 600;">Puzzle Input</MudText>
+                        @if (HasInputChanged)
+                        {
+                            <MudButton OnClick="@ReloadInput" 
+                                       Disabled="@IsWorking" 
+                                       Variant="Variant.Outlined"
+                                       Color="Color.Secondary"
+                                       StartIcon="@Icons.Material.Filled.Restore"
+                                       Style="border-radius: 8px;">
+                                Restore Original
+                            </MudButton>
+                        }
+                    </div>
+                    <MudTextField T="string"
+                                  Value="@Input"
+                                  ValueChanged="@SetInput"
+                                  Lines="@((Input?.Split('\n').Length ?? 0) + 2)"
+                                  FullWidth="true"
+                                  Disabled="@IsWorking"
+                                  Placeholder="Enter your puzzle input here..."
+                                  Variant="Variant.Outlined"
+                                  Style="font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 14px; line-height: 1.4;" />
+                </MudPaper>
+            </TabPage>
+            <TabPage Name="Source">
+                <MudPaper Elevation="1" Style="padding: 2rem; border-radius: 12px;">
+                    <MudText Typo="Typo.h5" Style="font-weight: 600; margin-bottom: 1.5rem;">Source Code</MudText>
+                    <div style="background: #f8fafc; border-radius: 8px; padding: 1.5rem; overflow-x: auto;">
+                        <pre style="margin: 0; font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 14px; line-height: 1.6; color: #334155;">@SourceCode</pre>
+                    </div>
+                </MudPaper>
+            </TabPage>
+        </TabControl>
+    </div>
 }
 
 @code

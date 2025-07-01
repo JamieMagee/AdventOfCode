@@ -21,7 +21,7 @@ Based on [sanraith/aoc2019](https://github.com/sanraith/aoc2019)
 
 ## Setup
 
-This project requires [.NET SDK 5.0](https://dotnet.microsoft.com/download/dotnet/5.0).
+This project requires [.NET SDK 9.0](https://dotnet.microsoft.com/download/dotnet/9.0).
 
 To run the Blazor WebAssembly application:
 

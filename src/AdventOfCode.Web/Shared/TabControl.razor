@@ -1,10 +1,17 @@
 @using MudBlazor
 
-<MudTabs>
-    @foreach (var page in Pages.Where(p => p.IsVisible))
+<MudTabs Elevation="0" 
+         Rounded="true" 
+         PanelClass="pa-0"
+         Style="margin-bottom: 1rem;">
+    @foreach (var tabPage in Pages.Where(p => p.IsVisible))
     {
-        <MudTabPanel Text=@(page.Name)>
-            @(page.ChildContent)
+        <MudTabPanel Text="@tabPage.Name" 
+                     Icon="@GetTabIcon(tabPage.Name)"
+                     Style="padding: 0;">
+            <div style="margin-top: 1rem;">
+                @(tabPage.ChildContent)
+            </div>
         </MudTabPanel>
     }
 </MudTabs>
