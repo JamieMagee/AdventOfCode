@@ -76,7 +76,7 @@ internal sealed class SolutionRunner
             return;
         }
 
-    var solution = solutionMetadata.CreateInstance();
+        var solution = solutionMetadata.CreateInstance();
 
         var dayString = day.ToString().PadLeft(2, '0');
         var rootDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -90,28 +90,56 @@ internal sealed class SolutionRunner
 
         var input = await File.ReadAllTextAsync(inputFile);
 
-        var table = new Table()
-            .Border(TableBorder.Rounded)
-            .BorderColor(Color.Blue)
-            .AddColumn(new TableColumn("[bold]Part[/]").Centered())
-            .AddColumn(new TableColumn("[bold]Result[/]").LeftAligned())
-            .AddColumn(new TableColumn("[bold]Time[/]").RightAligned());
-
-        AnsiConsole.Write(new Panel($"[bold blue]Day {day}: {solutionMetadata.Title}[/]")
-            .Border(BoxBorder.Double)
-            .BorderColor(Color.Blue));
-
         // Run Part 1
         var (result1, time1) = await RunPartAsync(input, solution.Part1Async, solution);
-        table.AddRow("[yellow]1[/]", result1.Contains(Environment.NewLine) ?
-            $"[dim]{Environment.NewLine}{result1}[/]" : result1, $"[green]{time1}ms[/]");
 
         // Run Part 2
         var (result2, time2) = await RunPartAsync(input, solution.Part2Async, solution);
-        table.AddRow("[yellow]2[/]", result2.Contains(Environment.NewLine) ?
-            $"[dim]{Environment.NewLine}{result2}[/]" : result2, $"[green]{time2}ms[/]");
 
-        AnsiConsole.Write(table);
+        // Create a compact grid layout combining title and results
+        var grid = new Grid();
+
+        // Add columns: Day/Part, Result, and Time
+        grid.AddColumn(new GridColumn().Width(12));              // Day/Part column
+        grid.AddColumn(new GridColumn());                        // Result column (expandable)
+        grid.AddColumn(new GridColumn().Width(10).PadLeft(1));   // Time column
+
+        // Add day title row spanning across columns
+        grid.AddRow(
+            new Markup($"[bold blue]Day {day}[/]"),
+            new Markup($"[bold blue]{solutionMetadata.Title}[/]"),
+            Text.Empty
+        );
+
+        // Add separator row
+        grid.AddRow(
+            new Markup("[dim]────────────[/]"),
+            new Markup("[dim]────────────────────────────────────────[/]"),
+            new Markup("[dim]──────────[/]")
+        );
+
+        // Add Part 1 results
+        var part1Result = result1.Contains(Environment.NewLine) ?
+            $"[dim]{result1.Trim()}[/]" : result1;
+
+        grid.AddRow(
+            new Markup("[yellow]Part 1[/]"),
+            new Markup(part1Result),
+            new Markup($"[green]{time1}ms[/]")
+        );
+
+        // Add Part 2 results
+        var part2Result = result2.Contains(Environment.NewLine) ?
+            $"[dim]{result2.Trim()}[/]" : result2;
+
+        grid.AddRow(
+            new Markup("[yellow]Part 2[/]"),
+            new Markup(part2Result),
+            new Markup($"[green]{time2}ms[/]")
+        );
+
+        // Display the grid directly without border
+        AnsiConsole.Write(grid);
         AnsiConsole.WriteLine();
     }
 
