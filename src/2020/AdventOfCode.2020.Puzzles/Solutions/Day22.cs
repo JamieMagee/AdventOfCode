@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AdventOfCode.Core;
-
-namespace AdventOfCode._2020.Puzzles.Solutions
+﻿namespace AdventOfCode._2020.Puzzles.Solutions
 {
     [Puzzle("Crab Combat")]
     public sealed class Day22 : SolutionBase
