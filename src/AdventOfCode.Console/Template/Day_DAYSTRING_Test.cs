@@ -10,14 +10,18 @@ namespace AdventOfCode._YEAR_.Puzzles.Test.Solutions
         [Fact]
         public async Task Part1Async()
         {
-            var input = @"";
+            var input = """
+
+            """;
             Assert.Equal("", await Solution.Part1Async(input));
         }
 
         [Fact]
         public async Task Part2Async()
         {
-            var input = @"";
+            var input = """
+            
+            """;
             Assert.Equal("", await Solution.Part2Async(input));
         }
     }
