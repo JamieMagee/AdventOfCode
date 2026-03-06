@@ -27,7 +27,9 @@
 
             // Sort by allergen name and join ingredient names
             var sortedAllergens = allergenToIngredient.Keys.OrderBy(x => x).ToList();
-            var dangerousIngredients = sortedAllergens.Select(allergen => allergenToIngredient[allergen]);
+            var dangerousIngredients = sortedAllergens.Select(allergen =>
+                allergenToIngredient[allergen]
+            );
 
             return Task.FromResult(string.Join(",", dangerousIngredients));
         }
@@ -78,7 +80,10 @@
             return allergenCandidates;
         }
 
-        private static HashSet<string> FindSafeIngredients(List<Food> foods, Dictionary<string, HashSet<string>> allergenCandidates)
+        private static HashSet<string> FindSafeIngredients(
+            List<Food> foods,
+            Dictionary<string, HashSet<string>> allergenCandidates
+        )
         {
             var allIngredients = new HashSet<string>();
             var possibleDangerousIngredients = new HashSet<string>();
@@ -99,7 +104,9 @@
             return safeIngredients;
         }
 
-        private static Dictionary<string, string> ResolveAllergens(Dictionary<string, HashSet<string>> allergenCandidates)
+        private static Dictionary<string, string> ResolveAllergens(
+            Dictionary<string, HashSet<string>> allergenCandidates
+        )
         {
             var resolved = new Dictionary<string, string>();
             var candidates = new Dictionary<string, HashSet<string>>();

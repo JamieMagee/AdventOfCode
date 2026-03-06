@@ -5,18 +5,14 @@ public sealed class Day15 : SolutionBase
 {
     public override async Task<string> Part1Async(string input)
     {
-        var numbers = input.Split(',')
-            .Select(int.Parse)
-            .ToArray();
+        var numbers = input.Split(',').Select(int.Parse).ToArray();
 
         return await this.SolveAsync(numbers, 2020);
     }
 
     public override async Task<string> Part2Async(string input)
     {
-        var numbers = input.Split(',')
-            .Select(int.Parse)
-            .ToArray();
+        var numbers = input.Split(',').Select(int.Parse).ToArray();
         return await this.SolveAsync(numbers, 30_000_000);
     }
 

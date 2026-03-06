@@ -5,7 +5,10 @@ using System.Text.RegularExpressions;
 [Puzzle("Passport Processing")]
 public sealed class Day04 : SolutionBase
 {
-    private static readonly IDictionary<string, string> PassportFields = new Dictionary<string, string>
+    private static readonly IDictionary<string, string> PassportFields = new Dictionary<
+        string,
+        string
+    >
     {
         { "byr", @"^(19[2-8][0-9]|199[0-9]|200[0-2])$" },
         { "iyr", @"^(201[0-9]|2020)$" },
@@ -16,25 +19,33 @@ public sealed class Day04 : SolutionBase
         { "pid", @"^\d{9}$" },
     };
 
-    protected override string Part1(string input) => ParseInput(input)
-        .Count(p =>
-            PassportFields.All(f => p.Select(e => e.Key).Contains(f.Key)))
-        .ToString();
+    protected override string Part1(string input) =>
+        ParseInput(input)
+            .Count(p => PassportFields.All(f => p.Select(e => e.Key).Contains(f.Key)))
+            .ToString();
 
-    protected override string Part2(string input) => ParseInput(input)
-        .Count(p =>
-            PassportFields.All(f => p.Select(e => e.Key).Contains(f.Key)) &&
-            PassportFields.All(f => Regex.IsMatch(p.First(e => e.Key == f.Key).Value, f.Value)))
-        .ToString();
+    protected override string Part2(string input) =>
+        ParseInput(input)
+            .Count(p =>
+                PassportFields.All(f => p.Select(e => e.Key).Contains(f.Key))
+                && PassportFields.All(f =>
+                    Regex.IsMatch(p.First(e => e.Key == f.Key).Value, f.Value)
+                )
+            )
+            .ToString();
 
-    private static IEnumerable<IDictionary<string, string>> ParseInput(string input) => input.Trim()
-        .Split("\n\n")
-        .Select(passport =>
-            passport.Split(' ', '\n')
-                .Select(field =>
+    private static IEnumerable<IDictionary<string, string>> ParseInput(string input) =>
+        input
+            .Trim()
+            .Split("\n\n")
+            .Select(passport =>
+                passport
+                    .Split(' ', '\n')
+                    .Select(field =>
                     {
                         var tuple = field.Split(':');
                         return (tuple[0], tuple[1]);
                     })
-                .ToDictionary(e => e.Item1, e => e.Item2));
+                    .ToDictionary(e => e.Item1, e => e.Item2)
+            );
 }

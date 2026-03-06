@@ -15,23 +15,27 @@ internal sealed class Program
             config.SetApplicationName("aoc");
             config.SetApplicationVersion("1.0.0");
 
-            config.AddCommand<RunCommand>("run")
+            config
+                .AddCommand<RunCommand>("run")
                 .WithDescription("Run Advent of Code solutions")
                 .WithExample(["run", "--all"])
                 .WithExample(["run", "--last"])
                 .WithExample(["run", "--day", "12"])
                 .WithExample(["run", "--year", "2020", "--day", "5"]);
 
-            config.AddCommand<SetupCommand>("setup")
+            config
+                .AddCommand<SetupCommand>("setup")
                 .WithDescription("Setup a new day by downloading input and creating solution files")
                 .WithExample(["setup", "23"])
                 .WithExample(["setup", "15", "--year", "2020"]);
 
-            config.SetExceptionHandler((ex, resolver) =>
-            {
-                AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything);
-                return -1;
-            });
+            config.SetExceptionHandler(
+                (ex, resolver) =>
+                {
+                    AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything);
+                    return -1;
+                }
+            );
 
 #if DEBUG
             config.PropagateExceptions();

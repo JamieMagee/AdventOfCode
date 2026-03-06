@@ -7,24 +7,30 @@ using MoreLinq;
 [Puzzle("Conway Cubes")]
 public sealed class Day17 : SolutionBase
 {
-    private static readonly IEnumerable<(int X, int Y, int Z)> Kernel3D = Enumerable.Range(-1, 3)
-        .SelectMany(x => Enumerable.Range(-1, 3)
-            .SelectMany(y => Enumerable.Range(-1, 3)
-                .Select(z => (x, y, z))))
+    private static readonly IEnumerable<(int X, int Y, int Z)> Kernel3D = Enumerable
+        .Range(-1, 3)
+        .SelectMany(x =>
+            Enumerable.Range(-1, 3).SelectMany(y => Enumerable.Range(-1, 3).Select(z => (x, y, z)))
+        )
         .Where(coords => coords != (0, 0, 0));
 
-    private static readonly IEnumerable<(int X, int T, int Z, int W)> Kernel4D = Enumerable.Range(-1, 3)
-        .SelectMany(x => Enumerable.Range(-1, 3)
-            .SelectMany(y => Enumerable.Range(-1, 3)
-                .SelectMany(z => Enumerable.Range(-1, 3)
-                    .Select(w => (x, y, z, w)))))
+    private static readonly IEnumerable<(int X, int T, int Z, int W)> Kernel4D = Enumerable
+        .Range(-1, 3)
+        .SelectMany(x =>
+            Enumerable
+                .Range(-1, 3)
+                .SelectMany(y =>
+                    Enumerable
+                        .Range(-1, 3)
+                        .SelectMany(z => Enumerable.Range(-1, 3).Select(w => (x, y, z, w)))
+                )
+        )
         .Where(coords => coords != (0, 0, 0, 0));
 
     protected override string Part1(string input)
     {
         var state = new Dictionary<(int X, int Y, int Z), bool>();
-        var lines = input.GetLines<string>()
-            .ToList();
+        var lines = input.GetLines<string>().ToList();
 
         for (var x = 0; x < lines.Count; x++)
         {
@@ -66,8 +72,7 @@ public sealed class Day17 : SolutionBase
     protected override string Part2(string input)
     {
         var state = new Dictionary<(int X, int Y, int Z, int W), bool>();
-        var lines = input.GetLines<string>()
-            .ToList();
+        var lines = input.GetLines<string>().ToList();
 
         for (var x = 0; x < lines.Count; x++)
         {

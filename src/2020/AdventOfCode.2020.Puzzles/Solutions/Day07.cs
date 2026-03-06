@@ -18,16 +18,19 @@ public sealed class Day07 : SolutionBase
     protected override string Part2(string input)
     {
         var parsedInput = ParseInput(input);
-        int MustContain(string colour) => parsedInput[colour].Sum(kvp => kvp.Value * (1 + MustContain(kvp.Key)));
+        int MustContain(string colour) =>
+            parsedInput[colour].Sum(kvp => kvp.Value * (1 + MustContain(kvp.Key)));
         return MustContain(Colour).ToString();
     }
 
-    private static Dictionary<string, Dictionary<string, int>> ParseInput(string input) => GetLines(input).Select(x => Regex.Match(x, @"(.*) bags contain(?: (\d+ .*?) bags?[,.])*"))
-        .ToDictionary(
-            x => x.Groups[1].Value,
-            x => x.Groups[2].Captures
-                .Select(y => y.Value.Split(' ', 2))
-                .ToDictionary(
-                    z => z[1],
-                    z => int.Parse(z[0])));
+    private static Dictionary<string, Dictionary<string, int>> ParseInput(string input) =>
+        GetLines(input)
+            .Select(x => Regex.Match(x, @"(.*) bags contain(?: (\d+ .*?) bags?[,.])*"))
+            .ToDictionary(
+                x => x.Groups[1].Value,
+                x =>
+                    x.Groups[2]
+                        .Captures.Select(y => y.Value.Split(' ', 2))
+                        .ToDictionary(z => z[1], z => int.Parse(z[0]))
+            );
 }

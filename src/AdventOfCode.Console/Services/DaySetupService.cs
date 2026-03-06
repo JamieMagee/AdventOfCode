@@ -1,11 +1,11 @@
 namespace AdventOfCode.Console.Services;
 
-using HtmlAgilityPack;
-using Spectre.Console;
 using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using HtmlAgilityPack;
+using Spectre.Console;
 
 internal sealed class DaySetupService
 {
@@ -27,31 +27,45 @@ internal sealed class DaySetupService
             "..",
             "..",
             $"{year}",
-            $"AdventOfCode.{year}.Puzzles");
+            $"AdventOfCode.{year}.Puzzles"
+        );
 
         var rule = new Rule($"[bold green]Setting up {year} Day {dayString}[/]");
         AnsiConsole.Write(rule);
 
         var cookieContainer = new CookieContainer();
-        cookieContainer.Add(new Cookie("session", this._config.SessionCookie, "/", "adventofcode.com"));
+        cookieContainer.Add(
+            new Cookie("session", this._config.SessionCookie, "/", "adventofcode.com")
+        );
         using var httpClientHandler = new HttpClientHandler { CookieContainer = cookieContainer };
         using var httpClient = new HttpClient(httpClientHandler);
 
-        await AnsiConsole.Status()
-            .StartAsync("Setting up day...", async ctx =>
-            {
-                ctx.Spinner(Spinner.Known.Dots);
-                ctx.SpinnerStyle(Style.Parse("yellow"));
+        await AnsiConsole
+            .Status()
+            .StartAsync(
+                "Setting up day...",
+                async ctx =>
+                {
+                    ctx.Spinner(Spinner.Known.Dots);
+                    ctx.SpinnerStyle(Style.Parse("yellow"));
 
-                ctx.Status("Downloading input...");
-                await SaveInputAsync(year, day, dayString, puzzleProjectPath, httpClient);
+                    ctx.Status("Downloading input...");
+                    await SaveInputAsync(year, day, dayString, puzzleProjectPath, httpClient);
 
-                ctx.Status("Getting puzzle title...");
-                var puzzleTitle = await GetPuzzleTitleAsync(year, day, httpClient);
+                    ctx.Status("Getting puzzle title...");
+                    var puzzleTitle = await GetPuzzleTitleAsync(year, day, httpClient);
 
-                ctx.Status("Creating solution files...");
-                await CreateSolutionSourceAsync(year, day, dayString, consoleProjectBinPath!, puzzleProjectPath, puzzleTitle);
-            });
+                    ctx.Status("Creating solution files...");
+                    await CreateSolutionSourceAsync(
+                        year,
+                        day,
+                        dayString,
+                        consoleProjectBinPath!,
+                        puzzleProjectPath,
+                        puzzleTitle
+                    );
+                }
+            );
 
         AnsiConsole.MarkupLine("[green]✓ Setup completed successfully![/]");
     }
@@ -61,19 +75,19 @@ internal sealed class DaySetupService
         int day,
         string dayString,
         string puzzleProjectPath,
-        HttpClient httpClient)
+        HttpClient httpClient
+    )
     {
         var inputAddress = $"https://adventofcode.com/{year}/day/{day}/input";
-        var inputFile = new FileInfo(Path.Combine(puzzleProjectPath, "Input", $"day{dayString}.txt"));
+        var inputFile = new FileInfo(
+            Path.Combine(puzzleProjectPath, "Input", $"day{dayString}.txt")
+        );
 
         var input = await httpClient.GetStringAsync(inputAddress);
         await File.WriteAllTextAsync(inputFile.FullName, input, Encoding.UTF8);
     }
 
-    private static async Task<string> GetPuzzleTitleAsync(
-        int year,
-        int day,
-        HttpClient httpClient)
+    private static async Task<string> GetPuzzleTitleAsync(int year, int day, HttpClient httpClient)
     {
         var descriptionAddress = $"https://adventofcode.com/{year}/day/{day}";
         var puzzleTitleRegex = new Regex(@"---.*: (?'title'.*) ---");
@@ -95,17 +109,27 @@ internal sealed class DaySetupService
         string dayString,
         string consoleProjectBinPath,
         string puzzleProjectPath,
-        string puzzleTitle)
+        string puzzleTitle
+    )
     {
-        var solutionSourceFile = new FileInfo(Path.Combine(consoleProjectBinPath, "Template", "Day_DAYSTRING_.cs"));
-        var solutionTargetFile = new FileInfo(Path.Combine(puzzleProjectPath, "Solutions", $"Day{dayString}.cs"));
-        var testSourceFile = new FileInfo(Path.Combine(consoleProjectBinPath, "Template", "Day_DAYSTRING_Test.cs"));
-        var testTargetFile =
-            new FileInfo(Path.Combine($"{puzzleProjectPath}.Test", "Solutions", $"Day{dayString}Test.cs"));
+        var solutionSourceFile = new FileInfo(
+            Path.Combine(consoleProjectBinPath, "Template", "Day_DAYSTRING_.cs")
+        );
+        var solutionTargetFile = new FileInfo(
+            Path.Combine(puzzleProjectPath, "Solutions", $"Day{dayString}.cs")
+        );
+        var testSourceFile = new FileInfo(
+            Path.Combine(consoleProjectBinPath, "Template", "Day_DAYSTRING_Test.cs")
+        );
+        var testTargetFile = new FileInfo(
+            Path.Combine($"{puzzleProjectPath}.Test", "Solutions", $"Day{dayString}Test.cs")
+        );
 
         if (solutionTargetFile.Exists)
         {
-            AnsiConsole.MarkupLine($"[yellow]⚠ Source file already exists at {solutionTargetFile.FullName}[/]");
+            AnsiConsole.MarkupLine(
+                $"[yellow]⚠ Source file already exists at {solutionTargetFile.FullName}[/]"
+            );
         }
         else
         {
@@ -120,7 +144,9 @@ internal sealed class DaySetupService
 
         if (testTargetFile.Exists)
         {
-            AnsiConsole.MarkupLine($"[yellow]⚠ Test file already exists at {testTargetFile.FullName}[/]");
+            AnsiConsole.MarkupLine(
+                $"[yellow]⚠ Test file already exists at {testTargetFile.FullName}[/]"
+            );
         }
         else
         {

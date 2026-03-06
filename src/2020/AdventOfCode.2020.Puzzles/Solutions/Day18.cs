@@ -12,15 +12,19 @@ public sealed class Day18 : SolutionBase
     private const char OpenBracket = '(';
     private const char CloseBracket = ')';
 
-    protected override string Part1(string input) => input.GetLines<string>()
-        .Select(line => ReversePolishNotation(line, false))
-        .Sum()
-        .ToString(CultureInfo.InvariantCulture);
+    protected override string Part1(string input) =>
+        input
+            .GetLines<string>()
+            .Select(line => ReversePolishNotation(line, false))
+            .Sum()
+            .ToString(CultureInfo.InvariantCulture);
 
-    protected override string Part2(string input) => input.GetLines<string>()
-        .Select(line => ReversePolishNotation(line, true))
-        .Sum()
-        .ToString(CultureInfo.InvariantCulture);
+    protected override string Part2(string input) =>
+        input
+            .GetLines<string>()
+            .Select(line => ReversePolishNotation(line, true))
+            .Sum()
+            .ToString(CultureInfo.InvariantCulture);
 
     private static double ReversePolishNotation(string line, bool part2)
     {
@@ -59,7 +63,11 @@ public sealed class Day18 : SolutionBase
         return values.Single();
     }
 
-    private static (Stack<char> Ops, Stack<double> Values) Calculate(Stack<char> ops, Stack<double> values, bool part2 = false)
+    private static (Stack<char> Ops, Stack<double> Values) Calculate(
+        Stack<char> ops,
+        Stack<double> values,
+        bool part2 = false
+    )
     {
         while (!(ops.Peek() == OpenBracket || (part2 && ops.Peek() == Multiply)))
         {

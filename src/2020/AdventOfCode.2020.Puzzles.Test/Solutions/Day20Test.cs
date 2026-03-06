@@ -5,12 +5,13 @@ using Xunit;
 
 namespace AdventOfCode._2020.Puzzles.Test.Solutions
 {
-  public sealed class Day20Test : TestBase<Day20>
-  {
-    [Fact]
-    public async Task Part1Async()
+    public sealed class Day20Test : TestBase<Day20>
     {
-      var input = @"Tile 2311:
+        [Fact]
+        public async Task Part1Async()
+        {
+            var input =
+                @"Tile 2311:
 ..##.#..#.
 ##..#.....
 #...##..#.
@@ -117,13 +118,14 @@ Tile 3079:
 ..#.###...
 ..#.......
 ..#.###...";
-      Assert.Equal("20899048083289", await Solution.Part1Async(input));
-    }
+            Assert.Equal("20899048083289", await Solution.Part1Async(input));
+        }
 
-    [Fact]
-    public async Task Part2Async()
-    {
-      var input = @"Tile 2311:
+        [Fact]
+        public async Task Part2Async()
+        {
+            var input =
+                @"Tile 2311:
 ..##.#..#.
 ##..#.....
 #...##..#.
@@ -230,7 +232,7 @@ Tile 3079:
 ..#.###...
 ..#.......
 ..#.###...";
-      Assert.Equal("273", await Solution.Part2Async(input));
+            Assert.Equal("273", await Solution.Part2Async(input));
+        }
     }
-  }
 }

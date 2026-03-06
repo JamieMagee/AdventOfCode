@@ -2,7 +2,8 @@
 
 public sealed class Day12Test : TestBase<Day12>
 {
-    private const string Input = @"F10
+    private const string Input =
+        @"F10
 N3
 F7
 R90

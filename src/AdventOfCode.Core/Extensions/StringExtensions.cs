@@ -8,7 +8,8 @@ public static class StringExtensions
     {
         ArgumentNullException.ThrowIfNull(input);
 
-        return input.Replace("\r", string.Empty, StringComparison.Ordinal)
+        return input
+            .Replace("\r", string.Empty, StringComparison.Ordinal)
             .Split('\n')
             .Reverse()
             .SkipWhile(string.IsNullOrEmpty)

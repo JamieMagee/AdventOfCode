@@ -2,7 +2,8 @@
 
 public sealed class Day02Test : TestBase<Day02>
 {
-    private const string Input = @"1-3 a: abcde
+    private const string Input =
+        @"1-3 a: abcde
 1-3 b: cdefg
 2-9 c: ccccccccc";
 

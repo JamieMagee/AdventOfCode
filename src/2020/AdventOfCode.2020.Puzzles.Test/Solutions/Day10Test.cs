@@ -2,7 +2,8 @@
 
 public sealed class Day10Test : TestBase<Day10>
 {
-    private const string Input = @"28
+    private const string Input =
+        @"28
 33
 18
 42

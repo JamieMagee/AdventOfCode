@@ -49,7 +49,8 @@
 
         private static (int x, int y) GetTilePosition(string directions)
         {
-            int x = 0, y = 0;
+            int x = 0,
+                y = 0;
             int i = 0;
 
             while (i < directions.Length)
@@ -112,7 +113,8 @@
 
             foreach (var tile in tilesToCheck)
             {
-                var blackNeighborCount = GetNeighbors(tile).Count(neighbor => blackTiles.Contains(neighbor));
+                var blackNeighborCount = GetNeighbors(tile)
+                    .Count(neighbor => blackTiles.Contains(neighbor));
                 var isCurrentlyBlack = blackTiles.Contains(tile);
 
                 if (isCurrentlyBlack)
@@ -141,11 +143,11 @@
             var (x, y) = position;
 
             // Six hexagonal directions: e, w, ne, nw, se, sw
-            yield return (x + 1, y);     // e
-            yield return (x - 1, y);     // w
+            yield return (x + 1, y); // e
+            yield return (x - 1, y); // w
             yield return (x + 1, y + 1); // ne
-            yield return (x, y + 1);     // nw
-            yield return (x, y - 1);     // se
+            yield return (x, y + 1); // nw
+            yield return (x, y - 1); // se
             yield return (x - 1, y - 1); // sw
         }
     }

@@ -11,7 +11,11 @@ public sealed class Day12 : SolutionBase
     {
         var lines = input.GetLines<string>();
         var ship = new Ship();
-        foreach (var (op, val) in lines.Select(l => (l[0], int.Parse(l[1..], CultureInfo.InvariantCulture))))
+        foreach (
+            var (op, val) in lines.Select(l =>
+                (l[0], int.Parse(l[1..], CultureInfo.InvariantCulture))
+            )
+        )
         {
             switch (op)
             {
@@ -46,7 +50,11 @@ public sealed class Day12 : SolutionBase
     {
         var lines = input.GetLines<string>();
         var ship = new Ship();
-        foreach (var (op, val) in lines.Select(l => (l[0], int.Parse(l[1..], CultureInfo.InvariantCulture))))
+        foreach (
+            var (op, val) in lines.Select(l =>
+                (l[0], int.Parse(l[1..], CultureInfo.InvariantCulture))
+            )
+        )
         {
             switch (op)
             {
@@ -90,23 +98,25 @@ public sealed class Ship
 
     private int Y { get; set; }
 
-    public void Move(int dir, int val) => (this.X, this.Y) = dir switch
-    {
-        0 => (this.X + val, this.Y),
-        1 => (this.X, this.Y - val),
-        2 => (this.X - val, this.Y),
-        3 => (this.X, this.Y + val),
-        _ => (this.X, this.Y),
-    };
+    public void Move(int dir, int val) =>
+        (this.X, this.Y) = dir switch
+        {
+            0 => (this.X + val, this.Y),
+            1 => (this.X, this.Y - val),
+            2 => (this.X - val, this.Y),
+            3 => (this.X, this.Y + val),
+            _ => (this.X, this.Y),
+        };
 
-    public void MoveWaypoint(int dir, int val) => (this.Wayx, this.Wayy) = dir switch
-    {
-        0 => (this.Wayx + val, this.Wayy),
-        1 => (this.Wayx, this.Wayy - val),
-        2 => (this.Wayx - val, this.Wayy),
-        3 => (this.Wayx, this.Wayy + val),
-        _ => (this.Wayx, this.Wayy),
-    };
+    public void MoveWaypoint(int dir, int val) =>
+        (this.Wayx, this.Wayy) = dir switch
+        {
+            0 => (this.Wayx + val, this.Wayy),
+            1 => (this.Wayx, this.Wayy - val),
+            2 => (this.Wayx - val, this.Wayy),
+            3 => (this.Wayx, this.Wayy + val),
+            _ => (this.Wayx, this.Wayy),
+        };
 
     public void MoveForward(int val) => this.Move(this.Dir, val);
 
@@ -118,14 +128,15 @@ public sealed class Ship
 
     public void Rotate(int val) => this.Dir = (this.Dir + val) % 4;
 
-    public void RotateWaypoint(int val) => (this.Wayx, this.Wayy) = val switch
-    {
-        0 => (this.Wayx, this.Wayy),
-        1 => (this.Wayy, -this.Wayx),
-        2 => (-this.Wayx, -this.Wayy),
-        3 => (-this.Wayy, this.Wayx),
-        _ => (this.Wayx, this.Wayy),
-    };
+    public void RotateWaypoint(int val) =>
+        (this.Wayx, this.Wayy) = val switch
+        {
+            0 => (this.Wayx, this.Wayy),
+            1 => (this.Wayy, -this.Wayx),
+            2 => (-this.Wayx, -this.Wayy),
+            3 => (-this.Wayy, this.Wayx),
+            _ => (this.Wayx, this.Wayy),
+        };
 
     public string ManhattanDistance() => (Math.Abs(this.X) + Math.Abs(this.Y)).ToString();
 }

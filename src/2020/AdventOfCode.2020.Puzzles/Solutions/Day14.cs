@@ -7,14 +7,13 @@ namespace AdventOfCode._2020.Puzzles.Solutions;
 [Puzzle("Docking Data")]
 public sealed class Day14 : SolutionBase
 {
-    private static readonly Regex Regex =
-        new(@"^(mask = (?<mask>[01X]{36}))|(mem\[(?<address>\d+)\] = (?<value>\d+))$");
+    private static readonly Regex Regex = new(
+        @"^(mask = (?<mask>[01X]{36}))|(mem\[(?<address>\d+)\] = (?<value>\d+))$"
+    );
 
     protected override string Part1(string input)
     {
-        var matches = input.GetLines<string>()
-            .Select(l => Regex.Match(l))
-            .ToArray();
+        var matches = input.GetLines<string>().Select(l => Regex.Match(l)).ToArray();
 
         var memory = new Dictionary<int, ulong>();
         var mask = string.Empty;
@@ -26,10 +25,13 @@ public sealed class Day14 : SolutionBase
             }
             else
             {
-                var value = Convert.ToString(Convert.ToInt32(match.Groups["value"].Value), 2)
+                var value = Convert
+                    .ToString(Convert.ToInt32(match.Groups["value"].Value), 2)
                     .PadLeft(36, '0');
-                var result =
-                    Convert.ToUInt64(new string([.. value.Select((c, i) => mask[i] == 'X' ? c : mask[i])]), 2);
+                var result = Convert.ToUInt64(
+                    new string([.. value.Select((c, i) => mask[i] == 'X' ? c : mask[i])]),
+                    2
+                );
                 var address = int.Parse(match.Groups["address"].Value);
                 memory[address] = result;
             }
@@ -40,9 +42,7 @@ public sealed class Day14 : SolutionBase
 
     protected override string Part2(string input)
     {
-        var matches = input.GetLines<string>()
-            .Select(l => Regex.Match(l))
-            .ToArray();
+        var matches = input.GetLines<string>().Select(l => Regex.Match(l)).ToArray();
 
         var memory = new Dictionary<ulong, ulong>();
         var mask = string.Empty;
@@ -54,10 +54,12 @@ public sealed class Day14 : SolutionBase
             }
             else
             {
-                var address = Convert.ToString(Convert.ToInt32(match.Groups["address"].Value), 2)
+                var address = Convert
+                    .ToString(Convert.ToInt32(match.Groups["address"].Value), 2)
                     .PadLeft(36, '0');
-                var result =
-                    new string([.. address.Select((c, i) => mask[i] == '0' ? c : mask[i])]);
+                var result = new string([
+                    .. address.Select((c, i) => mask[i] == '0' ? c : mask[i]),
+                ]);
                 var addresses = GetAddresses(result);
                 var value = ulong.Parse(match.Groups["value"].Value);
                 foreach (var a in addresses)

@@ -12,7 +12,8 @@ public sealed partial class Puzzle : IDisposable
     private int myProgressRenderTick = Environment.TickCount;
 
     [Parameter]
-    public string Year { get; set; } = (DateTime.Now.Month == 12 ? DateTime.Now.Year : DateTime.Now.Year - 1).ToString();
+    public string Year { get; set; } =
+        (DateTime.Now.Month == 12 ? DateTime.Now.Year : DateTime.Now.Year - 1).ToString();
 
     [Parameter]
     public string? Day { get; set; }
@@ -58,8 +59,12 @@ public sealed partial class Puzzle : IDisposable
         Cancel();
         ResetState();
 
-        if (TryParseParameters(out var yearNumber, out var dayNumber) &&
-            SolutionHandler.Solutions[yearNumber].TryGetValue(dayNumber, out var solutionMetadata))
+        if (
+            TryParseParameters(out var yearNumber, out var dayNumber)
+            && SolutionHandler
+                .Solutions[yearNumber]
+                .TryGetValue(dayNumber, out var solutionMetadata)
+        )
         {
             SolutionMetadata = solutionMetadata;
             Results = InputHandler.GetResults(SolutionMetadata.Day);
@@ -95,24 +100,32 @@ public sealed partial class Puzzle : IDisposable
 
     private void LoadPuzzleMetadataInBackground()
     {
-        if (SolutionMetadata == null) return;
+        if (SolutionMetadata == null)
+            return;
 
         myCancellationTokenSource = new CancellationTokenSource();
 
         _ = Task.Run(() => LoadInputAsync(), myCancellationTokenSource.Token);
-        _ = Task.Run(async () =>
-        {
-            if (SolutionMetadata != null)
+        _ = Task.Run(
+            async () =>
             {
-                SourceCode = await InputHandler.GetSourceCodeAsync(SolutionMetadata.Year, SolutionMetadata.Day);
-                StateHasChanged();
-            }
-        }, myCancellationTokenSource.Token);
+                if (SolutionMetadata != null)
+                {
+                    SourceCode = await InputHandler.GetSourceCodeAsync(
+                        SolutionMetadata.Year,
+                        SolutionMetadata.Day
+                    );
+                    StateHasChanged();
+                }
+            },
+            myCancellationTokenSource.Token
+        );
     }
 
     private async Task LoadInputAsync(bool forceReload = false)
     {
-        if (SolutionMetadata == null) return;
+        if (SolutionMetadata == null)
+            return;
 
         Input = forceReload ? null : Input;
         Input ??= await InputHandler.GetInputAsync(SolutionMetadata.Year, SolutionMetadata.Day);
@@ -122,7 +135,8 @@ public sealed partial class Puzzle : IDisposable
 
     private async Task SolveAsync()
     {
-        if (SolutionMetadata == null) return;
+        if (SolutionMetadata == null)
+            return;
 
         myCancellationTokenSource = new CancellationTokenSource();
         SolutionInstance = null;
@@ -147,7 +161,8 @@ public sealed partial class Puzzle : IDisposable
 
             for (int i = 0; i < solutionParts.Length; i++)
             {
-                if (!IsWorking) break;
+                if (!IsWorking)
+                    break;
 
                 Progress = new SolutionProgress();
                 StateHasChanged();
@@ -222,9 +237,15 @@ public sealed partial class Puzzle : IDisposable
     }
 
     private Timer? liveTimerUpdate;
+
     private Timer CreateLiveTimerUpdate()
     {
-        return new Timer(_ => _ = InvokeAsync(StateHasChanged), null, TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100));
+        return new Timer(
+            _ => _ = InvokeAsync(StateHasChanged),
+            null,
+            TimeSpan.FromMilliseconds(100),
+            TimeSpan.FromMilliseconds(100)
+        );
     }
 
     private static string FormatElapsedTime(TimeSpan elapsed)
@@ -253,11 +274,19 @@ public sealed partial class Puzzle : IDisposable
             return TimeSpan.Zero;
 
         // If the part is already completed, return its timing
-        if (PartTimings != null && partIndex < PartTimings.Length && PartTimings[partIndex] != TimeSpan.Zero)
+        if (
+            PartTimings != null
+            && partIndex < PartTimings.Length
+            && PartTimings[partIndex] != TimeSpan.Zero
+        )
             return PartTimings[partIndex];
 
         // If this is the currently running part, return its current elapsed time
-        if (ShouldShowProgressBar(partIndex) && PartStopwatches[partIndex] != null && PartStopwatches[partIndex].IsRunning)
+        if (
+            ShouldShowProgressBar(partIndex)
+            && PartStopwatches[partIndex] != null
+            && PartStopwatches[partIndex].IsRunning
+        )
         {
             return PartStopwatches[partIndex].Elapsed;
         }

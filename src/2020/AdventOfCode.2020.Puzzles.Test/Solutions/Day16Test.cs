@@ -5,7 +5,8 @@ public sealed class Day16Test : TestBase<Day16>
     [Fact]
     public async Task Part1Async()
     {
-        const string input = @"class: 1-3 or 5-7
+        const string input =
+            @"class: 1-3 or 5-7
 row: 6-11 or 33-44
 seat: 13-40 or 45-50
 
@@ -23,7 +24,8 @@ nearby tickets:
     [Fact]
     public async Task Part2Async()
     {
-        const string input = @"class: 0-1 or 4-19
+        const string input =
+            @"class: 0-1 or 4-19
 row: 0-5 or 8-19
 seat: 0-13 or 16-19
 

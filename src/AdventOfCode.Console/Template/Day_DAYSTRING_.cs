@@ -8,7 +8,7 @@ namespace AdventOfCode._YEAR_.Puzzles.Solutions
     public sealed class Day_DAYSTRING_ : SolutionBase
     {
         public override async Task<string> Part1Async(string input)
-        { 
+        {
             throw new NotImplementedException();
         }
 

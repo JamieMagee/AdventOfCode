@@ -6,17 +6,21 @@ using System.Text.RegularExpressions;
 [Puzzle("Password Philosophy")]
 public sealed class Day02 : SolutionBase
 {
-    protected override string Part1(string input) => input.Trim()
-        .Split("\n")
-        .Select(x => new PasswordPolicy(x))
-        .Count(x => x.PartOneValid())
-        .ToString(CultureInfo.InvariantCulture);
+    protected override string Part1(string input) =>
+        input
+            .Trim()
+            .Split("\n")
+            .Select(x => new PasswordPolicy(x))
+            .Count(x => x.PartOneValid())
+            .ToString(CultureInfo.InvariantCulture);
 
-    protected override string Part2(string input) => input.Trim()
-        .Split("\n")
-        .Select(x => new PasswordPolicy(x))
-        .Count(x => x.PartTwoValid())
-        .ToString(CultureInfo.InvariantCulture);
+    protected override string Part2(string input) =>
+        input
+            .Trim()
+            .Split("\n")
+            .Select(x => new PasswordPolicy(x))
+            .Count(x => x.PartTwoValid())
+            .ToString(CultureInfo.InvariantCulture);
 
     private sealed record PasswordPolicy
     {
@@ -40,6 +44,8 @@ public sealed class Day02 : SolutionBase
             return count >= this.min && count <= this.max;
         }
 
-        public bool PartTwoValid() => (this.password[this.min - 1] == this.letter) ^ (this.password[this.max - 1] == this.letter);
+        public bool PartTwoValid() =>
+            (this.password[this.min - 1] == this.letter)
+            ^ (this.password[this.max - 1] == this.letter);
     }
 }

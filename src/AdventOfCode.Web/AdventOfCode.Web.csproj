@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-
   <PropertyGroup Label="Build">
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>AdventOfCode.Web</RootNamespace>
@@ -8,7 +7,11 @@
   <ItemGroup Label="Package References">
     <PackageReference Include="MudBlazor" Version="8.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.3" PrivateAssets="all" />
+    <PackageReference
+      Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"
+      Version="10.0.3"
+      PrivateAssets="all"
+    />
     <PackageReference Include="System.Net.Http.Json" Version="10.0.3" />
   </ItemGroup>
 
@@ -32,11 +35,21 @@
       <InputFiles2020 Include="$(MSBuildThisFileDirectory)..\2020\AdventOfCode.2020.Puzzles\Input\day*.txt" />
       <SourceFiles2020 Include="$(MSBuildThisFileDirectory)..\2020\AdventOfCode.2020.Puzzles\Solutions\Day*.cs" />
     </ItemGroup>
-    <Copy SourceFiles="@(InputFiles2015)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\input\2015" />
-    <Copy SourceFiles="@(SourceFiles2015)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\source\2015" />
-    <Copy SourceFiles="@(InputFiles2020)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\input\2020" />
-    <Copy SourceFiles="@(SourceFiles2020)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\source\2020" />
+    <Copy
+      SourceFiles="@(InputFiles2015)"
+      DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\input\2015"
+    />
+    <Copy
+      SourceFiles="@(SourceFiles2015)"
+      DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\source\2015"
+    />
+    <Copy
+      SourceFiles="@(InputFiles2020)"
+      DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\input\2020"
+    />
+    <Copy
+      SourceFiles="@(SourceFiles2020)"
+      DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\source\2020"
+    />
   </Target>
-
-
 </Project>

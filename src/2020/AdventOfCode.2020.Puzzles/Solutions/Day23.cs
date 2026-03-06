@@ -72,7 +72,12 @@
 
                 // Find destination cup
                 int destinationCup = currentCup - 1;
-                while (destinationCup == cup1 || destinationCup == cup2 || destinationCup == cup3 || destinationCup < minCup)
+                while (
+                    destinationCup == cup1
+                    || destinationCup == cup2
+                    || destinationCup == cup3
+                    || destinationCup < minCup
+                )
                 {
                     destinationCup--;
                     if (destinationCup < minCup)

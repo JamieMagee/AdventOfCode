@@ -19,7 +19,12 @@ public sealed class InputHandler : IInputHandler
 
     public async Task<string> GetSourceCodeAsync(int year, int day)
     {
-        var source = await this.GetFileAsync(year, day, "source/{0}/Day{1}.cs", this.mySourceCodeCache);
+        var source = await this.GetFileAsync(
+            year,
+            day,
+            "source/{0}/Day{1}.cs",
+            this.mySourceCodeCache
+        );
         return source ?? "No source file available.";
     }
 
@@ -43,14 +48,21 @@ public sealed class InputHandler : IInputHandler
         }
     }
 
-    private async Task<string?> GetFileAsync(int year, int day, string pathTemplate, Dictionary<int, string> cache)
+    private async Task<string?> GetFileAsync(
+        int year,
+        int day,
+        string pathTemplate,
+        Dictionary<int, string> cache
+    )
     {
         if (!cache.TryGetValue(day, out var description))
         {
             var dayString = day.ToString().PadLeft(2, '0');
             try
             {
-                description = await this.myHttpClient.GetStringAsync(string.Format(pathTemplate, year, dayString));
+                description = await this.myHttpClient.GetStringAsync(
+                    string.Format(pathTemplate, year, dayString)
+                );
             }
             catch (HttpRequestException)
             {

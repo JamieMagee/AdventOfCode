@@ -96,7 +96,10 @@
             return score;
         }
 
-        private static (int winner, List<int> winningCards) PlayRecursiveCombat(List<int> player1Cards, List<int> player2Cards)
+        private static (int winner, List<int> winningCards) PlayRecursiveCombat(
+            List<int> player1Cards,
+            List<int> player2Cards
+        )
         {
             var seenConfigurations = new HashSet<string>();
 

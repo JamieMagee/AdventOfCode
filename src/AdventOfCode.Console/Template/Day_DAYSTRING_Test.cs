@@ -12,7 +12,7 @@ namespace AdventOfCode._YEAR_.Puzzles.Test.Solutions
         {
             var input = """
 
-            """;
+                """;
             Assert.Equal("", await Solution.Part1Async(input));
         }
 
@@ -20,8 +20,8 @@ namespace AdventOfCode._YEAR_.Puzzles.Test.Solutions
         public async Task Part2Async()
         {
             var input = """
-            
-            """;
+
+                """;
             Assert.Equal("", await Solution.Part2Async(input));
         }
     }

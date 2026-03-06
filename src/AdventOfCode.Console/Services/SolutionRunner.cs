@@ -1,9 +1,9 @@
 namespace AdventOfCode.Console.Services;
 
-using AdventOfCode.Core;
-using Spectre.Console;
 using System.Diagnostics;
 using System.Reflection;
+using AdventOfCode.Core;
+using Spectre.Console;
 
 internal sealed class SolutionRunner
 {
@@ -51,13 +51,16 @@ internal sealed class SolutionRunner
 
     public async Task RunLastAsync(int year)
     {
-        var lastSolutionDay = this._solutionHandler.Solutions[year].Keys
-            .Where(x => x is >= 1 and <= 25)
+        var lastSolutionDay = this
+            ._solutionHandler.Solutions[year]
+            .Keys.Where(x => x is >= 1 and <= 25)
             .MaxBy(x => x);
 
         if (lastSolutionDay > 0)
         {
-            var rule = new Rule($"[bold green]Running Last Solution - {year} Day {lastSolutionDay}[/]");
+            var rule = new Rule(
+                $"[bold green]Running Last Solution - {year} Day {lastSolutionDay}[/]"
+            );
             AnsiConsole.Write(rule);
             await this.RunDayAsync(year, lastSolutionDay);
         }
@@ -69,8 +72,12 @@ internal sealed class SolutionRunner
 
     public async Task RunDayAsync(int year, int day)
     {
-        if (!_solutionHandler.Solutions.TryGetValue(year, out IDictionary<int, SolutionMetadata>? value) ||
-            !value.TryGetValue(day, out SolutionMetadata? solutionMetadata))
+        if (
+            !_solutionHandler.Solutions.TryGetValue(
+                year,
+                out IDictionary<int, SolutionMetadata>? value
+            ) || !value.TryGetValue(day, out SolutionMetadata? solutionMetadata)
+        )
         {
             AnsiConsole.MarkupLine($"[red]No solution found for {year} Day {day}[/]");
             return;
@@ -100,9 +107,9 @@ internal sealed class SolutionRunner
         var grid = new Grid();
 
         // Add columns: Day/Part, Result, and Time
-        grid.AddColumn(new GridColumn().Width(12));              // Day/Part column
-        grid.AddColumn(new GridColumn());                        // Result column (expandable)
-        grid.AddColumn(new GridColumn().Width(10).PadLeft(1));   // Time column
+        grid.AddColumn(new GridColumn().Width(12)); // Day/Part column
+        grid.AddColumn(new GridColumn()); // Result column (expandable)
+        grid.AddColumn(new GridColumn().Width(10).PadLeft(1)); // Time column
 
         // Add day title row spanning across columns
         grid.AddRow(
@@ -119,8 +126,9 @@ internal sealed class SolutionRunner
         );
 
         // Add Part 1 results
-        var part1Result = result1.Contains(Environment.NewLine) ?
-            $"[dim]{result1.Trim()}[/]" : result1;
+        var part1Result = result1.Contains(Environment.NewLine)
+            ? $"[dim]{result1.Trim()}[/]"
+            : result1;
 
         grid.AddRow(
             new Markup("[yellow]Part 1[/]"),
@@ -129,8 +137,9 @@ internal sealed class SolutionRunner
         );
 
         // Add Part 2 results
-        var part2Result = result2.Contains(Environment.NewLine) ?
-            $"[dim]{result2.Trim()}[/]" : result2;
+        var part2Result = result2.Contains(Environment.NewLine)
+            ? $"[dim]{result2.Trim()}[/]"
+            : result2;
 
         grid.AddRow(
             new Markup("[yellow]Part 2[/]"),
@@ -146,42 +155,49 @@ internal sealed class SolutionRunner
     private static async Task<(string result, long time)> RunPartAsync(
         string input,
         Func<string, Task<string>> action,
-        ISolution solution)
+        ISolution solution
+    )
     {
         var stopwatch = new Stopwatch();
         string result = string.Empty;
 
-        await AnsiConsole.Status()
-            .StartAsync("Calculating...", async ctx =>
-            {
-                ctx.Spinner(Spinner.Known.Star);
-                ctx.SpinnerStyle(Style.Parse("green"));
+        await AnsiConsole
+            .Status()
+            .StartAsync(
+                "Calculating...",
+                async ctx =>
+                {
+                    ctx.Spinner(Spinner.Known.Star);
+                    ctx.SpinnerStyle(Style.Parse("green"));
 
-                stopwatch.Start();
-                try
-                {
-                    solution.ProgressUpdated += (_, args) =>
+                    stopwatch.Start();
+                    try
                     {
-                        if (args.Progress.Percentage > 0)
+                        solution.ProgressUpdated += (_, args) =>
                         {
-                            ctx.Status($"Calculating... {Math.Min(99.99, args.Progress.Percentage):0.00}%");
-                        }
-                    };
-                    result = await action(input);
+                            if (args.Progress.Percentage > 0)
+                            {
+                                ctx.Status(
+                                    $"Calculating... {Math.Min(99.99, args.Progress.Percentage):0.00}%"
+                                );
+                            }
+                        };
+                        result = await action(input);
+                    }
+                    catch (NotImplementedException)
+                    {
+                        result = "[dim]Not implemented.[/]";
+                    }
+                    catch (Exception ex)
+                    {
+                        result = $"[red]({ex.GetType().Name}) {ex.Message}[/]";
+                    }
+                    finally
+                    {
+                        stopwatch.Stop();
+                    }
                 }
-                catch (NotImplementedException)
-                {
-                    result = "[dim]Not implemented.[/]";
-                }
-                catch (Exception ex)
-                {
-                    result = $"[red]({ex.GetType().Name}) {ex.Message}[/]";
-                }
-                finally
-                {
-                    stopwatch.Stop();
-                }
-            });
+            );
 
         return (result, stopwatch.ElapsedMilliseconds);
     }

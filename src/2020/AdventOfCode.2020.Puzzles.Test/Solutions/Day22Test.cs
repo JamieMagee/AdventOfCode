@@ -10,7 +10,8 @@ namespace AdventOfCode._2020.Puzzles.Test.Solutions
         [Fact]
         public async Task Part1Async()
         {
-            var input = @"Player 1:
+            var input =
+                @"Player 1:
 9
 2
 6
@@ -29,7 +30,8 @@ Player 2:
         [Fact]
         public async Task Part2Async()
         {
-            var input = @"Player 1:
+            var input =
+                @"Player 1:
 9
 2
 6

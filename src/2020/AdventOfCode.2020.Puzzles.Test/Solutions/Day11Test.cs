@@ -2,7 +2,8 @@
 
 public sealed class Day11Test : TestBase<Day11>
 {
-    private const string Input = @"L.LL.LL.LL
+    private const string Input =
+        @"L.LL.LL.LL
 LLLLLLL.LL
 L.L.L..L..
 LLLL.LL.LL

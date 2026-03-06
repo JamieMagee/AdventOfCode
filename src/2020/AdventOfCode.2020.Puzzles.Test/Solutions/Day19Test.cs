@@ -5,7 +5,8 @@ public sealed class Day19Test : TestBase<Day19>
     [Fact]
     public async Task Part1Async()
     {
-        var input = @"0: 4 1 5
+        var input =
+            @"0: 4 1 5
 1: 2 3 | 3 2
 2: 4 4 | 5 5
 3: 4 5 | 5 4
@@ -23,7 +24,8 @@ aaaabbb";
     [Fact]
     public async Task Part2Async()
     {
-        var input = @"42: 9 14 | 10 1
+        var input =
+            @"42: 9 14 | 10 1
 9: 14 27 | 1 26
 10: 23 14 | 28 1
 1: ""a""

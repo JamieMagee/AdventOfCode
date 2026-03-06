@@ -15,7 +15,12 @@ public static class ListExtensions
         rest = [.. list.Skip(1)];
     }
 
-    public static void Deconstruct<T>(this IList<T> list, out T first, out T second, out IList<T> rest)
+    public static void Deconstruct<T>(
+        this IList<T> list,
+        out T first,
+        out T second,
+        out IList<T> rest
+    )
     {
         ArgumentNullException.ThrowIfNull(list);
         if (list.Count < 2)

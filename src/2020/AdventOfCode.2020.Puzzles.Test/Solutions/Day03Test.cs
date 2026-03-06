@@ -2,7 +2,8 @@
 
 public sealed class Day03Test : TestBase<Day03>
 {
-    private const string Input = @"..##.......
+    private const string Input =
+        @"..##.......
 #...#...#..
 .#....#..#.
 ..#.#...#.#

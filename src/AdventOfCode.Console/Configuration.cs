@@ -5,9 +5,7 @@ namespace AdventOfCode.Console;
 
 internal sealed class Configuration
 {
-    private Configuration()
-    {
-    }
+    private Configuration() { }
 
     public required string SessionCookie { get; set; }
 
@@ -18,10 +16,7 @@ internal sealed class Configuration
             .AddUserSecrets(Assembly.GetExecutingAssembly(), true, true)
             .Build();
 
-        var configuration = new Configuration
-        {
-            SessionCookie = string.Empty
-        };
+        var configuration = new Configuration { SessionCookie = string.Empty };
         config.Bind(configuration);
 
         return configuration;

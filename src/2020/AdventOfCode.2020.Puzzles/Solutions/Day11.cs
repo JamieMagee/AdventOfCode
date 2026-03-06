@@ -12,9 +12,16 @@ public sealed class Day11 : SolutionBase
     private const char Floor = '.';
 
     private static readonly (int Y, int X)[] Kernel =
-        {
-            (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1),
-        };
+    {
+        (-1, -1),
+        (-1, 0),
+        (-1, 1),
+        (0, -1),
+        (0, 1),
+        (1, -1),
+        (1, 0),
+        (1, 1),
+    };
 
     protected override string Part1(string input)
     {
@@ -31,15 +38,15 @@ public sealed class Day11 : SolutionBase
     private static int Solve(
         string[] curr,
         int threshold,
-        Func<string[], (int X, int Y), int> countAdjacent)
+        Func<string[], (int X, int Y), int> countAdjacent
+    )
     {
         string[] prev;
         do
         {
             prev = curr;
             curr = Step(curr, threshold, countAdjacent);
-        }
-        while (!prev.SequenceEqual(curr));
+        } while (!prev.SequenceEqual(curr));
 
         return curr.SelectMany(r => r).Count(c => c == Occupied);
     }
@@ -47,7 +54,8 @@ public sealed class Day11 : SolutionBase
     private static string[] Step(
         string[] grid,
         int threshold,
-        Func<string[], (int X, int Y), int> count)
+        Func<string[], (int X, int Y), int> count
+    )
     {
         var nextGrid = new string[grid.Length];
         for (var r = 0; r < grid.Length; r++)
@@ -76,17 +84,18 @@ public sealed class Day11 : SolutionBase
         return nextGrid;
     }
 
-    private static int CountPart1(string[] map, (int X, int Y) coords) => Kernel
-        .Select(d => d.Add(coords))
-        .Count(p => map.Get(p) == Occupied);
+    private static int CountPart1(string[] map, (int X, int Y) coords) =>
+        Kernel.Select(d => d.Add(coords)).Count(p => map.Get(p) == Occupied);
 
-    private static int CountPart2(string[] map, (int X, int Y) coords) => Kernel.Select(d =>
-            MoreEnumerable.Generate(
-                    coords,
-                    p => d.Add(p))
-                .Skip(1)
-                .Select(map.Get)
-                .SkipWhile(c => c == Floor)
-                .First())
-        .Count(x => x == Occupied);
+    private static int CountPart2(string[] map, (int X, int Y) coords) =>
+        Kernel
+            .Select(d =>
+                MoreEnumerable
+                    .Generate(coords, p => d.Add(p))
+                    .Skip(1)
+                    .Select(map.Get)
+                    .SkipWhile(c => c == Floor)
+                    .First()
+            )
+            .Count(x => x == Occupied);
 }

@@ -1,7 +1,7 @@
 namespace AdventOfCode.Console.Commands.Settings;
 
-using Spectre.Console.Cli;
 using System.ComponentModel;
+using Spectre.Console.Cli;
 
 internal class BaseSettings : CommandSettings
 {

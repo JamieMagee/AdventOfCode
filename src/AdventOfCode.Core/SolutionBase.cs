@@ -19,7 +19,8 @@ public abstract class SolutionBase : ISolution, IProgressPublisher
 
     bool IProgressPublisher.IsUpdateProgressNeeded() => this.IsUpdateProgressNeeded();
 
-    Task IProgressPublisher.UpdateProgressAsync(double current, double total) => this.UpdateProgressAsync(current, total);
+    Task IProgressPublisher.UpdateProgressAsync(double current, double total) =>
+        this.UpdateProgressAsync(current, total);
 
     public virtual Task<string> Part1Async(string input) => Task.FromResult(this.Part1(input));
 
@@ -33,11 +34,15 @@ public abstract class SolutionBase : ISolution, IProgressPublisher
     {
         ArgumentNullException.ThrowIfNull(input);
 
-        return [..input.Replace("\r", string.Empty, StringComparison.Ordinal)
-            .Split('\n')
-            .Reverse()
-            .SkipWhile(string.IsNullOrEmpty)
-            .Reverse()];
+        return
+        [
+            .. input
+                .Replace("\r", string.Empty, StringComparison.Ordinal)
+                .Split('\n')
+                .Reverse()
+                .SkipWhile(string.IsNullOrEmpty)
+                .Reverse(),
+        ];
     }
 
     protected virtual string Part1(string input) => throw new NotImplementedException();

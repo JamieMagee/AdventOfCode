@@ -2,7 +2,8 @@
 
 public sealed class Day08Test : TestBase<Day08>
 {
-    private const string Input = @"nop +0
+    private const string Input =
+        @"nop +0
 acc +1
 jmp +4
 acc +3

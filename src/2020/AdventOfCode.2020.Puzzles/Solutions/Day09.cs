@@ -11,8 +11,12 @@ public sealed class Day09 : SolutionBase
     protected override string Part1(string input)
     {
         var parsedInput = input.GetLines<long>().ToArray();
-        return parsedInput.Skip(this.PreambleLength)
-            .Where((x, i) => parsedInput[i..(i + this.PreambleLength)].Subsets(2).All(l => l.Sum() != x))
+        return parsedInput
+            .Skip(this.PreambleLength)
+            .Where(
+                (x, i) =>
+                    parsedInput[i..(i + this.PreambleLength)].Subsets(2).All(l => l.Sum() != x)
+            )
             .First()
             .ToString();
     }

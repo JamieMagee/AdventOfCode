@@ -5,7 +5,8 @@ public sealed class Day07Test : TestBase<Day07>
     [Fact]
     public async Task Part1Async()
     {
-        const string input = @"light red bags contain 1 bright white bag, 2 muted yellow bags.
+        const string input =
+            @"light red bags contain 1 bright white bag, 2 muted yellow bags.
 dark orange bags contain 3 bright white bags, 4 muted yellow bags.
 bright white bags contain 1 shiny gold bag.
 muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
@@ -20,7 +21,8 @@ dotted black bags contain no other bags.";
     [Fact]
     public async Task Part2Async()
     {
-        const string input = @"shiny gold bags contain 2 dark red bags.
+        const string input =
+            @"shiny gold bags contain 2 dark red bags.
 dark red bags contain 2 dark orange bags.
 dark orange bags contain 2 dark yellow bags.
 dark yellow bags contain 2 dark green bags.

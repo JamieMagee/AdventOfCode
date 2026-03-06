@@ -73,7 +73,7 @@ public sealed partial class TabControl
             "Visualization" => Icons.Material.Filled.Visibility,
             "Input" => Icons.Material.Filled.Input,
             "Source" => Icons.Material.Filled.Code,
-            _ => Icons.Material.Filled.Tab
+            _ => Icons.Material.Filled.Tab,
         };
     }
 }

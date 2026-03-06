@@ -25,16 +25,15 @@ public sealed class Day10 : SolutionBase
         parsedInput.Add(0);
         parsedInput.Add(parsedInput.Max() + 3);
         parsedInput.Sort();
-        var memoize = new Dictionary<int, long>
-        {
-            [parsedInput.Count - 1] = 1,
-        };
+        var memoize = new Dictionary<int, long> { [parsedInput.Count - 1] = 1 };
         for (var k = parsedInput.Count - 2; k >= 0; k--)
         {
             var connections = 0L;
-            for (var connected = k + 1;
-                 connected < parsedInput.Count && parsedInput[connected] - parsedInput[k] <= 3;
-                 connected++)
+            for (
+                var connected = k + 1;
+                connected < parsedInput.Count && parsedInput[connected] - parsedInput[k] <= 3;
+                connected++
+            )
             {
                 connections += memoize[connected];
             }
