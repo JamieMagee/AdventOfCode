@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup Label="Build">
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>AdventOfCode._2015.Puzzles</RootNamespace>
   </PropertyGroup>
 
@@ -10,7 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Input\*.txt" CopyToOutputDirectory="PreserveNewest" Link="%(RecursiveDir)2015\%(Filename)%(Extension)" />
+    <None
+      Update="Input\*.txt"
+      CopyToOutputDirectory="PreserveNewest"
+      Link="%(RecursiveDir)2015\%(Filename)%(Extension)"
+    />
   </ItemGroup>
-
 </Project>
