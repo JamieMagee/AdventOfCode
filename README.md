@@ -1,48 +1,59 @@
 # Advent of Code
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/JamieMagee/AdventOfCode/GitHub%20Pages?style=for-the-badge)](https://github.com/JamieMagee/AdventOfCode/actions?query=workflow%3A%22GitHub+Pages%22)
+[![GitHub Workflow Status][workflow-shield]][workflow-link]
 
-My solutions for [Advent of Code](https://adventofcode.com/) written in C# and Blazor WebAssembly
+My [Advent of Code](https://adventofcode.com/) solutions in C# and Blazor WebAssembly.
 
-Check it out at https://jamiemagee.github.io/AdventofCode.
+Live at <https://jamiemagee.github.io/AdventOfCode>. Based on [sanraith/aoc2019](https://github.com/sanraith/aoc2019).
 
-Based on [sanraith/aoc2019](https://github.com/sanraith/aoc2019)
+## Project structure
 
-## Project Structure
-
-| Folder                             | Description                                                 |
-|------------------------------------|-------------------------------------------------------------|
-| `AdventOfCode.Core`                | Interfaces and classes for solving puzzles                  |
-| `AdventOfCode.Core.Test`           | Interfaces and classes for puzzle tests                     |
-| `AdventOfCode.{Year}.Puzzles`      | Inputs and solutions for that year's Advent of Code puzzles |
-| `AdventOfCode.{Year}.Puzzles.Test` | Inputs and solutions for that year's Advent of Code puzzles |
-| `AdventOfCode.Console`             | Console application to prepare and run the puzzle solutions |
-| `AdventOfCode.Web`                 | Blazor WebAssembly application to run the puzzle solutions  |
+| Folder | What's in it |
+| --- | --- |
+| `AdventOfCode.Core` | Interfaces and base classes for solving puzzles |
+| `AdventOfCode.Core.Test` | Corresponding test infrastructure |
+| `AdventOfCode.{Year}.Puzzles` | Solutions and inputs for a given year |
+| `AdventOfCode.{Year}.Puzzles.Test` | Tests for a given year |
+| `AdventOfCode.Console` | CLI for running and scaffolding solutions |
+| `AdventOfCode.Web` | Blazor WebAssembly frontend |
 
 ## Setup
 
-This project requires [.NET SDK 9.0](https://dotnet.microsoft.com/download/dotnet/9.0).
+Requires [.NET SDK 10.0](https://dotnet.microsoft.com/download/dotnet/10.0).
 
-To run the Blazor WebAssembly application:
+Run the web app:
 
-- `dotnet run -p src/AdventOfCode.Web`
-- Open `[http://localhost:5000](http://localhost:5000)`
+```sh
+dotnet run -p src/AdventOfCode.Web
+# then open http://localhost:5000
+```
 
-To run all puzzle solutions in your console:
+Run solutions from the terminal:
 
-- `dotnet run -p src/AdventOfCode.Console --all`
+```sh
+# all puzzles
+dotnet run -p src/AdventOfCode.Console --all
 
-To run the last solution in your console:
+# just the latest one
+dotnet run -p src/AdventOfCode.Console --last
 
-- `dotnet run -p src/AdventOfCode.Console --last`
+# a specific day
+dotnet run -p src/AdventOfCode.Console --day 12
+```
 
-To run a specific solution in your console:
+Scaffold a new day:
 
-- `dotnet run -p src/AdventOfCode.Console --day [number of day]`
+First, stash your adventofcode.com session cookie:
 
-To setup the environment for a new puzzle solution:
+```sh
+dotnet user-secrets -p AdventOfCode.Console set "SessionCookie" "your-session-cookie"
+```
 
-- Set your adventofcode.com session cookie for `AdventOfCode.Console` as a user secret:
-    - `dotnet user-secrets -p AdventOfCode.Console set "SessionCookie" "[your session cookie]"`
-- Run setup to create source, test, input and description files for the given day:
-    - `dotnet run -p aoc2019.ConsoleApp --setup [number of day]`
+Then generate the source, test, input, and description files:
+
+```sh
+dotnet run -p src/AdventOfCode.Console --setup 12
+```
+
+[workflow-shield]: https://img.shields.io/github/actions/workflow/status/JamieMagee/AdventOfCode/github-pages.yml?style=for-the-badge
+[workflow-link]: https://github.com/JamieMagee/AdventOfCode/actions/workflows/pages/pages-build-deployment
