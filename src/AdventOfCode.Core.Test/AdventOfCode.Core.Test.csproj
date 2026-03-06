@@ -1,11 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup Label="Build">
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AdventOfCode.Core\AdventOfCode.Core.csproj"/>
+    <ProjectReference Include="..\AdventOfCode.Core\AdventOfCode.Core.csproj" />
   </ItemGroup>
-
 </Project>

@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup Label="Build">
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>AdventOfCode._2015.Puzzles.Test</RootNamespace>
 
     <IsPackable>false</IsPackable>
@@ -24,5 +23,4 @@
     <ProjectReference Include="..\..\AdventOfCode.Core.Test\AdventOfCode.Core.Test.csproj" />
     <ProjectReference Include="..\AdventOfCode.2015.Puzzles\AdventOfCode.2015.Puzzles.csproj" />
   </ItemGroup>
-
 </Project>
