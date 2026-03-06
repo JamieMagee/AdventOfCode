@@ -17,14 +17,16 @@ internal sealed class RunCommand : AsyncCommand<RunSettings>
         this._solutionRunner = new SolutionRunner(config, solutionHandler);
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, RunSettings settings)
+    public override async Task<int> ExecuteAsync(
+        CommandContext context,
+        RunSettings settings,
+        CancellationToken cancellationToken
+    )
     {
         var solutionHandler = new SolutionHandler();
 
         // Show welcome message
-        var figlet = new FigletText("Advent of Code")
-            .LeftJustified()
-            .Color(Color.Green);
+        var figlet = new FigletText("Advent of Code").LeftJustified().Color(Color.Green);
         AnsiConsole.Write(figlet);
 
         // Determine the year to use

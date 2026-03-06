@@ -16,7 +16,7 @@ internal sealed class DaySetupService
         this._config = config;
     }
 
-    public async Task SetupDayAsync(int year, int day)
+    public async Task SetupDayAsync(int year, int day, CancellationToken cancellationToken)
     {
         var dayString = day.ToString().PadLeft(2, '0');
         var consoleProjectBinPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
