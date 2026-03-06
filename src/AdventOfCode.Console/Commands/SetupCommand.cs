@@ -15,12 +15,16 @@ internal sealed class SetupCommand : AsyncCommand<SetupSettings>
         this._daySetupService = new DaySetupService(config);
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, SetupSettings settings)
+    public override async Task<int> ExecuteAsync(
+        CommandContext context,
+        SetupSettings settings,
+        CancellationToken cancellationToken
+    )
     {
         var solutionHandler = new SolutionHandler();
         var year = settings.Year ?? solutionHandler.Solutions.Keys.Max();
 
-        await this._daySetupService.SetupDayAsync(year, settings.Day);
+        await this._daySetupService.SetupDayAsync(year, settings.Day, cancellationToken);
 
         return 0;
     }

@@ -17,17 +17,21 @@ internal sealed class DefaultCommand : AsyncCommand<BaseSettings>
         this._solutionRunner = new SolutionRunner(config, solutionHandler);
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, BaseSettings settings)
+    public override async Task<int> ExecuteAsync(
+        CommandContext context,
+        BaseSettings settings,
+        CancellationToken cancellationToken
+    )
     {
         var solutionHandler = new SolutionHandler();
 
         // Show welcome message
-        var figlet = new FigletText("Advent of Code")
-            .LeftJustified()
-            .Color(Color.Green);
+        var figlet = new FigletText("Advent of Code").LeftJustified().Color(Color.Green);
         AnsiConsole.Write(figlet);
 
-        AnsiConsole.MarkupLine("[dim]Running last available solution. Use --help for available options.[/]");
+        AnsiConsole.MarkupLine(
+            "[dim]Running last available solution. Use --help for available options.[/]"
+        );
         AnsiConsole.WriteLine();
 
         // Determine the year to use
