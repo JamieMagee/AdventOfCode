@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width" name="viewport"/>
+    <title>AdventOfCode.Web</title>
+    <base href="/AdventOfCode/"/>
+    <link rel="icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet"/>
+    <link href="css/loading.css" rel="stylesheet"/>
+    <script src="js/spa-redirect.js"></script>
+    <script src="js/loading.js"></script>
+</head>
+<body>
+<div id="app">
+    <div id="advent-loading-screen">
+        <div class="loading-container">
+            <div class="header-section">
+                <div class="star-icon">⭐</div>
+                <h1 class="loading-title">Advent of Code</h1>
+                <p class="loading-subtitle">C# Solutions by Jamie Magee</p>
+            </div>
+            
+            <div class="loading-animation">
+                <div class="snowflake-container">
+                    <div class="snowflake">❄</div>
+                    <div class="snowflake">❅</div>
+                    <div class="snowflake">❆</div>
+                    <div class="snowflake">❄</div>
+                    <div class="snowflake">❅</div>
+                    <div class="snowflake">❆</div>
+                </div>
+                
+                <div class="progress-section">
+                    <div class="loading-spinner">
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ring"></div>
+                    </div>
+                    <p class="loading-text">Loading solutions...</p>
+                </div>
+            </div>
+            
+            <div class="stats-preview">
+                <div class="stat-item">
+                    <div class="stat-icon">🧩</div>
+                    <div class="stat-label">Puzzles</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-label">Years</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">👁</div>
+                    <div class="stat-label">Visualizations</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="_framework/blazor.webassembly.js"></script>
+<script src="_content/MudBlazor/MudBlazor.min.js"></script>
+</body>
+</html>
