@@ -17,6 +17,11 @@ public partial class SolutionHandler : ISolutionHandler
         AssemblyLoader.LoadAssemblies();
         var solutionTypes = AppDomain
             .CurrentDomain.GetAssemblies()
+            .Where(x =>
+                x.GetName().Name is { } assemblyName
+                && assemblyName.StartsWith("AdventOfCode.", StringComparison.Ordinal)
+                && assemblyName.EndsWith(".Puzzles", StringComparison.Ordinal)
+            )
             .SelectMany(x => x.GetTypes())
             .Where(x => typeof(ISolution).IsAssignableFrom(x) && !x.IsAbstract)
             .ToList();

@@ -14,7 +14,7 @@
     <PackageReference
       Include="Microsoft.VisualStudio.Threading.Analyzers"
       PrivateAssets="all"
-      Version="18.7.23"
+      Version="18.12.1"
     />
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ internal sealed class DefaultCommand : AsyncCommand<BaseSettings>
         this._solutionRunner = new SolutionRunner(config, solutionHandler);
     }
 
-    protected override async Task<int> ExecuteAsync(
+    public override async Task<int> ExecuteAsync(
         CommandContext context,
         BaseSettings settings,
         CancellationToken cancellationToken
