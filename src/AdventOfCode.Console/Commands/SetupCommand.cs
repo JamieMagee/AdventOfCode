@@ -15,7 +15,7 @@ internal sealed class SetupCommand : AsyncCommand<SetupSettings>
         this._daySetupService = new DaySetupService(config);
     }
 
-    protected override async Task<int> ExecuteAsync(
+    public override async Task<int> ExecuteAsync(
         CommandContext context,
         SetupSettings settings,
         CancellationToken cancellationToken
