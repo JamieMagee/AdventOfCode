@@ -19,7 +19,7 @@ Live at <https://jamiemagee.github.io/AdventOfCode>. Based on [sanraith/aoc2019]
 
 ## Setup
 
-Requires [.NET SDK 10.0](https://dotnet.microsoft.com/download/dotnet/10.0).
+Requires [.NET SDK 11.0](https://dotnet.microsoft.com/download/dotnet/11.0).
 
 Run the web app:
 
